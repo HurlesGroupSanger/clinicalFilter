@@ -66,8 +66,14 @@ class TestPreInheritanceFilter(unittest.TestCase):
         self.assertEqual(variants_per_gene, {'123': {'1_100000_A_G': {
             'child': variants['child']['1_100000_A_G']}}})
 
-    def test_revel(self):
-        pass
+    def test_revel_filter(self):
+        # test revel filter
+        self.vardata['revel'] = '0.3'
+        testvar = create_test_snv(self.vardata)
+        variants = {'child': {'1_100000_A_G': testvar},
+                    'mum': {}, 'dad': {}}
+        variants_per_gene = preinheritance_filter(variants)
+        self.assertEqual(variants_per_gene, {})
 
 
 
