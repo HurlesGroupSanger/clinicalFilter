@@ -19,3 +19,24 @@ def create_test_snv(vardata):
     Var = SNV
     var = Var(vardata)
     return var
+
+def create_test_candidate_vars(single_vars, compound_hets):
+    '''create candidate variants hash from variant data'''
+    candidates = {'single_variants': {}, 'compound_hets': {}}
+
+    for vid in single_vars.keys():
+        Var = SNV
+        var = Var(single_vars[vid]['variant'])
+        candidates['single_variants'][vid] = {}
+        candidates['single_variants'][vid]['variant'] = var
+        candidates['single_variants'][vid]['mode'] = single_vars[vid]['mode']
+
+    for gn in compound_hets.keys():
+        candidates['compound_hets'][gn] = {}
+        for cvid in compound_hets[gn].keys():
+            Var = SNV
+            var = Var(compound_hets[gn][cvid]['variant'])
+            candidates['compound_hets'][gn][cvid]['variant'] = var
+            candidates['compound_hets'][gn][cvid]['mode'] = compound_hets[gn][cvid]['mode']
+
+    return candidates

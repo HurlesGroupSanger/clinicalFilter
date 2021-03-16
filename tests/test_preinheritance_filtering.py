@@ -3,7 +3,7 @@ import unittest
 from tests.test_utils import create_test_snv
 from filtering.preinheritance_filtering import preinheritance_filter
 
-class TestTrioGenotypes(unittest.TestCase):
+class TestPreInheritanceFilter(unittest.TestCase):
 
     def setUp(self):
         self.maxDiff = None
@@ -66,7 +66,8 @@ class TestTrioGenotypes(unittest.TestCase):
         self.assertEqual(variants_per_gene, {'123': {'1_100000_A_G': {
             'child': variants['child']['1_100000_A_G']}}})
 
-
+    def test_revel(self):
+        pass
 
 
 

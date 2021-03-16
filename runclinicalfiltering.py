@@ -22,7 +22,7 @@ from datetime import datetime
 from utils.parse_args import get_options
 from file_loading.ped_files import create_ped, openped
 from filtering.filter import filter_trio
-
+from output.print_results import create_output
 
 def main():
     """
@@ -45,9 +45,14 @@ def main():
 
     families = openped(args.ped, args.proband_list)
     # exit(0)
+    variants_per_family = {}
     for family in families.keys():
-        filter_trio(families[family], args.known_genes, args.known_regions,
+        filtered_variants = filter_trio(families[family], args.known_genes, args.known_regions,
                     args.trusted_variants, args.outdir)
+        variants_per_family[family] = filtered_variants
+
+    # print(variants_per_family)
+    create_output(families, variants_per_family, args.outdir)
     exit(0)
     # vcf_file = '/Volumes/team29/re3/new_clinical_filtering/test_data/vcfs/DDDP100001.gatk.vep.revel.2020-10-29.vcf.gz'
     # readvcf(vcf_file)

@@ -53,6 +53,10 @@ def filter_trio(family, genes_file, regions_file, trusted_variants_file, outdir)
 
     #post inheritance filters
     postinheritance_filter(candidate_variants, family)
-    print(candidate_variants['compound_hets'].keys())
-    print(candidate_variants['single_variants'].keys())
+
+    print(candidate_variants)
+    # print(candidate_variants['compound_hets'].keys())
+    # print(candidate_variants['single_variants'].keys())
+
+    return candidate_variants
 
