@@ -10,14 +10,15 @@ class SNV(Variant):
     def __repr__(self):
         # return str(self.__dict__)
         return 'SNV(chrom="{}", pos="{}", ref="{}", alt="{}", consequence="{}", ' \
-               'ensg="{}", symbol="{}", feature="{}", canonical="{}", mane="{}", ' \
+               'protein_position="{}", ensg="{}", symbol="{}", feature="{}", canonical="{}", mane="{}", ' \
                'hgnc_id="{}", max_af="{}", max_af_pops="{}", ddd_af="{}", ' \
                'revel="{}", polyphen="{}", hgvsc="{}", hgvsp="{}", ' \
-               'denovo_snv="{}", denovo_indel="{}", gt="{}", gq="{}", pid="{}", gender="{}", ' \
+               'denovo_snv="{}", denovo_indel="{}", gt="{}", gq="{}", pid="{}", ad={}, gender="{}", ' \
                'genotype="{}", inheritance_type="{}", triogenotype="{}")'.format(
             self.chrom, self.pos,
             self.ref, self.alt,
             self.consequence,
+            self.protein_position,
             self.ensg, self.symbol,
             self.feature,
             self.canonical, self.mane,
@@ -28,7 +29,7 @@ class SNV(Variant):
             self.hgvsc,
             self.denovo_snv,
             self.denovo_indel,
-            self.gt, self.gq, self.pid,
+            self.gt, self.gq, self.pid, self.ad,
             self.gender,
             self.get_genotype(),
             self.inheritance_type,

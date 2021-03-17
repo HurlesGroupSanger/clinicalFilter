@@ -69,49 +69,50 @@ def readvcf(filename, regions, gender):
     """
     vars = {}
 
-    infofields = ['Consequence', 'Gene', 'SYMBOL', 'Feature', 'CANONICAL',
-                  'MANE', 'HGNC_ID', 'MAX_AF', 'MAX_AF_POPS',
-                  'DDD_AF', 'REVEL', 'PolyPhen', 'HGVSc', 'HGVSp']
-    infofields_dnm = infofields + ['DENOVO-SNP', 'DENOVO-INDEL']
-    formatfields = ['GT', 'GQ', 'PID']
+    #get list of info fields in the vcf
+    fieldlistcmd = "bcftools view -h " + filename + " z | grep ^##INFO | sed 's/^.*ID=// ; s/,.*//'"
+    fieldlist = runcommand(fieldlistcmd)
+    fields = fieldlist.split("\n")
 
-    infostring = (' %INFO/').join(infofields)
-    infostring_dnm = (' %INFO/').join(infofields_dnm)
-    formatstring = (' %').join(formatfields)
+    infofields_wanted = ['Consequence', 'Gene', 'SYMBOL', 'Feature', 'CANONICAL',
+                  'MANE', 'HGNC_ID', 'MAX_AF', 'MAX_AF_POPS',
+                  'DDD_AF', 'REVEL', 'PolyPhen', 'Protein_position', 'HGVSc', 'HGVSp']
+    formatfields = ['GT', 'GQ', 'PID', 'AD']
+
+    # create infostring containing only the fields present
+    info_query = []
+    for inf in infofields_wanted:
+        if inf in fields:
+            info_query.append("%INFO/" + inf)
+        else:
+            info_query.append("")
+
+    infostring = ("\t").join(info_query)
+    formatstring = ("\t%").join(formatfields)
 
     if regions is None:
         bcfcmdroot = "bcftools norm -m - " + filename + \
                      " | bcftools view -e 'INFO/MAX_AF>0.005 | FORMAT/GT[0]!=" + \
-                     '"alt"' + "'  | bcftools query -f '%CHROM %POS %REF %ALT{0} %INFO/"
+                     '"alt"' + "'  | bcftools query -f '%CHROM\t%POS\t%REF\t%ALT{0}\t"
     else:
         bcfcmdroot = "bcftools norm -m - -R " + regions + " " + filename + \
                      " | bcftools view -e 'INFO/MAX_AF>0.005 | FORMAT/GT[0]!=" + \
-                     '"alt"' + "'  | bcftools query -f '%CHROM %POS %REF %ALT{0} %INFO/"
+                     '"alt"' + "'  | bcftools query -f '%CHROM\t%POS\t%REF\t%ALT{0}\t"
 
-    bcfcmd = bcfcmdroot + infostring + " [ %" + formatstring + "]\n'"
-    bcfcmd_dnm = bcfcmdroot + infostring_dnm + " [ %" + formatstring + "]\n'"
-    #try the command for those with DNMs first
-    dnms_called = False
-    output = runcommand(bcfcmd_dnm)
-    outputlines = []
+    bcfcmd = bcfcmdroot + infostring + "[\t%" + formatstring + "]\n'"
+    output = runcommand(bcfcmd)
 
     if not output == "Error in command":
         outputlines = output.split('\n')
-        dnms_called = True
     else:
-        #try without DNM annotation
-        output = runcommand(bcfcmd)
-        if not output == "Error in command":
-            outputlines = output.split('\n')
-        else:
-            logging.error("Variants not loaded from " + filename)
+        logging.error("Variants not loaded from " + filename)
 
     for ol in outputlines:
-        oldata = ol.split()
+        oldata = ol.split("\t")
         alt = oldata[3]
         if alt == '*':  # get rid of any where alt allele is *
             continue
-        #populate hash with fields common to both bcftools commands
+        #populate hash with variant data
         varid = ("_").join([oldata[0], oldata[1], oldata[2], alt])
         vdata = {}
         vdata['chrom'] = oldata[0]
@@ -130,22 +131,24 @@ def readvcf(filename, regions, gender):
         vdata['ddd_af'] = oldata[13]
         vdata['revel'] = oldata[14]
         vdata['polyphen'] = oldata[15]
-        vdata['hgvsc'] = oldata[16]
-        vdata['hgvsp'] = oldata[17]
+        vdata['protein_position'] = oldata[16]
+        vdata['hgvsc'] = oldata[17]
+        vdata['hgvsp'] = oldata[18]
         vdata['gender'] = gender
-        #now add fields that differ according to which bcftools command was sucessful
-        if dnms_called == True:
-            vdata['denovo_snv'] = oldata[18]
-            vdata['denovo_indel'] = oldata[19]
-            vdata['gt'] = oldata[20]
-            vdata['gq'] = oldata[21]
-            vdata['pid'] = oldata[22]
+        vdata['gt'] = oldata[19]
+        vdata['gq'] = oldata[20]
+        vdata['pid'] = oldata[21]
+        vdata['ad'] = oldata[22]
+
+        if 'DENOVO-SNP' in fields:
+            vdata['denovo_snv'] = True
         else:
             vdata['denovo_snv'] = False
+
+        if 'DENOVO-INDEL' in fields:
+            vdata['denovo_indel'] = True
+        else:
             vdata['denovo_indel'] = False
-            vdata['gt'] = oldata[18]
-            vdata['gq'] = oldata[19]
-            vdata['pid'] = oldata[20]
 
         Var = SNV
         if alt in ['<DEL>', '<DUP>']:
