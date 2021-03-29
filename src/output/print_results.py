@@ -13,7 +13,7 @@ def create_output(families, variants, outdir):
         proband = families[list(families.keys())[0]].proband.person_id
         outfile = outdir + "/" + proband + "_clinical_filter.txt"
 
-    header = ['family_id', 'proband', 'gender', 'mum', 'dad', 'mum_aff',
+    header = ['family_id', 'proband', 'sex', 'mum', 'dad', 'mum_aff',
               'dad_aff', 'triogenotype', 'chrom', 'pos', 'ref', 'alt', 'DNM', 'symbol',
               'hgnc_id', 'transcript', 'canonical', 'MANE', 'consequence',
               'HGVSc', 'HGVSp', 'protein_position', 'polyphen', 'REVEL', 'max_af', 'ddd_af', 'GT',
@@ -44,7 +44,7 @@ def print_output(results, header, outfile):
 
         for fam in results.keys():
             for var in results[fam].keys():
-                line = ("\t").join([ results[fam][var]['family_id'], results[fam][var]['proband'], results[fam][var]['gender'], results[fam][var]['mum'], results[fam][var]['dad'], results[fam][var]['mum_aff'],
+                line = ("\t").join([ results[fam][var]['family_id'], results[fam][var]['proband'], results[fam][var]['sex'], results[fam][var]['mum'], results[fam][var]['dad'], results[fam][var]['mum_aff'],
                         results[fam][var]['dad_aff'], results[fam][var]['triogenotype'], results[fam][var]['chrom'], results[fam][var]['pos'], results[fam][var]['ref'],
                         results[fam][var]['alt'], results[fam][var]['DNM'], results[fam][var]['symbol'],
                         results[fam][var]['hgnc_id'], results[fam][var]['transcript'], results[fam][var]['canonical'],
@@ -87,7 +87,7 @@ def create_output_data(fam, families, variants, mnvs, variants_in_cis,
             results[varid]['dad'] = families[fam].proband.dad_id
             results[varid]['mum_aff'] = mum_aff
             results[varid]['dad_aff'] = dad_aff
-            results[varid]['gender'] = families[fam].proband.gender
+            results[varid]['sex'] = families[fam].proband.sex
 
     for gn in variants[fam]['compound_hets'].keys():
         for varid in variants[fam]['compound_hets'][gn].keys():
@@ -105,7 +105,7 @@ def create_output_data(fam, families, variants, mnvs, variants_in_cis,
                 results[varid]['dad'] = families[fam].proband.dad_id
                 results[varid]['mum_aff'] = mum_aff
                 results[varid]['dad_aff'] = dad_aff
-                results[varid]['gender'] = families[fam].proband.gender
+                results[varid]['sex'] = families[fam].proband.sex
 
     return results
 

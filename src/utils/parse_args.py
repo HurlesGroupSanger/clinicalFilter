@@ -13,7 +13,7 @@ def get_options():
     group.add_argument("--ped",
                        help="Path to ped file containing cohort details for multiple trios.")
     group.add_argument("--child", help="Path to child's VCF file.")
-    parser.add_argument("--gender", help="The child's gender (M or F).")
+    parser.add_argument("--sex", help="The child's chromosomal sex (eg XY, XX, XXY).")
     parser.add_argument("--mother", help="Path to mother's VCF file.")
     parser.add_argument("--father", help="Path to father's VCF file.")
     parser.add_argument("--mum-aff",
@@ -39,11 +39,11 @@ def get_options():
             parser.error("--dad-aff must also be used if --father is used")
         if args.mother is not None and args.mum_aff is None:
             parser.error("--mum-aff must also be used if --mother is used")
-        if args.gender is None:
-            parser.error("--gender must also be used if --child is used")
-        genders = ['M', 'F']
-        if not args.gender in genders:
-            parser.error("--gender must be M or F")
+        if args.sex is None:
+            parser.error("--sex must also be used if --child is used")
+        # genders = ['M', 'F']
+        # if not args.gender in genders:
+        #     parser.error("--gender must be M or F")
 
     if args.outdir is None:
         args.outdir = os.getcwd()

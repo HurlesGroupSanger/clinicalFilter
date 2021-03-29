@@ -16,6 +16,8 @@ class TestLoadVariants(unittest.TestCase):
                     '##contig=<ID=1,length=248956422,assembly=GRCh38>' + "\n" + \
                     '##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality">' + "\n" + \
                     '##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">' + "\n" + \
+                    '##FORMAT=<ID=AD,Number=1,Type=String,Description="AD">' + "\n" + \
+                    '##FORMAT=<ID=PID,Number=1,Type=String,Description="PID">' + "\n" + \
                     '##INFO=<ID=Consequence,Number=A,Type=String,Description="Consequence annotations from Ensembl VEP">' + "\n" + \
                     '##INFO=<ID=SYMBOL,Number=A,Type=String,Description="SYMBOL annotations from Ensembl VEP">' + "\n" + \
                     '##INFO=<ID=Gene,Number=A,Type=String,Description="Gene annotations from Ensembl VEP">' + "\n" + \
@@ -39,8 +41,8 @@ class TestLoadVariants(unittest.TestCase):
              'DDD_AF=0.0001',
              'REVEL=0.8', 'PolyPhen=Benign', 'HGVSc=string', 'HGVSp=string'])
         variantline = ("\t").join(
-            ['1', '1339911', 'rs1234', 'A', 'G', '.', '.', infofields, 'GT:GQ',
-             '1/1:99']) + "\n"
+            ['1', '1339911', 'rs1234', 'A', 'G', '.', '.', infofields, 'GT:GQ:AD:PID',
+             '1/1:99:.:.']) + "\n"
         commoninfofields = (";").join(
             ['Consequence=missense_variant', 'SYMBOL=MECP1', 'Gene=ENSG01234',
              'Feature=ENST01234', 'CANONICAL=YES', 'MANE=NM01234',
@@ -49,8 +51,8 @@ class TestLoadVariants(unittest.TestCase):
              'REVEL=0.8', 'PolyPhen=Benign', 'HGVSc=string', 'HGVSp=string'])
         commonvariantline = ("\t").join(
             ['1', '1339915', 'rs1234', 'A', 'G', '.', '.', commoninfofields,
-             'GT:GQ',
-             '1/1:99']) + "\n"
+             'GT:GQ:AD:PID',
+             '1/1:99:.:.']) + "\n"
         var3infofields = (";").join(
             ['Consequence=missense_variant', 'SYMBOL=MECP1', 'Gene=ENSG01234',
              'Feature=ENST01234', 'CANONICAL=YES', 'MANE=NM01234',
@@ -59,8 +61,8 @@ class TestLoadVariants(unittest.TestCase):
              'HGVSp=string'])
         var3variantline = ("\t").join(
             ['1', '1449915', 'rs1234', 'A', 'G', '.', '.', var3infofields,
-             'GT:GQ',
-             '1/1:99']) + "\n"
+             'GT:GQ:AD:PID',
+             '1/1:99:.:.']) + "\n"
         self.tempfile = tempfile.NamedTemporaryFile(mode="w")
         self.path = self.tempfile.name
         self.tempfile.write(vcfheader)
@@ -77,7 +79,7 @@ class TestLoadVariants(unittest.TestCase):
 
     def test_load_variants(self):
         '''load two variant lines - the common variant is ignored'''
-        self.assertEqual(readvcf(self.path, None, 'M'), {'1_1339911_A_G': SNV(
+        self.assertEqual(readvcf(self.path, None, 'XY'), {'1_1339911_A_G': SNV(
             {'chrom': '1', 'pos': '1339911', 'ref': 'A', 'alt': 'G',
              'consequence': 'missense_variant', 'ensg': 'ENSG01234',
              'symbol': 'MECP1', 'feature': 'ENST01234', 'canonical': 'YES',
@@ -85,7 +87,7 @@ class TestLoadVariants(unittest.TestCase):
              'max_af_pops': '.', 'ddd_af': '0.0001', 'revel': '0.8',
              'polyphen': 'Benign', 'hgvsc': 'string', 'hgvsp': 'string',
              'denovo_snv': False, 'denovo_indel': False, 'gt': '1/1',
-             'gq': '99', 'gender': 'M'}), '1_1449915_A_G': SNV(
+             'gq': '99', 'sex': 'XY'}), '1_1449915_A_G': SNV(
             {'chrom': '1', 'pos': '1449915', 'ref': 'A',
              'alt': 'G', 'consequence': 'missense_variant',
              'ensg': 'ENSG01234', 'symbol': 'MECP1',
@@ -96,5 +98,7 @@ class TestLoadVariants(unittest.TestCase):
              'polyphen': 'Benign', 'hgvsc': 'string',
              'hgvsp': 'string', 'denovo_snv': False,
              'denovo_indel': False, 'gt': '1/1', 'gq': '99',
-             'gender': 'M'})})
+             'sex': 'XY'})})
 
+if __name__ == '__main__':
+    unittest.main()

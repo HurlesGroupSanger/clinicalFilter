@@ -15,7 +15,7 @@ class Variant(object):
 
         self.set_genotype()
         self.standardise_chromosome()
-        self.set_inheritance_type()
+        # self.set_inheritance_type()
         self.parse_hgnc_id()
 
     def __eq__(self, other):
@@ -34,16 +34,16 @@ class Variant(object):
         if self.hgnc_id.startswith('HGNC:'):
             self.hgnc_id = self.hgnc_id[5:]
 
-    def set_inheritance_type(self):
-        self.inheritance_type = 'autosomal'
-        if self.chrom == 'X' and self.gender == 'M':
-            self.inheritance_type = "XChrMale"
-        elif self.chrom == 'X' and self.gender == 'F':
-            self.inheritance_type = "XChrFemale"
-        elif self.chrom == 'Y' and self.gender == 'M':
-            self.inheritance_type = "YChrMale"
-        elif self.chrom == 'Y' and self.gender == 'F':
-            self.inheritance_type = "YChrFemale"
+    # def set_inheritance_type(self):
+    #     self.inheritance_type = 'autosomal'
+    #     if self.chrom == 'X' and self.gender == 'M':
+    #         self.inheritance_type = "XChrMale"
+    #     elif self.chrom == 'X' and self.gender == 'F':
+    #         self.inheritance_type = "XChrFemale"
+    #     elif self.chrom == 'Y' and self.gender == 'M':
+    #         self.inheritance_type = "YChrMale"
+    #     elif self.chrom == 'Y' and self.gender == 'F':
+    #         self.inheritance_type = "YChrFemale"
 
 
 

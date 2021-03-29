@@ -13,7 +13,7 @@ class TestPreInheritanceFilter(unittest.TestCase):
                         'canonical': 'YES', 'mane': 'MANE', 'hgnc_id': '123',
                         'max_af': '0', 'max_af_pops': '.', 'ddd_af': '0',
                         'revel': '1', 'polyphen': '.', 'hgvsc': '.',
-                        'hgvsp': '.', 'gender': 'M', 'denovo_snv': False,
+                        'hgvsp': '.', 'sex': 'XY', 'denovo_snv': False,
                         'denovo_indel': False, 'gt': '0/1', 'gq': '50'}
 
     def test_min_gq(self):
@@ -75,6 +75,7 @@ class TestPreInheritanceFilter(unittest.TestCase):
         variants_per_gene = preinheritance_filter(variants)
         self.assertEqual(variants_per_gene, {})
 
-
+if __name__ == '__main__':
+    unittest.main()
 
 

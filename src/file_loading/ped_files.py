@@ -76,7 +76,7 @@ def openped(filename, proband_list):
 
     return families
 
-def create_ped(pedfile, child, mother, father, gender, mum_aff, dad_aff):
+def create_ped(pedfile, child, mother, father, sex, mum_aff, dad_aff):
     """create ped file where there isn't one inputted"""
     with open(pedfile, 'w') as p:
         mum = ''
@@ -89,11 +89,11 @@ def create_ped(pedfile, child, mother, father, gender, mum_aff, dad_aff):
             dad = "0"
         else:
             dad = "dad"
-        probandline = ("\t").join(["family", "child", dad, mum, gender, "2", child]) + "\n"
+        probandline = ("\t").join(["family", "child", dad, mum, sex, "2", child]) + "\n"
         p.write(probandline)
         if father:
-            dadline = ("\t").join(["family", "dad", "0", "0", "M", dad_aff, father]) + "\n"
+            dadline = ("\t").join(["family", "dad", "0", "0", "XY", dad_aff, father]) + "\n"
             p.write(dadline)
         if mother:
-            mumline = ("\t").join(["family", "mum", "0", "0", "F", mum_aff, mother]) + "\n"
+            mumline = ("\t").join(["family", "mum", "0", "0", "XX", mum_aff, mother]) + "\n"
             p.write(mumline)

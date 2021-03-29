@@ -13,7 +13,7 @@ class SNV(Variant):
                'protein_position="{}", ensg="{}", symbol="{}", feature="{}", canonical="{}", mane="{}", ' \
                'hgnc_id="{}", max_af="{}", max_af_pops="{}", ddd_af="{}", ' \
                'revel="{}", polyphen="{}", hgvsc="{}", hgvsp="{}", ' \
-               'denovo_snv="{}", denovo_indel="{}", gt="{}", gq="{}", pid="{}", ad={}, gender="{}", ' \
+               'denovo_snv="{}", denovo_indel="{}", gt="{}", gq="{}", pid="{}", ad={}, sex="{}", ' \
                'genotype="{}", inheritance_type="{}", triogenotype="{}")'.format(
             self.chrom, self.pos,
             self.ref, self.alt,
@@ -30,7 +30,7 @@ class SNV(Variant):
             self.denovo_snv,
             self.denovo_indel,
             self.gt, self.gq, self.pid, self.ad,
-            self.gender,
+            self.sex,
             self.get_genotype(),
             self.inheritance_type,
             self.triogenotype)

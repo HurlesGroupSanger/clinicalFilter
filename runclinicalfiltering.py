@@ -40,7 +40,7 @@ def main():
     if args.ped is None:
         # create ped file from family members on command line
         args.ped = args.outdir + "/ped." + timestamp + ".ped"
-        create_ped(args.ped, args.child, args.mother, args.father, args.gender,
+        create_ped(args.ped, args.child, args.mother, args.father, args.sex,
                    args.mum_aff, args.dad_aff)
 
     families = openped(args.ped, args.proband_list)

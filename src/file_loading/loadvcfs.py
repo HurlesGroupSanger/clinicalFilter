@@ -21,7 +21,7 @@ def load_variants(family, outdir, regions=None):
     sortcmd = "sort -k1,1V -k2,2n -k3,3n " + regionfile + " > " + sortedregs
     os.system(sortcmd)
 
-    child_vars = readvcf(proband_vcf, sortedregs, family.proband.get_gender())
+    child_vars = readvcf(proband_vcf, sortedregs, family.proband.get_sex())
 
     mum_vars = {}
     dad_vars = {}
@@ -63,7 +63,7 @@ def load_variants(family, outdir, regions=None):
     variants['dad'] = dad_vars
     return variants
 
-def readvcf(filename, regions, gender):
+def readvcf(filename, regions, sex):
     """
     read vcf files and return a dict of variant objects
     """
@@ -134,7 +134,7 @@ def readvcf(filename, regions, gender):
         vdata['protein_position'] = oldata[16]
         vdata['hgvsc'] = oldata[17]
         vdata['hgvsp'] = oldata[18]
-        vdata['gender'] = gender
+        vdata['sex'] = sex
         vdata['gt'] = oldata[19]
         vdata['gq'] = oldata[20]
         vdata['pid'] = oldata[21]

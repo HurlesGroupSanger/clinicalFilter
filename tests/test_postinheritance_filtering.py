@@ -16,7 +16,7 @@ class TestPostInheritanceFilter(unittest.TestCase):
                         'canonical': 'YES', 'mane': 'MANE', 'hgnc_id': '1234',
                         'max_af': '0', 'max_af_pops': '.', 'ddd_af': '0',
                         'revel': '.', 'polyphen': '.', 'hgvsc': '.',
-                        'hgvsp': '.', 'gender': 'M', 'denovo_snv': False,
+                        'hgvsp': '.', 'sex': 'XY', 'denovo_snv': False,
                         'denovo_indel': False, 'gt': '0/1', 'gq': '50', 'pid': '.'}
 
         self.child = create_test_person('fam', 'child_id', 'dad_id', 'mum_id',
@@ -135,5 +135,6 @@ class TestPostInheritanceFilter(unittest.TestCase):
 
         self.assertEqual(test_candidate_vars, test_candidate_vars_empty)
 
-
+if __name__ == '__main__':
+    unittest.main()
 

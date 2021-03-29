@@ -5,7 +5,7 @@ import logging
 
 class Person(object):
     """
-    Person object: ID, VCF, gender, affected status
+    Person object: ID, VCF, sex, affected status
     """
     def __init__(self, family_id, person_id, dad_id, mum_id, sex, affected, path):
         self.family_id = family_id#note that a person may be in >1 family if it is a parent
@@ -13,7 +13,7 @@ class Person(object):
         self.mum_id = mum_id
         self.dad_id = dad_id
         self.vcf_path = path
-        self.gender = sex
+        self.sex = sex
         #convert affected to true/false
         if affected == '2':
             self.affected = True
@@ -23,9 +23,9 @@ class Person(object):
             raise ValueError("Unknown affected status: " + affected + " should be '1' or '2'")
 
     def __repr__(self):
-        return 'Person(person_id="{}", dad_id="{}", mum_id="{}", gender="{}", ' \
+        return 'Person(person_id="{}", dad_id="{}", mum_id="{}", sex="{}", ' \
                'affected="{}", path="{}")'.format(self.get_id(), \
-                self.get_dad_id(), self.get_mum_id(), self.get_gender(), \
+                self.get_dad_id(), self.get_mum_id(), self.get_sex(), \
                 self.get_affected_status(), self.get_vcf_path())
 
     def get_id(self):
@@ -52,11 +52,11 @@ class Person(object):
         """
         return self.family_id
 
-    def get_gender(self):
+    def get_sex(self):
         """
-        get gender
+        get sex
         """
-        return self.gender
+        return self.sex
 
     def get_affected_status(self):
         """
@@ -87,7 +87,7 @@ class Person(object):
                self.dad_id == other.dad_id and \
                self.affected == other.affected and \
                self.vcf_path == other.vcf_path and \
-               self.gender == other.gender
+               self.sex == other.sex
 
 
 
