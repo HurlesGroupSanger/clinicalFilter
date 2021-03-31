@@ -45,9 +45,9 @@ def filter_trio(family, genes_file, regions_file, trusted_variants_file, outdir)
     #preinheritance filters
     variants_per_gene = preinheritance_filter(variants)
     # print(variants_per_gene)
-
+    # exit(0)
     #inheritance filters
-    candidate_variants = inheritance_filter(variants_per_gene, family, genes, regions, trusted_variants)
+    candidate_variants, inheritance_report = inheritance_filter(variants_per_gene, family, genes, regions, trusted_variants)
     # print(candidate_variants['compound_hets'])
     # print(candidate_variants['single_variants'])
 
@@ -58,5 +58,5 @@ def filter_trio(family, genes_file, regions_file, trusted_variants_file, outdir)
     # print(candidate_variants['compound_hets'].keys())
     # print(candidate_variants['single_variants'].keys())
 
-    return candidate_variants
+    return candidate_variants, inheritance_report
 

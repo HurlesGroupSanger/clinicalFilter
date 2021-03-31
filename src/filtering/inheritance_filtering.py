@@ -29,6 +29,12 @@ def inheritance_filter(variants_per_gene, family, genes, regions,
     candidate_variants['single_variants'] = {}
     candidate_variants['compound_hets'] = {}
 
+    # inheritance report gives data to populate a matrix for every possible
+    # combination of proband and parent GT and affected status for each mode of
+    # inheritance. Some variants will be counted twice (genes which are both
+    # mono and biallelic). Split into X and autosome
+    inheritance_report = {}
+
     lof_cqs = ['transcript_ablation', 'splice_donor_variant', 'stop_lost',
                'splice_acceptor_variant', 'stop_gained', 'frameshift_variant',
                'start_lost']
@@ -56,31 +62,31 @@ def inheritance_filter(variants_per_gene, family, genes, regions,
                     if parents == 'both':
                         allosomal_both_parents(hgncid, genes[hgncid],
                                                variants_per_gene[hgncid],
-                                               family, candidate_variants,
+                                               family, candidate_variants, inheritance_report,
                                                lof_cqs)
                     elif parents == 'none':
                         allosomal_no_parents(hgncid, genes[hgncid],
                                              variants_per_gene[hgncid],
-                                             candidate_variants, lof_cqs)
+                                             candidate_variants, inheritance_report, lof_cqs)
                     else:
                         allosomal_single_parent(hgncid, genes[hgncid],
                                                 variants_per_gene[hgncid],
-                                                family, candidate_variants,
+                                                family, candidate_variants, inheritance_report,
                                                 lof_cqs)
                 else:
                     if parents == 'both':
                         autosomal_both_parents(hgncid, genes[hgncid],
                                                variants_per_gene[hgncid],
-                                               family, candidate_variants,
+                                               family, candidate_variants, inheritance_report,
                                                lof_cqs)
                     elif parents == 'none':
                         autosomal_no_parents(hgncid, genes[hgncid],
                                              variants_per_gene[hgncid],
-                                             candidate_variants, lof_cqs)
+                                             candidate_variants, inheritance_report, lof_cqs)
                     else:
                         autosomal_single_parent(hgncid, genes[hgncid],
                                                 variants_per_gene[hgncid],
-                                                family, candidate_variants,
+                                                family, candidate_variants, inheritance_report,
                                                 lof_cqs)
             else:
                 for v in variants_per_gene[hgncid].keys():
@@ -97,7 +103,7 @@ def inheritance_filter(variants_per_gene, family, genes, regions,
         pass
 
     screen_compound_hets(candidate_variants, family)
-    return candidate_variants
+    return candidate_variants, inheritance_report
 
 
 def screen_compound_hets(candidate_variants, family):

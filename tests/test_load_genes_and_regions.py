@@ -28,3 +28,6 @@ class TestLoadGenesRegions(unittest.TestCase):
                      'symbol': 'HMX1', 'mode': {'Biallelic'},
                      'mechanism': {'Loss of function'},
                      'status': {'Probable DD gene'}}})
+
+if __name__ == '__main__':
+    unittest.main()

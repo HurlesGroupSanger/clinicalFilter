@@ -5,7 +5,7 @@
 # -identify and flag possible MNVs
 # -flag variants in cis in monoallelic genes
 
-def create_output(families, variants, outdir):
+def create_output(families, variants, inheritance_report, outdir):
 
     if len(families.keys()) > 1:
         outfile = outdir + "/" + "clinical_filter.txt"
@@ -32,6 +32,7 @@ def create_output(families, variants, outdir):
         results[fam] = create_output_data(fam, families, variants, mnvs, variants_in_cis,
                                           phased_varids)
 
+    # todo - add something to print out inheritance report matrices for each family
 
     print_output(results, header, outfile)
     exit(0)
