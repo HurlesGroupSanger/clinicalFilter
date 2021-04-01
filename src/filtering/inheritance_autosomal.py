@@ -3,6 +3,8 @@ import logging
 from utils.utils import common_elements
 from utils.utils import add_compound_het_to_candidates
 from utils.utils import add_single_var_to_candidates
+from utils.utils import convert_genotype_to_gt
+from filtering.inheritance_report import populate_inheritance_report
 
 def autosomal_both_parents(hgncid, gene, variants, family, candidate_variants, inheritance_report,
                            lof_cqs):
@@ -20,21 +22,21 @@ def autosomal_both_parents(hgncid, gene, variants, family, candidate_variants, i
             #heterozygous
             for inh in gene['mode']:
                 if inh == 'Biallelic':
-                    biallelic_heterozygous_parents_filter(v, variants[v]['child'],
-                                                     hgncid, inh, candidate_variants, inheritance_report)
+                    biallelic_heterozygous_parents_filter(v, variants[v]['child'], family,
+                                                     hgncid, candidate_variants, inheritance_report)
                 elif inh == 'Monoallelic':
                     monoallelic_heterozygous_parents_filter(v,
-                                                          variants[v]['child'],
-                                                          hgncid, inh,
+                                                          variants[v]['child'], family,
+                                                          hgncid,
                                                           candidate_variants, inheritance_report)
                 elif inh == 'Mosaic':
                     mosaic_heterozygous_parents_filter(v,
-                                                          variants[v]['child'],
-                                                          hgncid, inh,
+                                                          variants[v]['child'], family,
+                                                          hgncid,
                                                           candidate_variants, inheritance_report)
                 elif inh == 'Imprinted':
-                    imprinted_heterozygous_parents_filter(v, variants[v]['child'],
-                                                     hgncid, inh, candidate_variants, inheritance_report)
+                    imprinted_heterozygous_parents_filter(v, variants[v]['child'], family,
+                                                     hgncid, candidate_variants, inheritance_report)
                 else:
                     logging.info(v + " unknown gene mode " + inh)
         elif variants[v]['child'].genotype == '2':
@@ -42,24 +44,24 @@ def autosomal_both_parents(hgncid, gene, variants, family, candidate_variants, i
             for inh in gene['mode']:
                 if inh == 'Biallelic':
                     biallelic_homozygous_parents_filter(v,
-                                                          variants[v]['child'],
-                                                          hgncid, inh,
+                                                          variants[v]['child'], family,
+                                                          hgncid,
                                                           candidate_variants, inheritance_report)
                 elif inh == 'Monoallelic':
                     monoallelic_homozygous_parents_filter(v,
                                                             variants[v][
-                                                                'child'],
-                                                            hgncid, inh,
+                                                                'child'], family,
+                                                            hgncid,
                                                             candidate_variants, inheritance_report)
                 elif inh == 'Mosaic':
                     mosaic_homozygous_parents_filter(v,
-                                                       variants[v]['child'],
-                                                       hgncid, inh,
+                                                       variants[v]['child'], family,
+                                                       hgncid,
                                                        candidate_variants, inheritance_report)
                 elif inh == 'Imprinted':
                     imprinted_homozygous_parents_filter(v,
-                                                          variants[v]['child'],
-                                                          hgncid, inh,
+                                                          variants[v]['child'], family,
+                                                          hgncid,
                                                           candidate_variants, inheritance_report)
                 else:
                     logging.info(v + " unknown gene mode " + inh)
@@ -91,28 +93,52 @@ def autosomal_single_parent(hgncid, gene, variants, family, candidate_variants, 
     '''
     pass
 
-def biallelic_heterozygous_parents_filter(varid, var, hgncid, inh, candidate_variants, inheritance_report):
+def biallelic_heterozygous_parents_filter(varid, var, family, hgncid, candidate_variants, inheritance_report):
+    child_gt = var.gt
+    mum_genotype = var.get_mum_genotype()
+    dad_genotype = var.get_mum_genotype()
+    mum_gt = convert_genotype_to_gt(mum_genotype)
+    dad_gt = convert_genotype_to_gt(dad_genotype)
+    mum_aff = family.mum.affected
+    dad_aff = family.dad.affected
+
+    populate_inheritance_report(inheritance_report, 'autosomal', 'biallelic', child_gt, mum_gt, dad_gt, mum_aff, dad_aff)
+
+    if mum_aff and dad_aff:
+        # todo filter out child 0/1 both parents 1/1
+        add_compound_het_to_candidates(varid, var, hgncid, 'biallelic',
+                                       candidate_variants)
+    elif mum_aff and not dad_aff:
+        if not dad_gt == '1/1':
+            add_compound_het_to_candidates(varid, var, hgncid, 'biallelic',
+                                           candidate_variants)
+    elif not mum_aff and dad_aff:
+        if not mum_gt == '1/1':
+            add_compound_het_to_candidates(varid, var, hgncid, 'biallelic',
+                                           candidate_variants)
+    else:
+        if not dad_gt == '1/1' and not mum_gt == '1/1':
+            add_compound_het_to_candidates(varid, var, hgncid, 'biallelic',
+                                           candidate_variants)
+
+def monoallelic_heterozygous_parents_filter(varid, var, family,  hgncid, candidate_variants, inheritance_report):
     pass
 
-def monoallelic_heterozygous_parents_filter(varid, var, hgncid, inh, candidate_variants, inheritance_report):
+def mosaic_heterozygous_parents_filter(varid, var, family, hgncid, candidate_variants, inheritance_report):
     pass
 
-def mosaic_heterozygous_parents_filter(varid, var, hgncid, inh, candidate_variants, inheritance_report):
+def imprinted_heterozygous_parents_filter(varid, var, family, hgncid, candidate_variants, inheritance_report):
     pass
 
-def imprinted_heterozygous_parents_filter(varid, var, hgncid, inh, candidate_variants, inheritance_report):
+def biallelic_homozygous_parents_filter(varid, var, family, hgncid, candidate_variants, inheritance_report):
     pass
 
-def biallelic_homozygous_parents_filter(varid, var, hgncid, inh, candidate_variants, inheritance_report):
-    print('here')
-    exit(0)
-
-def monoallelic_homozygous_parents_filter(varid, var, hgncid, inh, candidate_variants, inheritance_report):
+def monoallelic_homozygous_parents_filter(varid, var, family, hgncid, candidate_variants, inheritance_report):
     pass
 
-def mosaic_homozygous_parents_filter(varid, var, hgncid, inh, candidate_variants, inheritance_report):
+def mosaic_homozygous_parents_filter(varid, var, family, hgncid, candidate_variants, inheritance_report):
     pass
 
-def imprinted_homozygous_parents_filter(varid, var, hgncid, inh, candidate_variants, inheritance_report):
+def imprinted_homozygous_parents_filter(varid, var, family, hgncid, candidate_variants, inheritance_report):
     pass
 

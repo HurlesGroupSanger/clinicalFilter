@@ -35,3 +35,17 @@ def add_compound_het_to_candidates(varid, var, hgncid, inh, candidates):
         else:
             candidates['compound_hets'][hgncid][varid]['mode'].add(inh)
 
+def convert_genotype_to_gt(genotype):
+    '''convert 0/1/2 genotype to GATK genotype'''
+    gt = ''
+    if genotype == '0':
+        gt = '0/0'
+    elif genotype == '1':
+        gt = '0/1'
+    elif genotype == '2':
+        gt = '1/1'
+    else:
+        print("Invalid genotype - shouldn't get here")
+        exit(1)
+
+    return gt

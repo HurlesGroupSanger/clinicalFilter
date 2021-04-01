@@ -5,8 +5,9 @@
 # -identify and flag possible MNVs
 # -flag variants in cis in monoallelic genes
 
-def create_output(families, variants, inheritance_report, outdir):
+def create_output(families, variants, inheritance_reports, outdir):
 
+    # print(inheritance_reports)
     if len(families.keys()) > 1:
         outfile = outdir + "/" + "clinical_filter.txt"
     else:

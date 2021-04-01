@@ -9,6 +9,7 @@ from filtering.inheritance_allosomal import allosomal_no_parents
 from filtering.inheritance_allosomal import allosomal_both_parents
 from filtering.inheritance_allosomal import allosomal_single_parent
 from filtering.compound_hets import screen_compound_hets
+from filtering.inheritance_report import create_blank_inheritance_report
 
 
 def inheritance_filter(variants_per_gene, family, genes, regions,
@@ -33,7 +34,7 @@ def inheritance_filter(variants_per_gene, family, genes, regions,
     # combination of proband and parent GT and affected status for each mode of
     # inheritance. Some variants will be counted twice (genes which are both
     # mono and biallelic). Split into X and autosome
-    inheritance_report = {}
+    inheritance_report = create_blank_inheritance_report()
 
     lof_cqs = ['transcript_ablation', 'splice_donor_variant', 'stop_lost',
                'splice_acceptor_variant', 'stop_gained', 'frameshift_variant',
@@ -116,3 +117,62 @@ def inheritance_filter_genes(variants_per_gene, family, genes, parents, candidat
                 logging.info(
                     v + " gene not in DDG2P: " +
                     variants_per_gene[hgncid][v]['child'].symbol)
+
+# def create_blank_inheritance_report():
+#     # create a blank report dict to report variants observed in all combinations
+#     # of trio genotype, affected status and gene mode
+#     inheritance_report = {}
+#
+#     gt_matrix = {
+#         'dad_0/0_mum_0/0': 0,
+#         'dad_0/0_mum_0/1': 0,
+#         'dad_0/0_mum_1/1': 0,
+#         'dad_0/1_mum_0/0': 0,
+#         'dad_0/1_mum_0/1': 0,
+#         'dad_0/1_mum_1/1': 0,
+#         'dad_1/1_mum_0/0': 0,
+#         'dad_1/1_mum_0/1': 0,
+#         'dad_1/1_mum_1/1': 0
+#     }
+#
+#     aff_matrix = {
+#         'dad_unaffected':{
+#             'mum_unaffected':gt_matrix,
+#             'mum_affected':gt_matrix
+#         },
+#         'dad_affected':{
+#             'mum_unaffected':gt_matrix,
+#             'mum_affected':gt_matrix
+#         }
+#     }
+#
+#     inheritance_report['autosomal'] = {}
+#     inheritance_report['allosomal'] = {}
+#
+#     inheritance_report['autosomal']['biallelic'] = {}
+#     inheritance_report['autosomal']['biallelic']['child_het'] = aff_matrix
+#     inheritance_report['autosomal']['biallelic']['child_hom'] = aff_matrix
+#     inheritance_report['autosomal']['monoallelic'] = {}
+#     inheritance_report['autosomal']['monoallelic']['child_het'] = aff_matrix
+#     inheritance_report['autosomal']['monoallelic']['child_hom'] = aff_matrix
+#     inheritance_report['autosomal']['mosaic'] = {}
+#     inheritance_report['autosomal']['mosaic']['child_het'] = aff_matrix
+#     inheritance_report['autosomal']['mosaic']['child_hom'] = aff_matrix
+#     inheritance_report['autosomal']['imprinted'] = {}
+#     inheritance_report['autosomal']['imprinted']['child_het'] = aff_matrix
+#     inheritance_report['autosomal']['imprinted']['child_hom'] = aff_matrix
+#
+#     inheritance_report['allosomal']['hemizygous'] = {}
+#     inheritance_report['allosomal']['hemizygous']['child_het'] = aff_matrix
+#     inheritance_report['allosomal']['hemizygous']['child_hemi'] = aff_matrix
+#     inheritance_report['allosomal']['hemizygous']['child_hom'] = aff_matrix
+#     inheritance_report['allosomal']['X-linked_dominant'] = {}
+#     inheritance_report['allosomal']['X-linked_dominant']['child_het'] = aff_matrix
+#     inheritance_report['allosomal']['X-linked_dominant']['child_hemi'] = aff_matrix
+#     inheritance_report['allosomal']['X-linked_dominant']['child_hom'] = aff_matrix
+#     inheritance_report['allosomal']['X-linked_over_dominant'] = {}
+#     inheritance_report['allosomal']['X-linked_over_dominant']['child_het'] = aff_matrix
+#     inheritance_report['allosomal']['X-linked_over_dominant']['child_hemi'] = aff_matrix
+#     inheritance_report['allosomal']['X-linked_over_dominant']['child_hom'] = aff_matrix
+#
+#     return inheritance_report
