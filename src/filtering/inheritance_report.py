@@ -1,5 +1,7 @@
 """copyright"""
 
+import copy
+
 # create inheritance report and populate for matrix creation for all
 # combinations of parent and child gt, affected status and gene mode
 
@@ -22,12 +24,12 @@ def create_blank_inheritance_report():
 
     aff_matrix = {
         'dad_unaffected':{
-            'mum_unaffected':gt_matrix.copy(),
-            'mum_affected':gt_matrix.copy()
+            'mum_unaffected':copy.deepcopy(gt_matrix),
+            'mum_affected':copy.deepcopy(gt_matrix)
         },
         'dad_affected':{
-            'mum_unaffected':gt_matrix.copy(),
-            'mum_affected':gt_matrix.copy()
+            'mum_unaffected':copy.deepcopy(gt_matrix),
+            'mum_affected':copy.deepcopy(gt_matrix)
         }
     }
 
@@ -35,30 +37,30 @@ def create_blank_inheritance_report():
     inheritance_report['allosomal'] = {}
 
     inheritance_report['autosomal']['biallelic'] = {}
-    inheritance_report['autosomal']['biallelic']['child_het'] = aff_matrix.copy()
-    inheritance_report['autosomal']['biallelic']['child_hom'] = aff_matrix.copy()
+    inheritance_report['autosomal']['biallelic']['child_het'] = copy.deepcopy(aff_matrix)
+    inheritance_report['autosomal']['biallelic']['child_hom'] = copy.deepcopy(aff_matrix)
     inheritance_report['autosomal']['monoallelic'] = {}
-    inheritance_report['autosomal']['monoallelic']['child_het'] = aff_matrix.copy()
-    inheritance_report['autosomal']['monoallelic']['child_hom'] = aff_matrix.copy()
+    inheritance_report['autosomal']['monoallelic']['child_het'] = copy.deepcopy(aff_matrix)
+    inheritance_report['autosomal']['monoallelic']['child_hom'] = copy.deepcopy(aff_matrix)
     inheritance_report['autosomal']['mosaic'] = {}
-    inheritance_report['autosomal']['mosaic']['child_het'] = aff_matrix.copy()
-    inheritance_report['autosomal']['mosaic']['child_hom'] = aff_matrix.copy()
+    inheritance_report['autosomal']['mosaic']['child_het'] = copy.deepcopy(aff_matrix)
+    inheritance_report['autosomal']['mosaic']['child_hom'] = copy.deepcopy(aff_matrix)
     inheritance_report['autosomal']['imprinted'] = {}
-    inheritance_report['autosomal']['imprinted']['child_het'] = aff_matrix.copy()
-    inheritance_report['autosomal']['imprinted']['child_hom'] = aff_matrix.copy()
+    inheritance_report['autosomal']['imprinted']['child_het'] = copy.deepcopy(aff_matrix)
+    inheritance_report['autosomal']['imprinted']['child_hom'] = copy.deepcopy(aff_matrix)
 
     inheritance_report['allosomal']['hemizygous'] = {}
-    inheritance_report['allosomal']['hemizygous']['child_het'] = aff_matrix.copy()
-    inheritance_report['allosomal']['hemizygous']['child_hemi'] = aff_matrix.copy()
-    inheritance_report['allosomal']['hemizygous']['child_hom'] = aff_matrix.copy()
+    inheritance_report['allosomal']['hemizygous']['child_het'] = copy.deepcopy(aff_matrix)
+    inheritance_report['allosomal']['hemizygous']['child_hemi'] = copy.deepcopy(aff_matrix)
+    inheritance_report['allosomal']['hemizygous']['child_hom'] = copy.deepcopy(aff_matrix)
     inheritance_report['allosomal']['X-linked_dominant'] = {}
-    inheritance_report['allosomal']['X-linked_dominant']['child_het'] = aff_matrix.copy()
-    inheritance_report['allosomal']['X-linked_dominant']['child_hemi'] = aff_matrix.copy()
-    inheritance_report['allosomal']['X-linked_dominant']['child_hom'] = aff_matrix.copy()
+    inheritance_report['allosomal']['X-linked_dominant']['child_het'] = copy.deepcopy(aff_matrix)
+    inheritance_report['allosomal']['X-linked_dominant']['child_hemi'] = copy.deepcopy(aff_matrix)
+    inheritance_report['allosomal']['X-linked_dominant']['child_hom'] = copy.deepcopy(aff_matrix)
     inheritance_report['allosomal']['X-linked_over_dominant'] = {}
-    inheritance_report['allosomal']['X-linked_over_dominant']['child_het'] = aff_matrix.copy()
-    inheritance_report['allosomal']['X-linked_over_dominant']['child_hemi'] = aff_matrix.copy()
-    inheritance_report['allosomal']['X-linked_over_dominant']['child_hom'] = aff_matrix.copy()
+    inheritance_report['allosomal']['X-linked_over_dominant']['child_het'] = copy.deepcopy(aff_matrix)
+    inheritance_report['allosomal']['X-linked_over_dominant']['child_hemi'] = copy.deepcopy(aff_matrix)
+    inheritance_report['allosomal']['X-linked_over_dominant']['child_hom'] = copy.deepcopy(aff_matrix)
 
     return inheritance_report
 
@@ -70,7 +72,7 @@ def populate_inheritance_report(inheritance_report, chromtype, mode, child_gt, m
         elif child_gt == '1/1':
             child_geno = 'child_hom'
         else:
-            print("Error - unrecocgised child GT")
+            print("Error - unrecognised child GT")
             exit(1)
 
         if mum_aff == True:
