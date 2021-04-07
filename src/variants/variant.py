@@ -15,8 +15,8 @@ class Variant(object):
 
         self.set_genotype()
         self.standardise_chromosome()
-        # self.set_inheritance_type()
         self.parse_hgnc_id()
+
 
     def __eq__(self, other):
         return self.chrom == other.chrom and \
@@ -28,6 +28,11 @@ class Variant(object):
         '''ensure chromosome is 1-22,X,Y'''
         if self.chrom.startswith('Chr') or self.chrom.startswith('chr'):
             self.chrom = self.chrom[3:]
+
+    # def standardise_gt(self):
+    #     '''standardise format of gt to always use / and have lowest number
+    #     allele first'''
+
 
     def parse_hgnc_id(self):
         '''strip HGNC: from hgnc_id'''

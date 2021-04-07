@@ -7,6 +7,10 @@ from variants.variant import Variant
 class SNV(Variant):
     """class for SNVs"""
 
+    def __init__(self, vardata):
+        super().__init__(vardata)
+        self.standardise_gt()
+
     def __repr__(self):
         # return str(self.__dict__)
         return 'SNV(chrom="{}", pos="{}", ref="{}", alt="{}", consequence="{}", ' \
@@ -35,6 +39,15 @@ class SNV(Variant):
             self.inheritance_type,
             self.triogenotype)
 
+    def standardise_gt(self):
+        '''Reformat gt to ensure that lowest number allele is first and that
+        the separater is / '''
+        newgt = self.gt
+        newgt = newgt.replace('|', '/')
+        gtsplit = list(newgt)
+        if int(gtsplit[0]) > int(gtsplit[2]):
+            newgt = gtsplit[2] + "/" + gtsplit[0]
+        self.gt = newgt
 
     def set_genotype(self):
         '''converts genotype to 0/1/2'''
