@@ -2,177 +2,111 @@
 
 import logging
 
-from filtering.inheritance_autosomal import autosomal_no_parents
-from filtering.inheritance_autosomal import autosomal_both_parents
-from filtering.inheritance_autosomal import autosomal_single_parent
-from filtering.inheritance_allosomal import allosomal_no_parents
-from filtering.inheritance_allosomal import allosomal_both_parents
-from filtering.inheritance_allosomal import allosomal_single_parent
-from filtering.compound_hets import screen_compound_hets
-from filtering.inheritance_report import create_blank_inheritance_report
+from filtering.inheritance_autosomal import AutosomalFilter
+from filtering.inheritance_allosomal import AllosomalFilter
+from filtering.compound_hets import CompoundHetScreen
+from filtering.inheritance_report import InheritanceReport
 
+class InheritanceFiltering(object):
 
-def inheritance_filter(variants_per_gene, family, genes, regions,
-                       trusted_variants):
-    # Autosomal without parents
-    # Autosomal with parents
-    #   Heterozygous
-    #   Homozygous
-    # Autosomal with one parent
-    # Allosomal without parents
-    # Allosomal with parents
-    #   Heterozygous
-    #   Homozygous
-    # Allosomal with one parent
-    # Identification of compound hets,
+    def __init__(self, variants_per_gene, family, genes, regions, trusted_variants):
+        self.variants_per_gene = variants_per_gene
+        self.family = family
+        self.genes = genes
+        self.regions = regions
+        self.trusted_variants = trusted_variants
+        self.parents = None
 
-    candidate_variants = {}
-    candidate_variants['single_variants'] = {}
-    candidate_variants['compound_hets'] = {}
+    def inheritance_filter(self):
 
-    # inheritance report gives data to populate a matrix for every possible
-    # combination of proband and parent GT and affected status for each mode of
-    # inheritance. Some variants will be counted twice (genes which are both
-    # mono and biallelic). Split into X and autosome
-    inheritance_report = create_blank_inheritance_report()
+        candidate_variants = {}
+        candidate_variants['single_variants'] = {}
+        candidate_variants['compound_hets'] = {}
 
-    lof_cqs = ['transcript_ablation', 'splice_donor_variant', 'stop_lost',
-               'splice_acceptor_variant', 'stop_gained', 'frameshift_variant',
-               'start_lost']
+        # inheritance report gives data to populate a matrix for every possible
+        # combination of proband and parent GT and affected status for each mode of
+        # inheritance. Some variants will be counted twice (genes which are both
+        # mono and biallelic). Split into X and autosome
+        # inheritance_report = create_blank_inheritance_report()
+        Inhreport = InheritanceReport()
 
-    parents = ''
-    if family.has_both_parents():
-        parents = 'both'
-    elif family.has_no_parents():
-        parents = 'none'
-    elif family.has_dad():
-        parents = 'dad_only'
-    elif family.has_mum():
-        parents = 'mum_only'
-    else:
-        print(
-            "Error: should not get here as family must either have both, one \
-             or no parents")
-        logging.error("Can't calculate inheritance type - family error")
-        exit(1)
+        # lof_cqs = ['transcript_ablation', 'splice_donor_variant', 'stop_lost',
+        #            'splice_acceptor_variant', 'stop_gained', 'frameshift_variant',
+        #            'start_lost']
 
-    if genes:
-        inheritance_filter_genes(variants_per_gene, family, genes, parents,
-                                 candidate_variants, inheritance_report,
-                                 lof_cqs)
-
-    if regions:
-        # todo filtering for regions
-        pass
-
-    if trusted_variants:
-        # todo filtering for trusted variants
-        pass
-
-    screen_compound_hets(candidate_variants, family)
-    return candidate_variants, inheritance_report
-
-def inheritance_filter_genes(variants_per_gene, family, genes, parents, candidate_variants, inheritance_report, lof_cqs):
-    # inheritance filters for use with a gene list
-    for hgncid in variants_per_gene.keys():
-        if hgncid in genes.keys():
-            if genes[hgncid]['chr'] in ['X', 'Y']:
-                if parents == 'both':
-                    allosomal_both_parents(hgncid, genes[hgncid],
-                                           variants_per_gene[hgncid],
-                                           family, candidate_variants,
-                                           inheritance_report,
-                                           lof_cqs)
-                elif parents == 'none':
-                    allosomal_no_parents(hgncid, genes[hgncid],
-                                         variants_per_gene[hgncid],
-                                         candidate_variants, inheritance_report,
-                                         lof_cqs)
-                else:
-                    allosomal_single_parent(hgncid, genes[hgncid],
-                                            variants_per_gene[hgncid],
-                                            family, candidate_variants,
-                                            inheritance_report,
-                                            lof_cqs)
-            else:
-                if parents == 'both':
-                    autosomal_both_parents(hgncid, genes[hgncid],
-                                           variants_per_gene[hgncid],
-                                           family, candidate_variants,
-                                           inheritance_report,
-                                           lof_cqs)
-                elif parents == 'none':
-                    autosomal_no_parents(hgncid, genes[hgncid],
-                                         variants_per_gene[hgncid],
-                                         candidate_variants, inheritance_report,
-                                         lof_cqs)
-                else:
-                    autosomal_single_parent(hgncid, genes[hgncid],
-                                            variants_per_gene[hgncid],
-                                            family, candidate_variants,
-                                            inheritance_report,
-                                            lof_cqs)
+        if self.family.has_both_parents():
+            self.parents = 'both'
+        elif self.family.has_no_parents():
+            self.parents = 'none'
+        elif self.family.has_dad():
+            self.parents = 'dad_only'
+        elif self.family.has_mum():
+            self.parents = 'mum_only'
         else:
-            for v in variants_per_gene[hgncid].keys():
-                logging.info(
-                    v + " gene not in DDG2P: " +
-                    variants_per_gene[hgncid][v]['child'].symbol)
+            print(
+                "Error: should not get here as family must either have both, one \
+                 or no parents")
+            logging.error("Can't calculate inheritance type - family error")
+            exit(1)
 
-# def create_blank_inheritance_report():
-#     # create a blank report dict to report variants observed in all combinations
-#     # of trio genotype, affected status and gene mode
-#     inheritance_report = {}
-#
-#     gt_matrix = {
-#         'dad_0/0_mum_0/0': 0,
-#         'dad_0/0_mum_0/1': 0,
-#         'dad_0/0_mum_1/1': 0,
-#         'dad_0/1_mum_0/0': 0,
-#         'dad_0/1_mum_0/1': 0,
-#         'dad_0/1_mum_1/1': 0,
-#         'dad_1/1_mum_0/0': 0,
-#         'dad_1/1_mum_0/1': 0,
-#         'dad_1/1_mum_1/1': 0
-#     }
-#
-#     aff_matrix = {
-#         'dad_unaffected':{
-#             'mum_unaffected':gt_matrix,
-#             'mum_affected':gt_matrix
-#         },
-#         'dad_affected':{
-#             'mum_unaffected':gt_matrix,
-#             'mum_affected':gt_matrix
-#         }
-#     }
-#
-#     inheritance_report['autosomal'] = {}
-#     inheritance_report['allosomal'] = {}
-#
-#     inheritance_report['autosomal']['biallelic'] = {}
-#     inheritance_report['autosomal']['biallelic']['child_het'] = aff_matrix
-#     inheritance_report['autosomal']['biallelic']['child_hom'] = aff_matrix
-#     inheritance_report['autosomal']['monoallelic'] = {}
-#     inheritance_report['autosomal']['monoallelic']['child_het'] = aff_matrix
-#     inheritance_report['autosomal']['monoallelic']['child_hom'] = aff_matrix
-#     inheritance_report['autosomal']['mosaic'] = {}
-#     inheritance_report['autosomal']['mosaic']['child_het'] = aff_matrix
-#     inheritance_report['autosomal']['mosaic']['child_hom'] = aff_matrix
-#     inheritance_report['autosomal']['imprinted'] = {}
-#     inheritance_report['autosomal']['imprinted']['child_het'] = aff_matrix
-#     inheritance_report['autosomal']['imprinted']['child_hom'] = aff_matrix
-#
-#     inheritance_report['allosomal']['hemizygous'] = {}
-#     inheritance_report['allosomal']['hemizygous']['child_het'] = aff_matrix
-#     inheritance_report['allosomal']['hemizygous']['child_hemi'] = aff_matrix
-#     inheritance_report['allosomal']['hemizygous']['child_hom'] = aff_matrix
-#     inheritance_report['allosomal']['X-linked_dominant'] = {}
-#     inheritance_report['allosomal']['X-linked_dominant']['child_het'] = aff_matrix
-#     inheritance_report['allosomal']['X-linked_dominant']['child_hemi'] = aff_matrix
-#     inheritance_report['allosomal']['X-linked_dominant']['child_hom'] = aff_matrix
-#     inheritance_report['allosomal']['X-linked_over_dominant'] = {}
-#     inheritance_report['allosomal']['X-linked_over_dominant']['child_het'] = aff_matrix
-#     inheritance_report['allosomal']['X-linked_over_dominant']['child_hemi'] = aff_matrix
-#     inheritance_report['allosomal']['X-linked_over_dominant']['child_hom'] = aff_matrix
-#
-#     return inheritance_report
+        if self.genes:
+            self.inheritance_filter_genes(candidate_variants, Inhreport)
+
+        if self.regions:
+            # todo filtering for regions
+            pass
+
+        if self.trusted_variants:
+            # todo filtering for trusted variants
+            pass
+
+        Compoundhets = CompoundHetScreen(candidate_variants, self.family)
+        screened_candidate_variants = Compoundhets.screen_compound_hets()
+        # screen_compound_hets(candidate_variants, self.family)
+
+        return screened_candidate_variants, Inhreport.inheritance_report
+
+    def inheritance_filter_genes(self, candidate_variants, Inhreport):
+        # inheritance filters for use with a gene list
+        for hgncid in self.variants_per_gene.keys():
+            if hgncid in self.genes.keys():
+                if self.genes[hgncid]['chr'] in ['X', 'Y']:
+                    Allosomalfiltering = AllosomalFilter(self, candidate_variants, Inhreport, hgncid)
+                    Allosomalfiltering.allosomal_filter()
+                    # if self.parents == 'both':
+                    #     allosomal_both_parents(hgncid, self.genes[hgncid],
+                    #                            self.variants_per_gene[hgncid],
+                    #                            self.family, candidate_variants,
+                    #                            inheritance_report)
+                    # elif self.parents == 'none':
+                    #     allosomal_no_parents(hgncid, self.genes[hgncid],
+                    #                          self.variants_per_gene[hgncid],
+                    #                          candidate_variants, inheritance_report)
+                    # else:
+                    #     allosomal_single_parent(hgncid, self.genes[hgncid],
+                    #                             self.variants_per_gene[hgncid],
+                    #                             self.family, candidate_variants,
+                    #                             inheritance_report)
+                else:
+                    Autosomalfiltering = AutosomalFilter(self, candidate_variants, Inhreport, hgncid)
+                    Autosomalfiltering.autosomal_filter()
+                    # if self.parents == 'both':
+                    #     autosomal_both_parents(hgncid, self.genes[hgncid],
+                    #                            self.variants_per_gene[hgncid],
+                    #                            self.family, candidate_variants,
+                    #                            inheritance_report)
+                    # elif self.parents == 'none':
+                    #     autosomal_no_parents(hgncid, self.genes[hgncid],
+                    #                          self.variants_per_gene[hgncid],
+                    #                          self.candidate_variants, inheritance_report)
+                    # else:
+                    #     autosomal_single_parent(hgncid, self.genes[hgncid],
+                    #                             self.variants_per_gene[hgncid],
+                    #                             self.family, candidate_variants,
+                    #                             inheritance_report)
+            else:
+                for v in self.variants_per_gene[hgncid].keys():
+                    logging.info(
+                        v + " gene not in DDG2P: " +
+                        self.variants_per_gene[hgncid][v]['child'].symbol)
+
