@@ -3,8 +3,8 @@ copyright
 """
 
 from file_loading.load_genes_and_regions import load_genes
-from file_loading.loadvcfs import load_variants
-from variants.triogenotype import add_trio_genotypes
+from file_loading.load_vcfs import load_variants
+from variants.trio_genotype import add_trio_genotypes
 from filtering.preinheritance_filtering import PreInheritanceFiltering
 from filtering.inheritance_filtering import InheritanceFiltering
 from filtering.postinheritance_filter import PostInheritanceFiltering
@@ -54,12 +54,12 @@ class Filter(object):
         add_trio_genotypes(self.family, variants)
 
         #preinheritance filters
-        Preinheritancefilter = PreInheritanceFiltering(variants)
-        variants_per_gene = Preinheritancefilter.preinheritance_filter()
+        preinheritancefilter = PreInheritanceFiltering(variants)
+        variants_per_gene = preinheritancefilter.preinheritance_filter()
 
         #inheritance filters
-        Inheritancefilter = InheritanceFiltering(variants_per_gene, self.family, genes, regions, trusted_variants)
-        candidate_variants, inheritance_report = Inheritancefilter.inheritance_filter()
+        inheritancefilter = InheritanceFiltering(variants_per_gene, self.family, genes, regions, trusted_variants)
+        candidate_variants, inheritance_report = inheritancefilter.inheritance_filter()
         # candidate_variants, inheritance_report = inheritance_filter(variants_per_gene, self.family, genes, regions, trusted_variants)
         # import pprint as pp
         # pp.pprint(inheritance_report)
@@ -67,8 +67,8 @@ class Filter(object):
         # exit(0)
 
         #post inheritance filters
-        Postinheritancefilter = PostInheritanceFiltering(candidate_variants, self.family)
-        filtered_candidate_variants = Postinheritancefilter.postinheritance_filter()
+        postinheritancefilter = PostInheritanceFiltering(candidate_variants, self.family)
+        filtered_candidate_variants = postinheritancefilter.postinheritance_filter()
 
         # print(candidate_variants)
         # print(filtered_candidate_variants)

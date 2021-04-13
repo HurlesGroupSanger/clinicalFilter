@@ -4,7 +4,7 @@ from tests.test_utils import create_test_snv
 from tests.test_utils import create_test_person
 from tests.test_utils import create_test_family
 
-from variants.triogenotype import add_trio_genotypes
+from variants.trio_genotype import add_trio_genotypes
 
 
 class TestTrioGenotypes(unittest.TestCase):

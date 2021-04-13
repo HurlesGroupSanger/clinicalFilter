@@ -28,7 +28,7 @@ class InheritanceFiltering(object):
         # inheritance. Some variants will be counted twice (genes which are both
         # mono and biallelic). Split into X and autosome
         # inheritance_report = create_blank_inheritance_report()
-        Inhreport = InheritanceReport()
+        inhreport = InheritanceReport()
 
         # lof_cqs = ['transcript_ablation', 'splice_donor_variant', 'stop_lost',
         #            'splice_acceptor_variant', 'stop_gained', 'frameshift_variant',
@@ -50,7 +50,7 @@ class InheritanceFiltering(object):
             exit(1)
 
         if self.genes:
-            self.inheritance_filter_genes(candidate_variants, Inhreport)
+            self.inheritance_filter_genes(candidate_variants, inhreport)
 
         if self.regions:
             # todo filtering for regions
@@ -60,19 +60,19 @@ class InheritanceFiltering(object):
             # todo filtering for trusted variants
             pass
 
-        Compoundhets = CompoundHetScreen(candidate_variants, self.family)
-        screened_candidate_variants = Compoundhets.screen_compound_hets()
+        compoundhets = CompoundHetScreen(candidate_variants, self.family)
+        screened_candidate_variants = compoundhets.screen_compound_hets()
         # screen_compound_hets(candidate_variants, self.family)
 
-        return screened_candidate_variants, Inhreport.inheritance_report
+        return screened_candidate_variants, inhreport.inheritance_report
 
     def inheritance_filter_genes(self, candidate_variants, Inhreport):
         # inheritance filters for use with a gene list
         for hgncid in self.variants_per_gene.keys():
             if hgncid in self.genes.keys():
                 if self.genes[hgncid]['chr'] in ['X', 'Y']:
-                    Allosomalfiltering = AllosomalFilter(self, candidate_variants, Inhreport, hgncid)
-                    Allosomalfiltering.allosomal_filter()
+                    allosomalfiltering = AllosomalFilter(self, candidate_variants, Inhreport, hgncid)
+                    allosomalfiltering.allosomal_filter()
                     # if self.parents == 'both':
                     #     allosomal_both_parents(hgncid, self.genes[hgncid],
                     #                            self.variants_per_gene[hgncid],
@@ -88,8 +88,8 @@ class InheritanceFiltering(object):
                     #                             self.family, candidate_variants,
                     #                             inheritance_report)
                 else:
-                    Autosomalfiltering = AutosomalFilter(self, candidate_variants, Inhreport, hgncid)
-                    Autosomalfiltering.autosomal_filter()
+                    autosomalfiltering = AutosomalFilter(self, candidate_variants, Inhreport, hgncid)
+                    autosomalfiltering.autosomal_filter()
                     # if self.parents == 'both':
                     #     autosomal_both_parents(hgncid, self.genes[hgncid],
                     #                            self.variants_per_gene[hgncid],

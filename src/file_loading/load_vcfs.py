@@ -150,10 +150,10 @@ def readvcf(filename, regions, sex):
         else:
             vdata['denovo_indel'] = False
 
-        Var = SNV
+        var = SNV
         if alt in ['<DEL>', '<DUP>']:
-            Var = CNV
-        vars[varid] = Var(vdata)
+            var = CNV
+        vars[varid] = var(vdata)
 
     logging.info("Variants loaded from " + filename)
 

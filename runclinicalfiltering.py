@@ -48,15 +48,15 @@ def main():
     variants_per_family = {}
     inheritance_reports_per_family = {}
     for family in families.keys():
-        Varfilter = Filter(families[family], args.known_genes, args.known_regions, args.trusted_variants, args.outdir)
-        filtered_variants, inheritance_report = Varfilter.filter_trio()
+        varfilter = Filter(families[family], args.known_genes, args.known_regions, args.trusted_variants, args.outdir)
+        filtered_variants, inheritance_report = varfilter.filter_trio()
 
         variants_per_family[family] = filtered_variants
         inheritance_reports_per_family[family] = inheritance_report
 
     # print(variants_per_family)
-    import pprint as pp
-    pp.pprint(inheritance_reports_per_family)
+    # import pprint as pp
+    # pp.pprint(inheritance_reports_per_family)
 
     create_output(families, variants_per_family, inheritance_reports_per_family, args.outdir)
     exit(0)

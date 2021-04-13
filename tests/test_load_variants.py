@@ -2,7 +2,7 @@ import unittest
 import tempfile
 
 from variants.snv import SNV
-from file_loading.loadvcfs import readvcf
+from file_loading.load_vcfs import readvcf
 
 
 class TestLoadVariants(unittest.TestCase):
