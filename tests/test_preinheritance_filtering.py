@@ -1,7 +1,7 @@
 import unittest
 
 from tests.test_utils import create_test_snv
-from filtering.preinheritance_filtering import preinheritance_filter
+from filtering.preinheritance_filtering import PreInheritanceFiltering
 
 class TestPreInheritanceFilter(unittest.TestCase):
 
@@ -21,7 +21,8 @@ class TestPreInheritanceFilter(unittest.TestCase):
         testvar = create_test_snv(self.vardata)
         variants = {'child': {'1_100000_A_G': testvar},
                     'mum': {}, 'dad': {}}
-        variants_per_gene = preinheritance_filter(variants)
+        preinheritancefilter = PreInheritanceFiltering(variants)
+        variants_per_gene = preinheritancefilter.preinheritance_filter()
         self.assertEqual(variants_per_gene, {'123': {'1_100000_A_G': {
             'child': variants['child']['1_100000_A_G']}}})
 
@@ -29,14 +30,16 @@ class TestPreInheritanceFilter(unittest.TestCase):
         testvar = create_test_snv(self.vardata)
         variants = {'child': {'1_100000_A_G': testvar},
                     'mum': {}, 'dad': {}}
-        variants_per_gene = preinheritance_filter(variants)
+        preinheritancefilter = PreInheritanceFiltering(variants)
+        variants_per_gene = preinheritancefilter.preinheritance_filter()
         self.assertEqual(variants_per_gene, {})
 
         self.vardata['chrom'] = 'X'
         testvar = create_test_snv(self.vardata)
         variants = {'child': {'X_100000_A_G': testvar},
                     'mum': {}, 'dad': {}}
-        variants_per_gene = preinheritance_filter(variants)
+        preinheritancefilter = PreInheritanceFiltering(variants)
+        variants_per_gene = preinheritancefilter.preinheritance_filter()
         self.assertEqual(variants_per_gene, {'123': {'X_100000_A_G': {
             'child': variants['child']['X_100000_A_G']}}})
 
@@ -46,7 +49,8 @@ class TestPreInheritanceFilter(unittest.TestCase):
         testvar = create_test_snv(self.vardata)
         variants = {'child': {'1_100000_A_G': testvar},
                     'mum': {}, 'dad': {}}
-        variants_per_gene = preinheritance_filter(variants)
+        preinheritancefilter = PreInheritanceFiltering(variants)
+        variants_per_gene = preinheritancefilter.preinheritance_filter()
         self.assertEqual(variants_per_gene, {})
 
     def test_cq (self):
@@ -55,14 +59,16 @@ class TestPreInheritanceFilter(unittest.TestCase):
         testvar = create_test_snv(self.vardata)
         variants = {'child': {'1_100000_A_G': testvar},
                     'mum': {}, 'dad': {}}
-        variants_per_gene = preinheritance_filter(variants)
+        preinheritancefilter = PreInheritanceFiltering(variants)
+        variants_per_gene = preinheritancefilter.preinheritance_filter()
         self.assertEqual(variants_per_gene, {})
 
         self.vardata['consequence'] = 'synonymous&missense_variant'
         testvar = create_test_snv(self.vardata)
         variants = {'child': {'1_100000_A_G': testvar},
                     'mum': {}, 'dad': {}}
-        variants_per_gene = preinheritance_filter(variants)
+        preinheritancefilter = PreInheritanceFiltering(variants)
+        variants_per_gene = preinheritancefilter.preinheritance_filter()
         self.assertEqual(variants_per_gene, {'123': {'1_100000_A_G': {
             'child': variants['child']['1_100000_A_G']}}})
 
@@ -72,7 +78,8 @@ class TestPreInheritanceFilter(unittest.TestCase):
         testvar = create_test_snv(self.vardata)
         variants = {'child': {'1_100000_A_G': testvar},
                     'mum': {}, 'dad': {}}
-        variants_per_gene = preinheritance_filter(variants)
+        preinheritancefilter = PreInheritanceFiltering(variants)
+        variants_per_gene = preinheritancefilter.preinheritance_filter()
         self.assertEqual(variants_per_gene, {})
 
 if __name__ == '__main__':

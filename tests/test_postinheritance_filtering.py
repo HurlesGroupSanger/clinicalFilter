@@ -4,7 +4,7 @@ from tests.test_utils import create_test_candidate_vars
 from tests.test_utils import create_test_person
 from tests.test_utils import create_test_family
 
-from filtering.postinheritance_filter import postinheritance_filter
+from filtering.postinheritance_filter import PostInheritanceFiltering
 
 class TestPostInheritanceFilter(unittest.TestCase):
 
@@ -37,9 +37,10 @@ class TestPostInheritanceFilter(unittest.TestCase):
         test_candidate_vars = create_test_candidate_vars(test_single_vars, test_compound_hets)
         test_candidate_vars_copy = test_candidate_vars.copy()
 
-        postinheritance_filter(test_candidate_vars, family)
+        postinheritancefilter = PostInheritanceFiltering(test_candidate_vars, family)
+        filtered_candidate_variants = postinheritancefilter.postinheritance_filter()
 
-        self.assertEqual(test_candidate_vars, test_candidate_vars_copy)
+        self.assertEqual(filtered_candidate_variants, test_candidate_vars_copy)
 
         # modify test variant so that it fails on ddd allele frequency
 
@@ -50,9 +51,11 @@ class TestPostInheritanceFilter(unittest.TestCase):
         test_candidate_vars = create_test_candidate_vars(test_single_vars,
                                                          test_compound_hets)
         test_candidate_vars_empty = create_test_candidate_vars({},{})
-        postinheritance_filter(test_candidate_vars, family)
 
-        self.assertEqual(test_candidate_vars, test_candidate_vars_empty)
+        postinheritancefilter = PostInheritanceFiltering(test_candidate_vars, family)
+        filtered_candidate_variants = postinheritancefilter.postinheritance_filter()
+
+        self.assertEqual(filtered_candidate_variants, test_candidate_vars_empty)
 
         # modify test variant so that it fails on max allele frequency and not ddd
 
@@ -63,9 +66,11 @@ class TestPostInheritanceFilter(unittest.TestCase):
         test_compound_hets = {}
         test_candidate_vars = create_test_candidate_vars(test_single_vars,
                                                          test_compound_hets)
-        postinheritance_filter(test_candidate_vars, family)
 
-        self.assertEqual(test_candidate_vars, test_candidate_vars_empty)
+        postinheritancefilter = PostInheritanceFiltering(test_candidate_vars, family)
+        filtered_candidate_variants = postinheritancefilter.postinheritance_filter()
+
+        self.assertEqual(filtered_candidate_variants, test_candidate_vars_empty)
 
         # modify test variant so that it fails on both max and ddd allele frequency
 
@@ -76,9 +81,11 @@ class TestPostInheritanceFilter(unittest.TestCase):
         test_compound_hets = {}
         test_candidate_vars = create_test_candidate_vars(test_single_vars,
                                                          test_compound_hets)
-        postinheritance_filter(test_candidate_vars, family)
 
-        self.assertEqual(test_candidate_vars, test_candidate_vars_empty)
+        postinheritancefilter = PostInheritanceFiltering(test_candidate_vars, family)
+        filtered_candidate_variants = postinheritancefilter.postinheritance_filter()
+
+        self.assertEqual(filtered_candidate_variants, test_candidate_vars_empty)
 
 
     def test_maf_filter_no_parents(self):
@@ -92,9 +99,10 @@ class TestPostInheritanceFilter(unittest.TestCase):
         test_candidate_vars = create_test_candidate_vars(test_single_vars, test_compound_hets)
         test_candidate_vars_copy = test_candidate_vars.copy()
 
-        postinheritance_filter(test_candidate_vars, family)
+        postinheritancefilter = PostInheritanceFiltering(test_candidate_vars, family)
+        filtered_candidate_variants = postinheritancefilter.postinheritance_filter()
 
-        self.assertEqual(test_candidate_vars, test_candidate_vars_copy)
+        self.assertEqual(filtered_candidate_variants, test_candidate_vars_copy)
 
         # modify test variant so that it fails on ddd allele frequency
 
@@ -105,9 +113,11 @@ class TestPostInheritanceFilter(unittest.TestCase):
         test_candidate_vars = create_test_candidate_vars(test_single_vars,
                                                          test_compound_hets)
         test_candidate_vars_empty = create_test_candidate_vars({},{})
-        postinheritance_filter(test_candidate_vars, family)
 
-        self.assertEqual(test_candidate_vars, test_candidate_vars_empty)
+        postinheritancefilter = PostInheritanceFiltering(test_candidate_vars, family)
+        filtered_candidate_variants = postinheritancefilter.postinheritance_filter()
+
+        self.assertEqual(filtered_candidate_variants, test_candidate_vars_empty)
 
         # modify test variant so that it fails on max allele frequency and not ddd
 
@@ -118,9 +128,11 @@ class TestPostInheritanceFilter(unittest.TestCase):
         test_compound_hets = {}
         test_candidate_vars = create_test_candidate_vars(test_single_vars,
                                                          test_compound_hets)
-        postinheritance_filter(test_candidate_vars, family)
 
-        self.assertEqual(test_candidate_vars, test_candidate_vars_empty)
+        postinheritancefilter = PostInheritanceFiltering(test_candidate_vars, family)
+        filtered_candidate_variants = postinheritancefilter.postinheritance_filter()
+
+        self.assertEqual(filtered_candidate_variants, test_candidate_vars_empty)
 
         # modify test variant so that it fails on both max and ddd allele frequency
 
@@ -131,9 +143,11 @@ class TestPostInheritanceFilter(unittest.TestCase):
         test_compound_hets = {}
         test_candidate_vars = create_test_candidate_vars(test_single_vars,
                                                          test_compound_hets)
-        postinheritance_filter(test_candidate_vars, family)
 
-        self.assertEqual(test_candidate_vars, test_candidate_vars_empty)
+        postinheritancefilter = PostInheritanceFiltering(test_candidate_vars, family)
+        filtered_candidate_variants = postinheritancefilter.postinheritance_filter()
+
+        self.assertEqual(filtered_candidate_variants, test_candidate_vars_empty)
 
 if __name__ == '__main__':
     unittest.main()
