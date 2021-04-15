@@ -34,7 +34,7 @@ class AutosomalFilter(object):
         candidate_variants - output dict
         '''
         variants = self.variants_per_gene[self.hgncid]
-        for v in variants:
+        for v in variants.keys():
 
             mum_genotype = variants[v]['child'].get_mum_genotype()
             dad_genotype = variants[v]['child'].get_mum_genotype()
@@ -80,8 +80,23 @@ class AutosomalFilter(object):
         gene - info about the gene
         variants - all variants in this gene which pass preinheritance filters
         candidate_variants - output dict
+        unlike the families with parents this isn't split into hom/het proband genotypes
         '''
-        pass
+        variants = self.variants_per_gene[self.hgncid]
+
+        for v in variants.keys():
+            for inh in self.gene['mode']:
+                if inh == 'Biallelic':
+                    self.biallelic_no_parents_filter(v, variants[v]['child'])
+                elif inh == 'Monoallelic':
+                    self.monoallelic_no_parents_filter(v, variants[v]['child'])
+                elif inh == 'Mosaic':
+                    self.mosaic_no_parents_filter(v, variants[v]['child'])
+                elif inh == 'Imprinted':
+                    self.imprinted_no_parents_filter(v, variants[v]['child'])
+                else:
+                    logging.info(v + " unknown gene mode " + inh)
+
 
     def autosomal_single_parent(self):
         '''screens variants in autosomes where there is one parent and adds
@@ -267,4 +282,48 @@ class AutosomalFilter(object):
 
     def imprinted_homozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
         pass
+
+    def biallelic_no_parents_filter(self, varid, var):
+
+        if var.genotype == '1':
+            add_compound_het_to_candidates(varid, var, self.hgncid, 'biallelic',
+                                           self.candidate_variants)
+        elif var.genotype == '2':
+            add_single_var_to_candidates(varid, var, self.hgncid, 'biallelic',
+                                         self.candidate_variants)
+        else:
+            logging.info(varid + " failed inheritance filter for biallelic "
+                                 "variant, invalid genotype")
+
+    def monoallelic_no_parents_filter(self, varid,var):
+
+        if var.genotype == '1' or var.genotype == '2':
+            add_single_var_to_candidates(varid, var, self.hgncid, 'monoallelic',
+                                         self.candidate_variants)
+        else:
+            logging.info(varid + " failed inheritance filter for monoallelic "
+                                 "variant, invalid genotype")
+
+    def mosaic_no_parents_filter(self, varid,var):
+
+        if var.genotype == '1' or var.genotype == '2':
+            add_single_var_to_candidates(varid, var, self.hgncid, 'mosaic',
+                                         self.candidate_variants)
+        else:
+            logging.info(varid + " failed inheritance filter for mosaic "
+                                 "variant, invalid genotype")
+
+    def imprinted_no_parents_filter(self, varid,var):
+        # todo will need modification when CNVs (and UPDs) added
+        if var.genotype == '1':
+            add_single_var_to_candidates(varid, var, self.hgncid, 'imprinted',
+                                           self.candidate_variants)
+        elif var.genotype == '2':
+            add_single_var_to_candidates(varid, var, self.hgncid, 'imprinted',
+                                         self.candidate_variants)
+            #todo add flag for CNV here or modify inheritance to include CNV data
+        else:
+            logging.info(varid + " failed inheritance filter for biallelic "
+                                 "variant, invalid genotype")
+
 

@@ -4,7 +4,7 @@ from tests.test_utils import create_test_candidate_vars
 from tests.test_utils import create_test_person
 from tests.test_utils import create_test_family
 
-from filtering.inheritance_filtering import inheritance_filter
+from filtering.inheritance_filtering import InheritanceFiltering
 
 class TestAutosomalInheritanceFilter(unittest.TestCase):
 
@@ -33,6 +33,50 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
 
 
     def test_biallelic_heterozygous_parents_filter(self):
-        biallelic_heterozygous_parents_filter(varid, var, family, hgncid,
-                                              candidate_variants,
-                                              inheritance_report)
+        pass
+
+    def test_biallelic_homozygous_parents_filter(self):
+        pass
+
+    def test_monoallelic_heterozygous_parents_filter(self):
+        pass
+
+    def test_monoallelic_homozygous_parents_filter(self):
+        pass
+
+    def test_imprinted_heterozygous_parents_filter(self):
+        pass
+
+    def test_imprinted_homozygous_parents_filter(self):
+        pass
+
+    def test_mosaic_heterozygous_parents_filter(self):
+        pass
+
+    def test_mosaic_homozygous_parents_filter(self):
+        pass
+
+    def test_biallelic_heterozygous_no_parents_filter(self):
+        pass
+
+    def test_biallelic_homozygous_no_parents_filter(self):
+        pass
+
+    def test_monoallelic_heterozygous_no_parents_filter(self):
+        pass
+
+    def test_monoallelic_homozygous_no_parents_filter(self):
+        pass
+
+    def test_imprinted_heterozygous_no_parents_filter(self):
+        pass
+
+    def test_imprinted_homozygous_no_parents_filter(self):
+        pass
+
+    def test_mosaic_heterozygous_no_parents_filter(self):
+        pass
+
+    def test_mosaic_homozygous_no_parents_filter(self):
+        pass
+
