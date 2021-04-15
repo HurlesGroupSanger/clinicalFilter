@@ -14,6 +14,7 @@ class Person(object):
         self.dad_id = dad_id
         self.vcf_path = path
         self.sex = sex
+        self.X_count = self.get_X_count()
         #convert affected to true/false
         if affected == '2':
             self.affected = True
@@ -24,9 +25,14 @@ class Person(object):
 
     def __repr__(self):
         return 'Person(person_id="{}", dad_id="{}", mum_id="{}", sex="{}", ' \
-               'affected="{}", path="{}")'.format(self.get_id(), \
+               'X_count="{}", affected="{}", path="{}")'.format(self.get_id(), \
                 self.get_dad_id(), self.get_mum_id(), self.get_sex(), \
-                self.get_affected_status(), self.get_vcf_path())
+                self.get_X_count(), self.get_affected_status(), self.get_vcf_path())
+
+    def get_X_count(self):
+        '''get X chromosome count for inheritance filters'''
+        X_count = self.sex.count("X")
+        return X_count
 
     def get_id(self):
         """

@@ -62,7 +62,6 @@ class InheritanceFiltering(object):
 
         compoundhets = CompoundHetScreen(candidate_variants, self.family)
         screened_candidate_variants = compoundhets.screen_compound_hets()
-        # screen_compound_hets(candidate_variants, self.family)
 
         return screened_candidate_variants, inhreport.inheritance_report
 
@@ -73,37 +72,9 @@ class InheritanceFiltering(object):
                 if self.genes[hgncid]['chr'] in ['X', 'Y']:
                     allosomalfiltering = AllosomalFilter(self, candidate_variants, Inhreport, hgncid)
                     allosomalfiltering.allosomal_filter()
-                    # if self.parents == 'both':
-                    #     allosomal_both_parents(hgncid, self.genes[hgncid],
-                    #                            self.variants_per_gene[hgncid],
-                    #                            self.family, candidate_variants,
-                    #                            inheritance_report)
-                    # elif self.parents == 'none':
-                    #     allosomal_no_parents(hgncid, self.genes[hgncid],
-                    #                          self.variants_per_gene[hgncid],
-                    #                          candidate_variants, inheritance_report)
-                    # else:
-                    #     allosomal_single_parent(hgncid, self.genes[hgncid],
-                    #                             self.variants_per_gene[hgncid],
-                    #                             self.family, candidate_variants,
-                    #                             inheritance_report)
                 else:
                     autosomalfiltering = AutosomalFilter(self, candidate_variants, Inhreport, hgncid)
                     autosomalfiltering.autosomal_filter()
-                    # if self.parents == 'both':
-                    #     autosomal_both_parents(hgncid, self.genes[hgncid],
-                    #                            self.variants_per_gene[hgncid],
-                    #                            self.family, candidate_variants,
-                    #                            inheritance_report)
-                    # elif self.parents == 'none':
-                    #     autosomal_no_parents(hgncid, self.genes[hgncid],
-                    #                          self.variants_per_gene[hgncid],
-                    #                          self.candidate_variants, inheritance_report)
-                    # else:
-                    #     autosomal_single_parent(hgncid, self.genes[hgncid],
-                    #                             self.variants_per_gene[hgncid],
-                    #                             self.family, candidate_variants,
-                    #                             inheritance_report)
             else:
                 for v in self.variants_per_gene[hgncid].keys():
                     logging.info(
