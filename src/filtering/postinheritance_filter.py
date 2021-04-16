@@ -16,6 +16,7 @@ class PostInheritanceFiltering(object):
     def maf_filter(self):
         '''filter non-Biallelic vairants with more stringent MAF thresholds'''
         for v in list(self.candidate_variants['single_variants'].keys()):
+            # print(self.candidate_variants['single_variants'][v]['variant'].chrom)
             if self.candidate_variants['single_variants'][v]['mode'] != 'Biallelic':
                 ddd_af = self.candidate_variants['single_variants'][v]['variant'].ddd_af
                 max_af = self.candidate_variants['single_variants'][v]['variant'].max_af

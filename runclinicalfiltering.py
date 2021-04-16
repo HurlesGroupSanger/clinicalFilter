@@ -54,7 +54,7 @@ def main():
         variants_per_family[family] = filtered_variants
         inheritance_reports_per_family[family] = inheritance_report
 
-    # print(variants_per_family)
+    print(variants_per_family)
     # import pprint as pp
     # pp.pprint(inheritance_reports_per_family)
 

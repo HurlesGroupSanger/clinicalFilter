@@ -12,11 +12,9 @@ class Variant(object):
         self.genotype = None
         self.inheritance_type = None
         self.triogenotype = None
-
         self.set_genotype()
         self.standardise_chromosome()
         self.parse_hgnc_id()
-
 
     def __eq__(self, other):
         return self.chrom == other.chrom and \

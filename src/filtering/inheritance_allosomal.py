@@ -51,15 +51,13 @@ class AllosomalFilter(object):
         '''screens variants in X/Y where there are no parents and adds candidates
         to candidate_variants
         '''
-        print('here')
         variants = self.variants_per_gene[self.hgncid]
         for v in variants.keys():
             genotype = self.get_variant_genotype(variants[v]['child'], v)
             if genotype is None:
                 continue
             for inh in self.gene['mode']:
-                print('here1')
-                add_single_var_to_candidates(v, variants[v], self.hgncid, inh,
+                add_single_var_to_candidates(v, variants[v]['child'], self.hgncid, inh,
                                                  self.candidate_variants)
 
     def allosomal_single_parent(self):
