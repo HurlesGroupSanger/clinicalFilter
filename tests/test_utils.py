@@ -5,6 +5,7 @@
 from variants.snv import SNV
 from family.families import Person
 from family.families import Family
+from variants.trio_genotype import add_trio_genotypes
 
 def create_test_person(family_id, person_id, dad_id, mum_id, sex, affected, path):
     person = Person(family_id, person_id, dad_id, mum_id, sex, affected, path)
@@ -25,8 +26,8 @@ def create_test_candidate_vars(single_vars, compound_hets):
     candidates = {'single_variants': {}, 'compound_hets': {}}
 
     for vid in single_vars.keys():
-        Var = SNV
-        var = Var(single_vars[vid]['variant'])
+        variant = SNV
+        var = variant(single_vars[vid]['variant'])
         candidates['single_variants'][vid] = {}
         candidates['single_variants'][vid]['variant'] = var
         candidates['single_variants'][vid]['mode'] = single_vars[vid]['mode']
@@ -40,3 +41,39 @@ def create_test_candidate_vars(single_vars, compound_hets):
             candidates['compound_hets'][gn][cvid]['mode'] = compound_hets[gn][cvid]['mode']
 
     return candidates
+
+def create_test_variants_per_gene(variants, family):
+    '''create variants_per_gene from variant data'''
+    familyvariants = {'child':{}, 'mum':{}, 'dad':{}}
+    variants_per_gene = {}
+    for vid in variants['child'].keys():
+        variant = SNV
+        var = variant(variants['child'][vid])
+        familyvariants['child'][vid] = var
+    for vid in variants['mum'].keys():
+        variant = SNV
+        var = variant(variants['mum'][vid])
+        familyvariants['mum'][vid] = var
+    for vid in variants['dad'].keys():
+        variant = SNV
+        var = variant(variants['dad'][vid])
+        familyvariants['dad'][vid] = var
+    add_trio_genotypes(family, familyvariants)
+
+    for vid in familyvariants['child'].keys():
+        hgncid = familyvariants['child'][vid].hgnc_id
+        if hgncid not in variants_per_gene.keys():
+            variants_per_gene[hgncid] = {}
+        variants_per_gene[hgncid][vid] = {}
+        variants_per_gene[hgncid][vid]['child'] = familyvariants['child'][vid]
+        if vid in familyvariants['mum'].keys():
+            variants_per_gene[hgncid][vid]['mum'] = familyvariants['mum'][
+                vid]
+        if vid in familyvariants['dad'].keys():
+            variants_per_gene[hgncid][vid]['dad'] = familyvariants['dad'][
+                vid]
+
+    return(variants_per_gene)
+
+
+

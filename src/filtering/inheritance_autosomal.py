@@ -8,12 +8,12 @@ from filtering.inheritance_report import InheritanceReport
 
 class AutosomalFilter(object):
 
-    def __init__(self, Inheritancefilter, candidate_variants, inheritance_report, hgncid):
+    def __init__(self, Inheritancefilter, hgncid):
         self.family = Inheritancefilter.family
         self.parents = Inheritancefilter.parents
         self.variants_per_gene = Inheritancefilter.variants_per_gene
-        self.candidate_variants = candidate_variants
-        self.inheritance_report = inheritance_report
+        self.candidate_variants = Inheritancefilter.candidate_variants
+        self.inheritance_report = Inheritancefilter.inhreport
         self.gene = Inheritancefilter.genes[hgncid]
         self.hgncid = hgncid
 
@@ -34,14 +34,22 @@ class AutosomalFilter(object):
         candidate_variants - output dict
         '''
         variants = self.variants_per_gene[self.hgncid]
+
         for v in variants.keys():
 
             mum_genotype = variants[v]['child'].get_mum_genotype()
-            dad_genotype = variants[v]['child'].get_mum_genotype()
+            dad_genotype = variants[v]['child'].get_dad_genotype()
             mum_gt = convert_genotype_to_gt(mum_genotype)
             dad_gt = convert_genotype_to_gt(dad_genotype)
             mum_aff = self.family.mum.affected
             dad_aff = self.family.dad.affected
+            #
+            # print(variants[v]['child'].genotype)
+            # print(mum_gt)
+            # print(dad_gt)
+            # print(mum_aff)
+            # print(dad_aff)
+            # exit(0)
 
             if variants[v]['child'].genotype == '1':
                 #heterozygous
@@ -109,15 +117,15 @@ class AutosomalFilter(object):
         pass
 
     def biallelic_heterozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
-
         # populate_inheritance_report(self.inheritance_report, 'autosomal', 'biallelic', var.gt, mum_gt, dad_gt, mum_aff, dad_aff)
         self.inheritance_report.populate_inheritance_report('autosomal', 'biallelic', var.gt, mum_gt, dad_gt, mum_aff, dad_aff)
 
         vpass = 'n'
         if mum_aff and dad_aff:
-            if not dad_gt == '1/1' and not mum_gt == '1/1':
+            if not (dad_gt == '1/1' and mum_gt == '1/1'):
                 add_compound_het_to_candidates(varid, var, self.hgncid, 'biallelic',
                                            self.candidate_variants)
+                # print(self.candidate_variants)
                 vpass = 'y'
         elif mum_aff and not dad_aff:
             if not dad_gt == '1/1':
@@ -139,6 +147,7 @@ class AutosomalFilter(object):
             logging.info(varid + " failed inheritance filter for heterozygous "
                                  "variant in biallelic gene")
 
+
     def monoallelic_heterozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
 
         # populate_inheritance_report(self.inheritance_report, 'autosomal', 'monoallelic',
@@ -150,7 +159,7 @@ class AutosomalFilter(object):
         vpass = 'n'
 
         if mum_aff and dad_aff:
-            if not dad_gt == '1/1' and not mum_gt == '1/1':
+            if not (dad_gt == '1/1' and mum_gt == '1/1'):
                 add_single_var_to_candidates(varid, var, self.hgncid, 'monoallelic', self.candidate_variants)
                 vpass = 'y'
         elif mum_aff and not dad_aff:
@@ -184,7 +193,7 @@ class AutosomalFilter(object):
         vpass = 'n'
 
         if mum_aff and dad_aff:
-            if not dad_gt == '1/1' and not mum_gt == '1/1':
+            if not (dad_gt == '1/1' and mum_gt == '1/1'):
                 add_single_var_to_candidates(varid, var, self.hgncid, 'mosaic', self.candidate_variants)
                 vpass = 'y'
         elif mum_aff and not dad_aff:

@@ -63,8 +63,9 @@ class Filter(object):
         # candidate_variants, inheritance_report = inheritance_filter(variants_per_gene, self.family, genes, regions, trusted_variants)
         # import pprint as pp
         # pp.pprint(inheritance_report)
-        # print(candidate_variants)
-        # exit(0)
+        print(candidate_variants)
+        print(genes['2516'])
+        exit(0)
 
         #post inheritance filters
         postinheritancefilter = PostInheritanceFiltering(candidate_variants, self.family)

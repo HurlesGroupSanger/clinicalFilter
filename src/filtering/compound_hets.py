@@ -26,6 +26,7 @@ class CompoundHetScreen(object):
                     'variant']
                 var2 = self.candidate_variants['compound_hets'][gn][pair[1]][
                     'variant']
+
                 if var1 != var2:
                     if self.is_compound_pair(pair[0], var1, pair[1], var2):
                         if not gn in compound_het_passes.keys():

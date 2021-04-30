@@ -6,12 +6,12 @@ from utils.utils import add_single_var_to_candidates
 
 class AllosomalFilter(object):
 
-    def __init__(self, Inheritancefilter, candidate_variants, inheritance_report, hgncid):
+    def __init__(self, Inheritancefilter, hgncid):
         self.family = Inheritancefilter.family
         self.parents = Inheritancefilter.parents
         self.variants_per_gene = Inheritancefilter.variants_per_gene
-        self.candidate_variants = candidate_variants
-        self.inheritance_report = inheritance_report
+        self.candidate_variants = Inheritancefilter.candidate_variants
+        self.inheritance_report = Inheritancefilter.inhreport
         self.gene = Inheritancefilter.genes[hgncid]
         self.hgncid = hgncid
         self.proband_X_count = self.family.proband.X_count
