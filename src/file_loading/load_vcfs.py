@@ -8,6 +8,7 @@ import os
 from variants.snv import SNV
 from variants.cnv import CNV
 
+
 def load_variants(family, outdir, regions=None):
     '''get variants in child and parents'''
     proband_vcf = family.proband.get_vcf_path()
@@ -53,7 +54,7 @@ def load_variants(family, outdir, regions=None):
         os.system("rm " + childregionfile)
         os.system("rm " + childsortedregs)
 
-    #remove regions files used for bcftools queries
+    # remove regions files used for bcftools queries
     os.system("rm " + regionfile)
     os.system("rm " + sortedregs)
 
@@ -63,29 +64,40 @@ def load_variants(family, outdir, regions=None):
     variants['dad'] = dad_vars
     return variants
 
+
 def readvcf(filename, regions, sex):
     """
     read vcf files and return a dict of variant objects
     """
     vars = {}
 
-    #get list of info fields in the vcf
+    # get list of info fields in the vcf
     fieldlistcmd = "bcftools view -h " + filename + " z | grep ^##INFO | sed 's/^.*ID=// ; s/,.*//'"
     fieldlist = runcommand(fieldlistcmd)
     fields = fieldlist.split("\n")
 
-    infofields_wanted = ['Consequence', 'Gene', 'SYMBOL', 'Feature', 'CANONICAL',
-                  'MANE', 'HGNC_ID', 'MAX_AF', 'MAX_AF_POPS',
-                  'DDD_AF', 'REVEL', 'PolyPhen', 'Protein_position', 'HGVSc', 'HGVSp']
-    formatfields = ['GT', 'GQ', 'PID', 'AD']
+    # infofields_wanted = ['Consequence', 'Gene', 'SYMBOL', 'Feature', 'CANONICAL',
+    #               'MANE', 'HGNC_ID', 'MAX_AF', 'MAX_AF_POPS',
+    #               'DDD_AF', 'REVEL', 'PolyPhen', 'Protein_position', 'HGVSc', 'HGVSp']
+    # formatfields = ['GT', 'GQ', 'PID', 'AD']
+
+    infofields_wanted = ['Consequence', 'Gene', 'SYMBOL', 'Feature',
+                         'CANONICAL',
+                         'MANE', 'HGNC_ID', 'MAX_AF', 'MAX_AF_POPS',
+                         'DDD_AF', 'DDD_father_AF', 'REVEL', 'PolyPhen',
+                         'Protein_position',
+                         'HGVSc', 'HGVSp', 'DNM_TYPE', 'END', 'SVTYPE', 'SVLEN',
+                         'CNVFILTER']
+    formatfields = ['GT', 'GQ', 'PID', 'AD', 'CIFER_INHERITANCE', 'CN']
 
     # create infostring containing only the fields present
     info_query = []
     for inf in infofields_wanted:
-        if inf in fields:
-            info_query.append("%INFO/" + inf)
-        else:
-            info_query.append("")
+        info_query.append("%INFO/" + inf)
+        # if inf in fields:
+        #     info_query.append("%INFO/" + inf)
+        # else:
+        #     info_query.append("")
 
     infostring = ("\t").join(info_query)
     formatstring = ("\t%").join(formatfields)
@@ -93,11 +105,11 @@ def readvcf(filename, regions, sex):
     if regions is None:
         bcfcmdroot = "bcftools norm -m - " + filename + \
                      " | bcftools view -e 'INFO/MAX_AF>0.005 | FORMAT/GT[0]!=" + \
-                     '"alt"' + "'  | bcftools query -f '%CHROM\t%POS\t%REF\t%ALT{0}\t"
+                     '"alt"' + "'  | bcftools query -u -f '%CHROM\t%POS\t%REF\t%ALT{0}\t"
     else:
         bcfcmdroot = "bcftools norm -m - -R " + regions + " " + filename + \
                      " | bcftools view -e 'INFO/MAX_AF>0.005 | FORMAT/GT[0]!=" + \
-                     '"alt"' + "'  | bcftools query -f '%CHROM\t%POS\t%REF\t%ALT{0}\t"
+                     '"alt"' + "'  | bcftools query -u -f '%CHROM\t%POS\t%REF\t%ALT{0}\t"
 
     bcfcmd = bcfcmdroot + infostring + "[\t%" + formatstring + "]\n'"
     output = runcommand(bcfcmd)
@@ -112,7 +124,7 @@ def readvcf(filename, regions, sex):
         alt = oldata[3]
         if alt == '*':  # get rid of any where alt allele is *
             continue
-        #populate hash with variant data
+        # populate hash with variant data
         varid = ("_").join([oldata[0], oldata[1], oldata[2], alt])
         vdata = {}
         vdata['chrom'] = oldata[0]
@@ -129,26 +141,35 @@ def readvcf(filename, regions, sex):
         vdata['max_af'] = oldata[11]
         vdata['max_af_pops'] = oldata[12]
         vdata['ddd_af'] = oldata[13]
-        vdata['revel'] = oldata[14]
-        vdata['polyphen'] = oldata[15]
-        vdata['protein_position'] = oldata[16]
-        vdata['hgvsc'] = oldata[17]
-        vdata['hgvsp'] = oldata[18]
+        vdata['ddd_father_af'] = oldata[14]
+        vdata['revel'] = oldata[15]
+        vdata['polyphen'] = oldata[16]
+        vdata['protein_position'] = oldata[17]
+        vdata['hgvsc'] = oldata[18]
+        vdata['hgvsp'] = oldata[19]
         vdata['sex'] = sex
-        vdata['gt'] = oldata[19]
-        vdata['gq'] = oldata[20]
-        vdata['pid'] = oldata[21]
-        vdata['ad'] = oldata[22]
+        vdata['dnm'] = oldata[20]
+        vdata['cnv_end'] = oldata[21]
+        vdata['cnv_type'] = oldata[22]
+        vdata['cnv_length'] = oldata[23]
+        vdata['cnv_filter'] = oldata[24]
+        vdata['gt'] = oldata[25]
+        vdata['gq'] = oldata[26]
+        vdata['pid'] = oldata[27]
+        vdata['ad'] = oldata[28]
+        vdata['cnv_inh'] = oldata[29]
+        vdata['copy_num'] = oldata[30]
 
-        if 'DENOVO-SNP' in fields:
-            vdata['denovo_snv'] = True
-        else:
-            vdata['denovo_snv'] = False
-
-        if 'DENOVO-INDEL' in fields:
-            vdata['denovo_indel'] = True
-        else:
-            vdata['denovo_indel'] = False
+        # if vdata['dnm'] == 'DNM':
+        #     if len(vdata['ref']) == len(vdata['alt']):
+        #         vdata['denovo_snv'] = True
+        #     else:
+        #         vdata['denovo_indel'] = True
+        # else:
+        #     if len(vdata['ref']) == len(vdata['alt']):
+        #         vdata['denovo_snv'] = False
+        #     else:
+        #         vdata['denovo_indel'] = False
 
         var = SNV
         if alt in ['<DEL>', '<DUP>']:
@@ -158,6 +179,7 @@ def readvcf(filename, regions, sex):
     logging.info("Variants loaded from " + filename)
 
     return vars
+
 
 def runcommand(cmd):
     try:

@@ -21,8 +21,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                            'hgnc_id': '1234',
                            'max_af': '0', 'max_af_pops': '.', 'ddd_af': '0',
                            'revel': '.', 'polyphen': '.', 'hgvsc': '.',
-                           'hgvsp': '.', 'sex': 'XY', 'denovo_snv': False,
-                           'denovo_indel': False, 'gt': '0/1', 'gq': '50',
+                           'hgvsp': '.', 'sex': 'XY', 'dnm': '.',
+                           'gt': '0/1', 'gq': '50',
                            'pid': '.', 'protein_position': '123', 'ad': '4,4'}
         self.homaltvardata = self.hetvardata.copy()
         self.homaltvardata['gt'] = '1/1'

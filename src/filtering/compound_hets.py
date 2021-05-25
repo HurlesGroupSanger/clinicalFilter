@@ -3,6 +3,7 @@
 import logging
 from itertools import combinations
 
+
 class CompoundHetScreen(object):
 
     def __init__(self, candidate_variants, family):
@@ -20,7 +21,8 @@ class CompoundHetScreen(object):
                         v + " failed compound het screen: <2 vars in hgnc " + gn)
 
             combs_to_screen = list(
-                combinations(self.candidate_variants['compound_hets'][gn].keys(), 2))
+                combinations(
+                    self.candidate_variants['compound_hets'][gn].keys(), 2))
             for pair in combs_to_screen:
                 var1 = self.candidate_variants['compound_hets'][gn][pair[0]][
                     'variant']
@@ -38,11 +40,13 @@ class CompoundHetScreen(object):
 
                         compound_het_passes[gn][pair[0]]['variant'] = var1
                         compound_het_passes[gn][pair[0]]['mode'] = \
-                            self.candidate_variants['compound_hets'][gn][pair[0]][
+                            self.candidate_variants['compound_hets'][gn][
+                                pair[0]][
                                 'mode']
                         compound_het_passes[gn][pair[1]]['variant'] = var2
                         compound_het_passes[gn][pair[1]]['mode'] = \
-                            self.candidate_variants['compound_hets'][gn][pair[1]][
+                            self.candidate_variants['compound_hets'][gn][
+                                pair[1]][
                                 'mode']
 
         self.candidate_variants['compound_hets'] = compound_het_passes
@@ -88,16 +92,16 @@ class CompoundHetScreen(object):
                      var1.get_dad_genotype() == '0'):
                 '''one variant is inherited from each parent'''
                 return True
-            elif ((var1.denovo_snv or var1.denovo_indel) and \
+            elif (var1.dnm == "DNM" and \
                   var2.get_mum_genotype() != '0' and \
                   var2.get_dad_genotype() == '0') or \
-                    ((var1.denovo_snv or var1.denovo_indel) and \
+                    (var1.dnm == "DNM" and \
                      var2.get_mum_genotype() == '0' and \
                      var2.get_dad_genotype() != '0') or \
-                    ((var2.denovo_snv or var2.denovo_indel) and \
+                    (var2.dnm == "DNM" and \
                      var1.get_mum_genotype() != '0' and \
                      var1.get_dad_genotype() == '0') or \
-                    ((var2.denovo_snv or var2.denovo_indel) and \
+                    (var2.dnm == "DNM" and \
                      var1.get_mum_genotype() == '0' and \
                      var1.get_dad_genotype() != '0'):
                 '''one variant is DNM and the other is inherited'''
@@ -120,4 +124,3 @@ class CompoundHetScreen(object):
             exit(1)
         logging.info(varid1 + " " + varid2 + " failed compound het screen")
         return False
-

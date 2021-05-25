@@ -13,8 +13,8 @@ class TestPreInheritanceFilter(unittest.TestCase):
                         'canonical': 'YES', 'mane': 'MANE', 'hgnc_id': '123',
                         'max_af': '0', 'max_af_pops': '.', 'ddd_af': '0',
                         'revel': '1', 'polyphen': '.', 'hgvsc': '.',
-                        'hgvsp': '.', 'sex': 'XY', 'denovo_snv': False,
-                        'denovo_indel': False, 'gt': '0/1', 'gq': '50'}
+                        'hgvsp': '.', 'sex': 'XY', 'dnm': '.',
+                        'gt': '0/1', 'gq': '50'}
 
     def test_min_gq(self):
         # if GQ < 40 a variant should fail if in an autosome

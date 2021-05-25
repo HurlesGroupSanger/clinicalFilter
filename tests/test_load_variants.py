@@ -86,7 +86,7 @@ class TestLoadVariants(unittest.TestCase):
              'mane': 'NM01234', 'hgnc_id': 'HGNC:123', 'max_af': '0.0003',
              'max_af_pops': '.', 'ddd_af': '0.0001', 'revel': '0.8',
              'polyphen': 'Benign', 'hgvsc': 'string', 'hgvsp': 'string',
-             'denovo_snv': False, 'denovo_indel': False, 'gt': '1/1',
+             'dnm': '.', 'gt': '1/1',
              'gq': '99', 'sex': 'XY'}), '1_1449915_A_G': SNV(
             {'chrom': '1', 'pos': '1449915', 'ref': 'A',
              'alt': 'G', 'consequence': 'missense_variant',
@@ -96,8 +96,7 @@ class TestLoadVariants(unittest.TestCase):
              'max_af': '0.0003', 'max_af_pops': '.',
              'ddd_af': '0.0001', 'revel': '0.8',
              'polyphen': 'Benign', 'hgvsc': 'string',
-             'hgvsp': 'string', 'denovo_snv': False,
-             'denovo_indel': False, 'gt': '1/1', 'gq': '99',
+             'hgvsp': 'string', 'dnm':'.', 'gt': '1/1', 'gq': '99',
              'sex': 'XY'})})
 
 if __name__ == '__main__':

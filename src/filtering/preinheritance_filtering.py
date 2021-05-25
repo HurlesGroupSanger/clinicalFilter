@@ -72,7 +72,7 @@ class PreInheritanceFiltering(object):
         for gn in list(variants_per_gene.keys()):
             for varid in list(variants_per_gene[gn].keys()):
                 childvar = variants_per_gene[gn][varid]['child']
-                if childvar.denovo_snv == "True" or childvar.denovo_indel == "True":
+                if childvar.dnm == 'DNM':
                     continue
                 elif not childvar.consequence == "missense_variant":
                     continue

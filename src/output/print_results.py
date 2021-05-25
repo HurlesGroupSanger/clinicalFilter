@@ -198,7 +198,7 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res['AD'] = var['variant'].ad
     res['triogenotype'] = var['variant'].triogenotype
 
-    if var['variant'].denovo_indel == "True" or var['variant'].denovo_snv == "True":
+    if var['variant'].dnm == "DNM":
         res['DNM'] = "True"
     else:
         res['DNM'] = "False"

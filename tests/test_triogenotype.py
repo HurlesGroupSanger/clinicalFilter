@@ -19,24 +19,24 @@ class TestTrioGenotypes(unittest.TestCase):
                          'mane': 'MANE', 'hgnc_id': '123', 'max_af': '0',
                          'max_af_pops': '.', 'ddd_af': '0', 'revel': '1',
                          'polyphen': '.', 'hgvsc': '.', 'hgvsp': '.',
-                         'sex': 'XY', 'denovo_snv': False,
-                         'denovo_indel': False, 'gt': '1/1', 'gq': '50'}
+                         'sex': 'XY', 'dnm': '.',
+                         'gt': '1/1', 'gq': '50'}
         hetvardata = {'chrom': '1', 'pos': '100000', 'ref': 'A', 'alt': 'G',
                       'consequence': 'cq', 'ensg': 'ensg', 'symbol': 'KMTD2',
                       'feature': 'feature', 'canonical': 'YES',
                       'mane': 'MANE', 'hgnc_id': '123', 'max_af': '0',
                       'max_af_pops': '.', 'ddd_af': '0', 'revel': '1',
                       'polyphen': '.', 'hgvsc': '.', 'hgvsp': '.',
-                      'sex': 'XY', 'denovo_snv': False,
-                      'denovo_indel': False, 'gt': '0/1', 'gq': '50'}
+                      'sex': 'XY', 'dnm': '.',
+                      'gt': '0/1', 'gq': '50'}
         homrefvardata = {'chrom': '1', 'pos': '100000', 'ref': 'A', 'alt': 'G',
                          'consequence': 'cq', 'ensg': 'ensg', 'symbol': 'KMTD2',
                          'feature': 'feature', 'canonical': 'YES',
                          'mane': 'MANE', 'hgnc_id': '123', 'max_af': '0',
                          'max_af_pops': '.', 'ddd_af': '0', 'revel': '1',
                          'polyphen': '.', 'hgvsc': '.', 'hgvsp': '.',
-                         'sex': 'XY', 'denovo_snv': False,
-                         'denovo_indel': False, 'gt': '0/0', 'gq': '50'}
+                         'sex': 'XY', 'dnm': '.',
+                         'gt': '0/0', 'gq': '50'}
         self.homaltvar = create_test_snv(homaltvardata)
         self.hetvar = create_test_snv(hetvardata)
         self.homrefvar = create_test_snv(homrefvardata)
