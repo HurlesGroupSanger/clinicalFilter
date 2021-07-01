@@ -1990,15 +1990,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      None,
                                                      None)
         inheritancefilter_211.inheritance_filter_genes()
-        test_candidate_variants_211 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'monoallelic'},
-                'variant':
-                    variants_per_gene_211[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
+        test_candidate_variants_211 = {'single_variants': {}, 'compound_hets': {}}
 
         self.assertEqual(inheritancefilter_211.candidate_variants,
                          test_candidate_variants_211)
@@ -2047,15 +2039,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      None,
                                                      None)
         inheritancefilter_221.inheritance_filter_genes()
-        test_candidate_variants_221 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'monoallelic'},
-                'variant':
-                    variants_per_gene_221[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
+        test_candidate_variants_221 = {'single_variants': {}, 'compound_hets': {}}
 
         self.assertEqual(inheritancefilter_221.candidate_variants,
                          test_candidate_variants_221)
@@ -2117,15 +2101,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      None,
                                                      None)
         inheritancefilter_211.inheritance_filter_genes()
-        test_candidate_variants_211 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'monoallelic'},
-                'variant':
-                    variants_per_gene_211[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
+        test_candidate_variants_211 = {'single_variants': {}, 'compound_hets': {}}
 
         self.assertEqual(inheritancefilter_211.candidate_variants,
                          test_candidate_variants_211)
@@ -2166,15 +2142,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      None,
                                                      None)
         inheritancefilter_212.inheritance_filter_genes()
-        test_candidate_variants_212 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'monoallelic'},
-                'variant':
-                    variants_per_gene_212[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
+        test_candidate_variants_212 = {'single_variants': {}, 'compound_hets': {}}
 
         self.assertEqual(inheritancefilter_212.candidate_variants,
                          test_candidate_variants_212)

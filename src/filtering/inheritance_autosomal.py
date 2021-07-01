@@ -250,8 +250,8 @@ class AutosomalFilter(object):
                 vpass = 'y'
 
         if vpass == 'n':
-            logging.info(varid + " failed inheritance filter for heterozygous "
-                                 "variant in mosaic gene")
+            logging.info(varid + " failed inheritance filter for homozygous "
+                                 "variant in biallelic gene")
 
     def monoallelic_homozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
         # todo will need modification when CNVs (and UPDs) added
@@ -270,20 +270,10 @@ class AutosomalFilter(object):
                 add_single_var_to_candidates(varid, var, self.hgncid, 'monoallelic',
                                              self.candidate_variants)
                 vpass = 'y'
-        elif mum_aff and not dad_aff:
-            if dad_gt == '0/1' and mum_gt != '0/0':
-                add_single_var_to_candidates(varid, var, self.hgncid, 'monoallelic',
-                                             self.candidate_variants)
-                vpass = 'y'
-        elif not mum_aff and dad_aff:
-            if mum_gt == '0/1' and dad_gt != '0/0':
-                add_single_var_to_candidates(varid, var, self.hgncid, 'monoallelic',
-                                             self.candidate_variants)
-                vpass = 'y'
 
         if vpass == 'n':
-            logging.info(varid + " failed inheritance filter for heterozygous "
-                                 "variant in mosaic gene")
+            logging.info(varid + " failed inheritance filter for homozygous "
+                                 "variant in monoallelic gene")
 
 
     def mosaic_homozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
