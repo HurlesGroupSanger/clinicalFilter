@@ -283,7 +283,6 @@ class AutosomalFilter(object):
         pass
 
     def biallelic_no_parents_filter(self, varid, var):
-
         if var.genotype == '1':
             add_compound_het_to_candidates(varid, var, self.hgncid, 'biallelic',
                                            self.candidate_variants)

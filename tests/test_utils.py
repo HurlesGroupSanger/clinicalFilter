@@ -50,14 +50,16 @@ def create_test_variants_per_gene(variants, family):
         variant = SNV
         var = variant(variants['child'][vid])
         familyvariants['child'][vid] = var
-    for vid in variants['mum'].keys():
-        variant = SNV
-        var = variant(variants['mum'][vid])
-        familyvariants['mum'][vid] = var
-    for vid in variants['dad'].keys():
-        variant = SNV
-        var = variant(variants['dad'][vid])
-        familyvariants['dad'][vid] = var
+    if 'mum' in variants.keys():
+        for vid in variants['mum'].keys():
+            variant = SNV
+            var = variant(variants['mum'][vid])
+            familyvariants['mum'][vid] = var
+    if 'dad' in variants.keys():
+        for vid in variants['dad'].keys():
+            variant = SNV
+            var = variant(variants['dad'][vid])
+            familyvariants['dad'][vid] = var
     add_trio_genotypes(family, familyvariants)
 
     for vid in familyvariants['child'].keys():

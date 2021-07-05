@@ -83,6 +83,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.variants_222 = {'child': {'5_10971838_A_GG': self.homaltvardata},
                     'mum': {'5_10971838_A_GG': self.homaltvardata},
                     'dad': {'5_10971838_A_GG': self.homaltvardata}}
+        self.variants_1 = {'child': {'5_10971838_A_GG': self.hetvardata}}
+        self.variants_2 = {'child': {'5_10971838_A_GG': self.homaltvardata}}
 
         self.genes_biallelic = {
             '1234': {'chr': '5', 'start': '10971836', 'end': '11904446',
@@ -114,6 +116,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
 
         self.child = create_test_person('fam', 'child_id', 'dad_id', 'mum_id',
                                         'XY', '2', '/vcf/path')
+        self.child2 = create_test_person('fam', 'child_id', '0', '0',
+                                        'XY', '2', '/vcf/path')
         self.mum = create_test_person('fam', 'mum_id', '0', '0', 'XX', '1',
                                       '/vcf/path')
         self.mum_aff = create_test_person('fam', 'mum_id', '0', '0', 'XX', '2',
@@ -130,6 +134,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                  self.dad_aff)
         self.family_both_aff = create_test_family(self.child, self.mum_aff,
                                                   self.dad_aff)
+        self.family_no_parents = create_test_family(self.child2, None, None)
 
     def test_biallelic_heterozygous_parents_filter(self):
 
@@ -3602,7 +3607,51 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         pass
 
     def test_biallelic_heterozygous_no_parents_filter(self):
-        pass
+        #child heterozygous pass
+        variants_per_gene_1 = create_test_variants_per_gene(self.variants_1,
+                                                              self.family_no_parents)
+        inheritancefilter_1 = InheritanceFiltering(variants_per_gene_1,
+                                                     self.family_no_parents,
+                                                     self.genes_biallelic,
+                                                     None,
+                                                     None)
+        inheritancefilter_1.inheritance_filter_genes()
+        test_candidate_variants_1 = {'single_variants': {},
+                                                'compound_hets': {'1234': {
+                                                    '5_10971838_A_GG': {
+                                                        'mode': {'biallelic'},
+                                                        'variant':
+                                                            variants_per_gene_1[
+                                                                '1234'][
+                                                                '5_10971838_A_GG'][
+                                                                'child'],
+                                                        'hgncid': '1234'}}}}
+
+        self.assertEqual(inheritancefilter_1.candidate_variants,
+                         test_candidate_variants_1)
+        #child homozygous pass
+        variants_per_gene_2 = create_test_variants_per_gene(self.variants_2,
+                                                            self.family_no_parents)
+        inheritancefilter_2 = InheritanceFiltering(variants_per_gene_2,
+                                                   self.family_no_parents,
+                                                   self.genes_biallelic,
+                                                   None,
+                                                   None)
+        inheritancefilter_2.inheritance_filter_genes()
+        test_candidate_variants_2 = {'single_variants': {},
+                                     'compound_hets': {'1234': {
+                                         '5_10971838_A_GG': {
+                                             'mode': {'biallelic'},
+                                             'variant':
+                                                 variants_per_gene_1[
+                                                     '1234'][
+                                                     '5_10971838_A_GG'][
+                                                     'child'],
+                                             'hgncid': '1234'}}}}
+
+        self.assertEqual(inheritancefilter_2.candidate_variants,
+                         test_candidate_variants_2)
+
 
     def test_biallelic_homozygous_no_parents_filter(self):
         pass

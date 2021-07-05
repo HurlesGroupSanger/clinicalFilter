@@ -64,7 +64,6 @@ class InheritanceFiltering(object):
         #          or no parents")
         #     logging.error("Can't calculate inheritance type - family error")
         #     exit(1)
-
         if self.genes:
             self.inheritance_filter_genes()
         if self.regions:
