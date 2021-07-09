@@ -3606,7 +3606,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         # neither aff, both 1/1
         pass
 
-    def test_biallelic_heterozygous_no_parents_filter(self):
+    def test_biallelic_no_parents_filter(self):
         #child heterozygous pass
         variants_per_gene_1 = create_test_variants_per_gene(self.variants_1,
                                                               self.family_no_parents)
@@ -3638,38 +3638,106 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                    None,
                                                    None)
         inheritancefilter_2.inheritance_filter_genes()
-        test_candidate_variants_2 = {'single_variants': {},
-                                     'compound_hets': {'1234': {
-                                         '5_10971838_A_GG': {
-                                             'mode': {'biallelic'},
-                                             'variant':
-                                                 variants_per_gene_1[
-                                                     '1234'][
-                                                     '5_10971838_A_GG'][
-                                                     'child'],
-                                             'hgncid': '1234'}}}}
+        test_candidate_variants_2 = {'single_variants': {
+            '5_10971838_A_GG': {
+                'mode': {'biallelic'},
+                'variant':
+                    variants_per_gene_2[
+                        '1234'][
+                        '5_10971838_A_GG'][
+                        'child'],
+                'hgncid': '1234'}}, 'compound_hets': {}}
 
         self.assertEqual(inheritancefilter_2.candidate_variants,
                          test_candidate_variants_2)
 
+    def test_monoallelic_no_parents_filter(self):
+        #child heterozygous pass
+        variants_per_gene_1 = create_test_variants_per_gene(self.variants_1,
+                                                              self.family_no_parents)
+        inheritancefilter_1 = InheritanceFiltering(variants_per_gene_1,
+                                                     self.family_no_parents,
+                                                     self.genes_monoallelic,
+                                                     None,
+                                                     None)
+        inheritancefilter_1.inheritance_filter_genes()
+        test_candidate_variants_1 = {'single_variants': {
+            '5_10971838_A_GG': {
+                'mode': {'monoallelic'},
+                'variant':
+                    variants_per_gene_1[
+                        '1234'][
+                        '5_10971838_A_GG'][
+                        'child'],
+                'hgncid': '1234'}}, 'compound_hets': {}}
 
-    def test_biallelic_homozygous_no_parents_filter(self):
+        self.assertEqual(inheritancefilter_1.candidate_variants,
+                         test_candidate_variants_1)
+        #child homozygous pass
+        variants_per_gene_2 = create_test_variants_per_gene(self.variants_2,
+                                                            self.family_no_parents)
+        inheritancefilter_2 = InheritanceFiltering(variants_per_gene_2,
+                                                   self.family_no_parents,
+                                                   self.genes_monoallelic,
+                                                   None,
+                                                   None)
+        inheritancefilter_2.inheritance_filter_genes()
+        test_candidate_variants_2 = {'single_variants': {
+            '5_10971838_A_GG': {
+                'mode': {'monoallelic'},
+                'variant':
+                    variants_per_gene_2[
+                        '1234'][
+                        '5_10971838_A_GG'][
+                        'child'],
+                'hgncid': '1234'}}, 'compound_hets': {}}
+
+        self.assertEqual(inheritancefilter_2.candidate_variants,
+                         test_candidate_variants_2)
+
+    def test_imprinted_no_parents_filter(self):
         pass
 
-    def test_monoallelic_heterozygous_no_parents_filter(self):
-        pass
+    def test_mosaic_no_parents_filter(self):
+        # child heterozygous pass
+        variants_per_gene_1 = create_test_variants_per_gene(self.variants_1,
+                                                            self.family_no_parents)
+        inheritancefilter_1 = InheritanceFiltering(variants_per_gene_1,
+                                                   self.family_no_parents,
+                                                   self.genes_mosaic,
+                                                   None,
+                                                   None)
+        inheritancefilter_1.inheritance_filter_genes()
+        test_candidate_variants_1 = {'single_variants': {
+            '5_10971838_A_GG': {
+                'mode': {'mosaic'},
+                'variant':
+                    variants_per_gene_1[
+                        '1234'][
+                        '5_10971838_A_GG'][
+                        'child'],
+                'hgncid': '1234'}}, 'compound_hets': {}}
 
-    def test_monoallelic_homozygous_no_parents_filter(self):
-        pass
+        self.assertEqual(inheritancefilter_1.candidate_variants,
+                         test_candidate_variants_1)
+        # child homozygous pass
+        variants_per_gene_2 = create_test_variants_per_gene(self.variants_2,
+                                                            self.family_no_parents)
+        inheritancefilter_2 = InheritanceFiltering(variants_per_gene_2,
+                                                   self.family_no_parents,
+                                                   self.genes_mosaic,
+                                                   None,
+                                                   None)
+        inheritancefilter_2.inheritance_filter_genes()
+        test_candidate_variants_2 = {'single_variants': {
+            '5_10971838_A_GG': {
+                'mode': {'mosaic'},
+                'variant':
+                    variants_per_gene_2[
+                        '1234'][
+                        '5_10971838_A_GG'][
+                        'child'],
+                'hgncid': '1234'}}, 'compound_hets': {}}
 
-    def test_imprinted_heterozygous_no_parents_filter(self):
-        pass
-
-    def test_imprinted_homozygous_no_parents_filter(self):
-        pass
-
-    def test_mosaic_heterozygous_no_parents_filter(self):
-        pass
-
-    def test_mosaic_homozygous_no_parents_filter(self):
-        pass
+        self.assertEqual(inheritancefilter_2.candidate_variants,
+                         test_candidate_variants_2)
