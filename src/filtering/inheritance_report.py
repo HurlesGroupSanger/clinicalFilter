@@ -78,26 +78,36 @@ class InheritanceReport(object):
             else:
                 print("Error - unrecognised child GT")
                 exit(1)
-
-            if mum_aff == True:
-                mum_aff_state = 'mum_affected'
-            elif mum_aff == False:
-                mum_aff_state = 'mum_unaffected'
+        elif chromtype == 'allosomal':
+            if child_gt == 'hemizygous':
+                child_geno = 'child_hemi'
+            elif child_gt == 'homozygous':
+                child_geno = 'child_hom'
+            elif child_gt == 'heterozygous':
+                child_geno = 'child_het'
             else:
-                print("Error - invalid mum affected status")
+                print("Error - unrecognised child GT")
                 exit(1)
-
-            if dad_aff == True:
-                dad_aff_state = 'dad_affected'
-            elif dad_aff == False:
-                dad_aff_state = 'dad_unaffected'
-            else:
-                print("Error - invalid dad affected status")
-                exit(1)
-
-            parent_gts = "dad_" + dad_gt + "_mum_" + mum_gt
-            self.inheritance_report[chromtype][mode][child_geno][dad_aff_state][mum_aff_state][parent_gts]+=1
-
         else:
-            # todo allosomal and return error for unknown chromtype
-            pass
+            print("Error - unrecognised chromosome type")
+            exit(1)
+
+        if mum_aff == True:
+             mum_aff_state = 'mum_affected'
+        elif mum_aff == False:
+            mum_aff_state = 'mum_unaffected'
+        else:
+            print("Error - invalid mum affected status")
+            exit(1)
+
+        if dad_aff == True:
+            dad_aff_state = 'dad_affected'
+        elif dad_aff == False:
+            dad_aff_state = 'dad_unaffected'
+        else:
+            print("Error - invalid dad affected status")
+            exit(1)
+
+        parent_gts = "dad_" + dad_gt + "_mum_" + mum_gt
+        self.inheritance_report[chromtype][mode][child_geno][dad_aff_state][mum_aff_state][parent_gts]+=1
+
