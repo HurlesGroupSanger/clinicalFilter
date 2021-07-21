@@ -40,6 +40,10 @@ class AllosomalFilter(object):
             dad_aff = self.family.dad.affected
 
             genotype = self.get_variant_genotype(variants[v]['child'], v)
+            # if dad gt = 0/1 should go to a different (mosaic) pipeline - fail for now
+            if dad_gt == '0/1':
+                print("failed due to 0/1 paternal genotype in X: " + v)
+                exit(1)
             # if genotype is none then variant fails
             if genotype is None:
                 continue
@@ -180,22 +184,119 @@ class AllosomalFilter(object):
                              "variant in X-linked over dominant gene")
 
     def gn_hemizygous_gt_hemizygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
-        pass
+        #pass unless mum is 1/1 and unaffected
+        self.inheritance_report.populate_inheritance_report('allosomal',
+                                                            'hemizygous',
+                                                            'hemizygous',
+                                                            mum_gt, dad_gt,
+                                                            mum_aff, dad_aff)
+        if mum_aff and mum_gt == '1/1':
+            logging.info(varid + " failed inheritance filter for hemizygous "
+                                 "variant in hemizygous gene")
+        else:
+            add_single_var_to_candidates(varid, var, self.hgncid, 'hemizygous',
+                                         self.candidate_variants)
 
     def gn_X_linked_dominant_gt_hemizygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
-        pass
+        # pass unless mum is 1/1 and unaffected
+        self.inheritance_report.populate_inheritance_report('allosomal',
+                                                            'X-linked dominant',
+                                                            'hemizygous',
+                                                            mum_gt, dad_gt,
+                                                            mum_aff, dad_aff)
+        if not mum_aff and mum_gt == '1/1':
+            logging.info(varid + " failed inheritance filter for hemizygous "
+                                 "variant in X-linked dominant gene")
+        else:
+            add_single_var_to_candidates(varid, var, self.hgncid, 'hemizygous',
+                                         self.candidate_variants)
 
     def gn_X_linked_over_dominant_gt_hemizygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
-        pass
+        # X-linked over dominant gene, hemizygous proband all fail
+        self.inheritance_report.populate_inheritance_report('allosomal',
+                                                            'X-linked over-dominant',
+                                                            'hemizygous',
+                                                            mum_gt, dad_gt,
+                                                            mum_aff, dad_aff)
+        logging.info(varid + " failed inheritance filter for hemizygous "
+                             "variant in X-linked over dominant gene")
 
     def gn_hemizygous_gt_heterozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
-        pass
+        # Hemizygous gene, heterozygous proband. Fail if either parent is 1/1 and unaffected, or if both parents 1/1 and affected
+        self.inheritance_report.populate_inheritance_report('allosomal',
+                                                            'hemizygous',
+                                                            'heterozygous',
+                                                            mum_gt, dad_gt,
+                                                            mum_aff, dad_aff)
+        if not mum_aff and mum_gt == '1/1':
+            logging.info(varid + " failed inheritance filter for heterozygous "
+                                 "variant in hemizygous gene")
+        elif not dad_aff and dad_gt == '1/1':
+            logging.info(varid + " failed inheritance filter for heterozygous "
+                                 "variant in hemizygous gene")
+        elif mum_aff and mum_gt == '1/1' and dad_aff and dad_gt == '1/1':
+            logging.info(varid + " failed inheritance filter for heterozygous "
+                                 "variant in hemizygous gene")
+        else:
+            add_single_var_to_candidates(varid, var, self.hgncid, 'hemizygous',
+                                         self.candidate_variants)
+
+
 
     def gn_X_linked_dominant_gt_heterozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
-        pass
+        # X-linked dominant gene, heterozygous proband. Fail if either parent is 1/1 and unaffected, or if both parents 1/1 and affected
+        self.inheritance_report.populate_inheritance_report('allosomal',
+                                                            'X-linked dominant',
+                                                            'heterozygous',
+                                                             mum_gt, dad_gt,
+                                                             mum_aff, dad_aff)
+        if not mum_aff and mum_gt == '1/1':
+            logging.info(varid + " failed inheritance filter for heterozygous "
+                                 "variant in X-linked dominant gene")
+        elif not dad_aff and dad_gt == '1/1':
+            logging.info(varid + " failed inheritance filter for heterozygous "
+                                 "variant in X-linked dominant gene")
+        elif mum_aff and mum_gt == '1/1' and dad_aff and dad_gt == '1/1':
+            logging.info(varid + " failed inheritance filter for heterozygous "
+                                 "variant in X-linked dominant gene")
+        else:
+            add_single_var_to_candidates(varid, var, self.hgncid, 'X-linked dominant',
+                                         self.candidate_variants)
+
 
     def gn_X_linked_over_dominant_gt_heterozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
-        pass
+        # X-linked over-dominant gene, heterozygous proband. If dad aff pass if DNM
+        # if dad unaff pass if DNM or mum_aff and 1/1 or mum unaff and not 0/1
+        self.inheritance_report.populate_inheritance_report('allosomal',
+                                                            'X-linked over-dominant',
+                                                            'heterozygous',
+                                                            mum_gt, dad_gt,
+                                                            mum_aff, dad_aff)
+        if dad_aff:
+            if mum_gt == '0/0' and dad_gt == '0/0':
+                add_single_var_to_candidates(varid, var, self.hgncid,
+                                             'X-linked over-dominant',
+                                             self.candidate_variants)
+            else:
+                logging.info(varid + " failed inheritance filter for heterozygous "
+                                 "variant in X-linked over-dominant gene")
+        else:#dad unaff
+            if mum_gt == '0/0' and dad_gt == '0/0':
+                add_single_var_to_candidates(varid, var, self.hgncid,
+                                             'X-linked over-dominant',
+                                             self.candidate_variants)
+            elif mum_aff and mum_gt == '0/1':
+                add_single_var_to_candidates(varid, var, self.hgncid,
+                                             'X-linked over-dominant',
+                                             self.candidate_variants)
+            elif not mum_aff and not mum_gt == '0/1':
+                add_single_var_to_candidates(varid, var, self.hgncid,
+                                             'X-linked over-dominant',
+                                             self.candidate_variants)
+            else:
+                logging.info(
+                    varid + " failed inheritance filter for heterozygous "
+                            "variant in X-linked over-dominant gene")
 
     def get_variant_genotype(self, variant, v):
         '''work out if a variant is homozygous, heterozygous or hemizygous'''
