@@ -241,8 +241,6 @@ class AllosomalFilter(object):
             add_single_var_to_candidates(varid, var, self.hgncid, 'hemizygous',
                                          self.candidate_variants)
 
-
-
     def gn_X_linked_dominant_gt_heterozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
         # X-linked dominant gene, heterozygous proband. Fail if either parent is 1/1 and unaffected, or if both parents 1/1 and affected
         self.inheritance_report.populate_inheritance_report('allosomal',
