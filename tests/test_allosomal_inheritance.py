@@ -107,7 +107,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                  self.dad)
         self.family_XX_dad_aff = create_test_family(self.child_XX, self.mum,
                                                  self.dad_aff)
-        self.family_XX_both_aff = create_test_family(self.child, self.mum_aff,
+        self.family_XX_both_aff = create_test_family(self.child_XX, self.mum_aff,
                                                   self.dad_aff)
         self.family_XX_no_parents = create_test_family(self.child_XX2, None, None)
         self.family_XY_both_unaff = create_test_family(self.child_XY, self.mum,
@@ -121,36 +121,294 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
         self.family_XY_no_parents = create_test_family(self.child_XY2, None,
                                                        None)
 
-    def test_get_variant_genotype(self):
-        #test that variant genotype is calculated correctly from child chromosomal sex
-        pass
-
     def test_allosomal_no_parents(self):
-        pass
+        # all should pass - only testing one for now
+        variants_per_gene_1 = create_test_variants_per_gene(self.variants_1,
+                                                               self.family_XX_no_parents)
+        inheritancefilter_1 = InheritanceFiltering(variants_per_gene_1,
+                                                      self.family_XX_no_parents,
+                                                      self.genes_hemizygous, None,
+                                                      None)
+        inheritancefilter_1.inheritance_filter_genes()
+        test_candidate_variants_1 = {'single_variants': {
+            'X_1097183_A_GG': {
+                'mode': {'hemizygous'},
+                'variant':
+                    variants_per_gene_1[
+                        '1234'][
+                        'X_1097183_A_GG'][
+                        'child'],
+                'hgncid': '1234'}}, 'compound_hets': {}}
+
+        self.assertEqual(inheritancefilter_1.candidate_variants,
+                         test_candidate_variants_1)
 
     def test_gn_hemizygous_gt_homozygous_parents_filter(self):
+        # both aff, mum 0/0, dad 0/0 fail
+        # both aff, mum 0/1, dad 0/0 fail
+        # both aff, mum 1/1, dad 0/0 fail
+        # both aff, mum 0/0, dad 1/1 fail
+        # both aff, mum 0/1, dad 1/1 fail
+        # both aff, mum 1/1, dad 1/1 fail
+
+        # mum aff, mum 0/0, dad 0/0 fail
+        # mum aff, mum 0/1, dad 0/0 fail
+        # mum aff, mum 1/1, dad 0/0 fail
+        # mum aff, mum 0/0, dad 1/1 fail
+        # mum aff, mum 0/1, dad 1/1 fail
+        # mum aff, mum 1/1, dad 1/1 fail
+
+        # dad aff, mum 0/0, dad 0/0 fail
+        # dad aff, mum 0/1, dad 0/0 fail
+        # dad aff, mum 1/1, dad 0/0 fail
+        # dad aff, mum 0/0, dad 1/1 fail
+        # dad aff, mum 0/1, dad 1/1 fail
+        # dad aff, mum 1/1, dad 1/1 fail
+
+        # both unaff, mum 0/0, dad 0/0 fail
+        # both unaff, mum 0/1, dad 0/0 fail
+        # both unaff, mum 1/1, dad 0/0 fail
+        # both unaff, mum 0/0, dad 1/1 fail
+        # both unaff, mum 0/1, dad 1/1 fail
+        # both unaff, mum 1/1, dad 1/1 fail
         pass
 
     def test_gn_X_linked_dominant_gt_homozygous_parents_filter(self):
+        # both aff, mum 0/0, dad 0/0 fail
+        # both aff, mum 0/1, dad 0/0 fail
+        # both aff, mum 1/1, dad 0/0 fail
+        # both aff, mum 0/0, dad 1/1 fail
+        # both aff, mum 0/1, dad 1/1 fail
+        # both aff, mum 1/1, dad 1/1 fail
+
+        # mum aff, mum 0/0, dad 0/0 fail
+        # mum aff, mum 0/1, dad 0/0 fail
+        # mum aff, mum 1/1, dad 0/0 fail
+        # mum aff, mum 0/0, dad 1/1 fail
+        # mum aff, mum 0/1, dad 1/1 fail
+        # mum aff, mum 1/1, dad 1/1 fail
+
+        # dad aff, mum 0/0, dad 0/0 fail
+        # dad aff, mum 0/1, dad 0/0 fail
+        # dad aff, mum 1/1, dad 0/0 fail
+        # dad aff, mum 0/0, dad 1/1 fail
+        # dad aff, mum 0/1, dad 1/1 fail
+        # dad aff, mum 1/1, dad 1/1 fail
+
+        # both unaff, mum 0/0, dad 0/0 fail
+        # both unaff, mum 0/1, dad 0/0 fail
+        # both unaff, mum 1/1, dad 0/0 fail
+        # both unaff, mum 0/0, dad 1/1 fail
+        # both unaff, mum 0/1, dad 1/1 fail
+        # both unaff, mum 1/1, dad 1/1 fail
         pass
 
     def test_gn_X_linked_over_dominant_gt_homozygous_parents_filter(self):
+        # both aff, mum 0/0, dad 0/0 fail
+        # both aff, mum 0/1, dad 0/0 fail
+        # both aff, mum 1/1, dad 0/0 fail
+        # both aff, mum 0/0, dad 1/1 fail
+        # both aff, mum 0/1, dad 1/1 fail
+        # both aff, mum 1/1, dad 1/1 fail
+
+        # mum aff, mum 0/0, dad 0/0 fail
+        # mum aff, mum 0/1, dad 0/0 fail
+        # mum aff, mum 1/1, dad 0/0 fail
+        # mum aff, mum 0/0, dad 1/1 fail
+        # mum aff, mum 0/1, dad 1/1 fail
+        # mum aff, mum 1/1, dad 1/1 fail
+
+        # dad aff, mum 0/0, dad 0/0 fail
+        # dad aff, mum 0/1, dad 0/0 fail
+        # dad aff, mum 1/1, dad 0/0 fail
+        # dad aff, mum 0/0, dad 1/1 fail
+        # dad aff, mum 0/1, dad 1/1 fail
+        # dad aff, mum 1/1, dad 1/1 fail
+
+        # both unaff, mum 0/0, dad 0/0 fail
+        # both unaff, mum 0/1, dad 0/0 fail
+        # both unaff, mum 1/1, dad 0/0 fail
+        # both unaff, mum 0/0, dad 1/1 fail
+        # both unaff, mum 0/1, dad 1/1 fail
+        # both unaff, mum 1/1, dad 1/1 fail
         pass
 
     def test_gn_hemizygous_gt_hemizygous_parents_filter(self):
+        # both aff, mum 0/0, dad 0/0 pass
+        # both aff, mum 0/1, dad 0/0 pass
+        # both aff, mum 1/1, dad 0/0 fail
+        # both aff, mum 0/0, dad 1/1 pass
+        # both aff, mum 0/1, dad 1/1 pass
+        # both aff, mum 1/1, dad 1/1 fail
+
+        # mum aff, mum 0/0, dad 0/0 pass
+        # mum aff, mum 0/1, dad 0/0 pass
+        # mum aff, mum 1/1, dad 0/0 fail
+        # mum aff, mum 0/0, dad 1/1 pass
+        # mum aff, mum 0/1, dad 1/1 pass
+        # mum aff, mum 1/1, dad 1/1 fail
+
+        # dad aff, mum 0/0, dad 0/0 pass
+        # dad aff, mum 0/1, dad 0/0 pass
+        # dad aff, mum 1/1, dad 0/0 fail
+        # dad aff, mum 0/0, dad 1/1 pass
+        # dad aff, mum 0/1, dad 1/1 pass
+        # dad aff, mum 1/1, dad 1/1 fail
+
+        # both unaff, mum 0/0, dad 0/0 pass
+        # both unaff, mum 0/1, dad 0/0 pass
+        # both unaff, mum 1/1, dad 0/0 fail
+        # both unaff, mum 0/0, dad 1/1 pass
+        # both unaff, mum 0/1, dad 1/1 pass
+        # both unaff, mum 1/1, dad 1/1 fail
         pass
 
     def test_gn_X_linked_dominant_gt_hemizygous_parents_filter(self):
+        # both aff, mum 0/0, dad 0/0 pass
+        # both aff, mum 0/1, dad 0/0 pass
+        # both aff, mum 1/1, dad 0/0 pass
+        # both aff, mum 0/0, dad 1/1 pass
+        # both aff, mum 0/1, dad 1/1 pass
+        # both aff, mum 1/1, dad 1/1 pass
+
+        # mum aff, mum 0/0, dad 0/0 pass
+        # mum aff, mum 0/1, dad 0/0 pass
+        # mum aff, mum 1/1, dad 0/0 pass
+        # mum aff, mum 0/0, dad 1/1 pass
+        # mum aff, mum 0/1, dad 1/1 pass
+        # mum aff, mum 1/1, dad 1/1 pass
+
+        # dad aff, mum 0/0, dad 0/0 pass
+        # dad aff, mum 0/1, dad 0/0 pass
+        # dad aff, mum 1/1, dad 0/0 fail
+        # dad aff, mum 0/0, dad 1/1 pass
+        # dad aff, mum 0/1, dad 1/1 pass
+        # dad aff, mum 1/1, dad 1/1 fail
+
+        # both unaff, mum 0/0, dad 0/0 pass
+        # both unaff, mum 0/1, dad 0/0 pass
+        # both unaff, mum 1/1, dad 0/0 pass
+        # both unaff, mum 0/0, dad 1/1 fail
+        # both unaff, mum 0/1, dad 1/1 pass
+        # both unaff, mum 1/1, dad 1/1 fail
         pass
 
     def test_gn_X_linked_over_dominant_gt_hemizygous_parents_filter(self):
+        # both aff, mum 0/0, dad 0/0 fail
+        # both aff, mum 0/1, dad 0/0 fail
+        # both aff, mum 1/1, dad 0/0 fail
+        # both aff, mum 0/0, dad 1/1 fail
+        # both aff, mum 0/1, dad 1/1 fail
+        # both aff, mum 1/1, dad 1/1 fail
+
+        # mum aff, mum 0/0, dad 0/0 fail
+        # mum aff, mum 0/1, dad 0/0 fail
+        # mum aff, mum 1/1, dad 0/0 fail
+        # mum aff, mum 0/0, dad 1/1 fail
+        # mum aff, mum 0/1, dad 1/1 fail
+        # mum aff, mum 1/1, dad 1/1 fail
+
+        # dad aff, mum 0/0, dad 0/0 fail
+        # dad aff, mum 0/1, dad 0/0 fail
+        # dad aff, mum 1/1, dad 0/0 fail
+        # dad aff, mum 0/0, dad 1/1 fail
+        # dad aff, mum 0/1, dad 1/1 fail
+        # dad aff, mum 1/1, dad 1/1 fail
+
+        # both unaff, mum 0/0, dad 0/0 fail
+        # both unaff, mum 0/1, dad 0/0 fail
+        # both unaff, mum 1/1, dad 0/0 fail
+        # both unaff, mum 0/0, dad 1/1 fail
+        # both unaff, mum 0/1, dad 1/1 fail
+        # both unaff, mum 1/1, dad 1/1 fail
         pass
 
     def test_gn_hemizygous_gt_heterozygous_parents_filter(self):
+        # both aff, mum 0/0, dad 0/0 pass
+        # both aff, mum 0/1, dad 0/0 pass
+        # both aff, mum 1/1, dad 0/0 pass
+        # both aff, mum 0/0, dad 1/1 pass
+        # both aff, mum 0/1, dad 1/1 pass
+        # both aff, mum 1/1, dad 1/1 fail
+
+        # mum aff, mum 0/0, dad 0/0 pass
+        # mum aff, mum 0/1, dad 0/0 pass
+        # mum aff, mum 1/1, dad 0/0 pass
+        # mum aff, mum 0/0, dad 1/1 fail
+        # mum aff, mum 0/1, dad 1/1 fail
+        # mum aff, mum 1/1, dad 1/1 fail
+
+        # dad aff, mum 0/0, dad 0/0 pass
+        # dad aff, mum 0/1, dad 0/0 pass
+        # dad aff, mum 1/1, dad 0/0 fail
+        # dad aff, mum 0/0, dad 1/1 pass
+        # dad aff, mum 0/1, dad 1/1 pass
+        # dad aff, mum 1/1, dad 1/1 fail
+
+        # both unaff, mum 0/0, dad 0/0 pass
+        # both unaff, mum 0/1, dad 0/0 pass
+        # both unaff, mum 1/1, dad 0/0 fail
+        # both unaff, mum 0/0, dad 1/1 fail
+        # both unaff, mum 0/1, dad 1/1 fail
+        # both unaff, mum 1/1, dad 1/1 fail
         pass
 
     def test_gn_X_linked_dominant_gt_heterozygous_parents_filter(self):
+        # both aff, mum 0/0, dad 0/0 pass
+        # both aff, mum 0/1, dad 0/0 pass
+        # both aff, mum 1/1, dad 0/0 pass
+        # both aff, mum 0/0, dad 1/1 pass
+        # both aff, mum 0/1, dad 1/1 pass
+        # both aff, mum 1/1, dad 1/1 fail
+
+        # mum aff, mum 0/0, dad 0/0 pass
+        # mum aff, mum 0/1, dad 0/0 pass
+        # mum aff, mum 1/1, dad 0/0 pass
+        # mum aff, mum 0/0, dad 1/1 fail
+        # mum aff, mum 0/1, dad 1/1 fail
+        # mum aff, mum 1/1, dad 1/1 fail
+
+        # dad aff, mum 0/0, dad 0/0 pass
+        # dad aff, mum 0/1, dad 0/0 pass
+        # dad aff, mum 1/1, dad 0/0 fail
+        # dad aff, mum 0/0, dad 1/1 pass
+        # dad aff, mum 0/1, dad 1/1 pass
+        # dad aff, mum 1/1, dad 1/1 fail
+
+        # both unaff, mum 0/0, dad 0/0 pass
+        # both unaff, mum 0/1, dad 0/0 pass
+        # both unaff, mum 1/1, dad 0/0 fail
+        # both unaff, mum 0/0, dad 1/1 fail
+        # both unaff, mum 0/1, dad 1/1 fail
+        # both unaff, mum 1/1, dad 1/1 fail
         pass
 
     def test_gn_X_linked_over_dominant_gt_heterozygous_parents_filter(self):
+        # both aff, mum 0/0, dad 0/0 pass
+        # both aff, mum 0/1, dad 0/0 fail
+        # both aff, mum 1/1, dad 0/0 fail
+        # both aff, mum 0/0, dad 1/1 fail
+        # both aff, mum 0/1, dad 1/1 fail
+        # both aff, mum 1/1, dad 1/1 fail
+
+        # mum aff, mum 0/0, dad 0/0 pass
+        # mum aff, mum 0/1, dad 0/0 pass
+        # mum aff, mum 1/1, dad 0/0 fail
+        # mum aff, mum 0/0, dad 1/1 fail
+        # mum aff, mum 0/1, dad 1/1 pass
+        # mum aff, mum 1/1, dad 1/1 fail
+
+        # dad aff, mum 0/0, dad 0/0 pass
+        # dad aff, mum 0/1, dad 0/0 fail
+        # dad aff, mum 1/1, dad 0/0 fail
+        # dad aff, mum 0/0, dad 1/1 fail
+        # dad aff, mum 0/1, dad 1/1 fail
+        # dad aff, mum 1/1, dad 1/1 fail
+
+        # both unaff, mum 0/0, dad 0/0 pass
+        # both unaff, mum 0/1, dad 0/0 fail
+        # both unaff, mum 1/1, dad 0/0 pass
+        # both unaff, mum 0/0, dad 1/1 pass
+        # both unaff, mum 0/1, dad 1/1 fail
+        # both unaff, mum 1/1, dad 1/1 pass
         pass
