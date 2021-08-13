@@ -151,7 +151,7 @@ class AllosomalFilter(object):
         '''screens variants in X/Y where there are no parents and adds candidates
         to candidate_variants
         '''
-        #all allosomal variants with no parents pass
+        #all allosomal variants on X with no parents pass, Y fail if 0/1
         variants = self.variants_per_gene[self.hgncid]
         for v in variants.keys():
             genotype = self.get_variant_genotype(variants[v]['child'], v)
