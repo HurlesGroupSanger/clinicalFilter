@@ -66,6 +66,8 @@ class AllosomalFilter(object):
                                                                         dad_gt,
                                                                         mum_aff,
                                                                         dad_aff)
+                    elif inh == 'monoallelic_Y_hem':
+                        logging.info(v + "fails inheritance filters homozygous GT in " + inh)
                     else:
                         logging.info(v + " unknown gene mode " + inh)
             elif genotype == 'hemizygous':
@@ -89,6 +91,16 @@ class AllosomalFilter(object):
                                                                                dad_aff)
                     elif inh == 'X-linked over-dominant':
                         self.gn_X_linked_over_dominant_gt_hemizygous_parents_filter(
+                            v,
+                            variants[
+                                v][
+                                'child'],
+                            mum_gt,
+                            dad_gt,
+                            mum_aff,
+                            dad_aff)
+                    elif inh == 'monoallelic_Y_hem':
+                        self.gn_mono_y_hem_gt_hemizygous_parents_filter(
                             v,
                             variants[
                                 v][
@@ -128,6 +140,8 @@ class AllosomalFilter(object):
                             dad_gt,
                             mum_aff,
                             dad_aff)
+                    elif inh == 'monoallelic_Y_hem':
+                        logging.info(v + "fails inheritance filters heterozygous GT in " + inh)
                     else:
                         logging.info(v + " unknown gene mode " + inh)
             else:
@@ -143,9 +157,22 @@ class AllosomalFilter(object):
             genotype = self.get_variant_genotype(variants[v]['child'], v)
             if genotype is None:
                 continue
-            for inh in self.gene['mode']:
-                add_single_var_to_candidates(v, variants[v]['child'], self.hgncid, inh.lower(),
+            if variants[v]['child'].chrom == 'X':
+                for inh in self.gene['mode']:
+                    add_single_var_to_candidates(v, variants[v]['child'], self.hgncid, inh.lower(),
                                                  self.candidate_variants)
+            elif variants[v]['child'].chrom == 'Y':
+                if variants[v]['child'].gt == '1/1':
+                    add_single_var_to_candidates(v, variants[v]['child'],
+                                                 self.hgncid, inh.lower(),
+                                                 self.candidate_variants)
+                else:
+                    logging.info(
+                        v + "fails inheritance filters non-hemizygous GT in " + inh)
+            else:
+                logging.info(
+                    v + "fails inheritance allosomal inheritance filters, chromosome = " + variants[v]['child'].chrom)
+
 
     def allosomal_single_parent(self):
         '''screens variants in X/Y where there is one parent and adds candidates
@@ -295,9 +322,51 @@ class AllosomalFilter(object):
                     varid + " failed inheritance filter for heterozygous "
                             "variant in X-linked over-dominant gene")
 
+    def gn_mono_y_hem_gt_hemizygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
+        self.inheritance_report.populate_inheritance_report('allosomal',
+                                                            'monoallelic_Y_hemizygous',
+                                                            'hemizygous',
+                                                            mum_gt, dad_gt,
+                                                            mum_aff, dad_aff)
+        if dad_aff and dad_gt == '1/1':
+            logging.info(
+                varid + " failed inheritance filter for hemizygous "
+                        "variant in monoallelic_Y_hemizygous gene")
+        else:
+            add_single_var_to_candidates(varid, var, self.hgncid,
+                                         'monoallelic_Y_hemizygous',
+                                         self.candidate_variants)
+
     def get_variant_genotype(self, variant, v):
         '''work out if a variant is homozygous, heterozygous or hemizygous'''
-        if self.proband_X_count >= 2:
+        if variant.chrom == 'X':
+            if self.proband_X_count >= 2:
+                if variant.gt == '0/1':
+                    genotype = 'heterozygous'
+                elif variant.gt == '1/1':
+                    genotype = 'hemizygous'
+                else:
+                    logging.info(v + " fails invalid genotype " + variant.gt)
+                    return None
+            elif self.proband_X_count == 1:
+                if variant.gt == '1/1':
+                    genotype = 'hemizygous'
+                elif variant.gt == '0/1':
+                    adsplit = variant.ad.split(',')
+                    vaf = int(adsplit[1]) / (int(adsplit[0]) + int(adsplit[1]))
+                    if vaf > 0.9:
+                        genotype = 'hemizygous'
+                    else:
+                        logging.info(v + " fails 0/1 variant with low VAF in proband "
+                                         "with 1 X chromosome")
+                        return None
+                else:
+                    logging.info(v + " fails invalid genotype " + variant.gt)
+                    return None
+            else:
+                logging.info(v + " fails invalid X chromsome count")
+                return None
+        elif variant.chrom == 'Y':
             if variant.gt == '0/1':
                 genotype = 'heterozygous'
             elif variant.gt == '1/1':
@@ -305,23 +374,5 @@ class AllosomalFilter(object):
             else:
                 logging.info(v + " fails invalid genotype " + variant.gt)
                 return None
-        elif self.proband_X_count == 1:
-            if variant.gt == '1/1':
-                genotype = 'hemizygous'
-            elif variant.gt == '0/1':
-                adsplit = variant.ad.split(',')
-                vaf = int(adsplit[1]) / (int(adsplit[0]) + int(adsplit[1]))
-                if vaf > 0.9:
-                    genotype = 'hemizygous'
-                else:
-                    logging.info(v + " fails 0/1 variant with low VAF in proband "
-                                     "with 1 X chromosome")
-                    return None
-            else:
-                logging.info(v + " fails invalid genotype " + variant.gt)
-                return None
-        else:
-            logging.info(v + " fails invalid X chromsome count")
-            return None
 
         return genotype

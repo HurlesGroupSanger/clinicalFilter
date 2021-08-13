@@ -34,36 +34,6 @@ class InheritanceFiltering(object):
 
     def inheritance_filter(self):
 
-        # self.candidate_variants = {}
-        # self.candidate_variants['single_variants'] = {}
-        # self.candidate_variants['compound_hets'] = {}
-
-        # inheritance report gives data to populate a matrix for every possible
-        # combination of proband and parent GT and affected status for each mode of
-        # inheritance. Some variants will be counted twice (genes which are both
-        # mono and biallelic). Split into X and autosome
-        # inheritance_report = create_blank_inheritance_report()
-
-        # self.inhreport = InheritanceReport()
-
-        # lof_cqs = ['transcript_ablation', 'splice_donor_variant', 'stop_lost',
-        #            'splice_acceptor_variant', 'stop_gained', 'frameshift_variant',
-        #            'start_lost']
-
-        # if self.family.has_both_parents():
-        #     self.parents = 'both'
-        # elif self.family.has_no_parents():
-        #     self.parents = 'none'
-        # elif self.family.has_dad():
-        #     self.parents = 'dad_only'
-        # elif self.family.has_mum():
-        #     self.parents = 'mum_only'
-        # else:
-        #     print(
-        #         "Error: should not get here as family must either have both, one \
-        #          or no parents")
-        #     logging.error("Can't calculate inheritance type - family error")
-        #     exit(1)
         if self.genes:
             self.inheritance_filter_genes()
         if self.regions:

@@ -214,13 +214,43 @@ class AutosomalFilter(object):
                                  "variant in mosaic gene")
 
     def imprinted_heterozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
-        pass
+        self.inheritance_report.populate_inheritance_report('autosomal',
+                                                            'imprinted', var.gt,
+                                                            mum_gt, dad_gt,
+                                                            mum_aff, dad_aff)
+        vpass = 'n'
+        if mum_aff and dad_aff:
+            if not (dad_gt == '1/1' and mum_gt == '1/1'):
+                add_single_var_to_candidates(varid, var, self.hgncid,
+                                               'imprinted',
+                                               self.candidate_variants)
+                vpass = 'y'
+        elif mum_aff and not dad_aff:
+            if not dad_gt == '1/1':
+                add_single_var_to_candidates(varid, var, self.hgncid,
+                                             'imprinted',
+                                             self.candidate_variants)
+                vpass = 'y'
+        elif not mum_aff and dad_aff:
+            if not mum_gt == '1/1':
+                add_single_var_to_candidates(varid, var, self.hgncid,
+                                             'imprinted',
+                                             self.candidate_variants)
+                vpass = 'y'
+        else:
+            if not dad_gt == '1/1' and not mum_gt == '1/1':
+                add_single_var_to_candidates(varid, var, self.hgncid,
+                                             'imprinted',
+                                             self.candidate_variants)
+                vpass = 'y'
+
+        if vpass == 'n':
+            logging.info(varid + " failed inheritance filter for heterozygous "
+                                 "variant in imprinted gene")
+
 
     def biallelic_homozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
         # todo will need modification when CNVs (and UPDs) added
-
-        # populate_inheritance_report(self.inheritance_report, 'autosomal', 'biallelic',
-        #                             var.gt, mum_gt, dad_gt, mum_aff, dad_aff)
         self.inheritance_report.populate_inheritance_report('autosomal',
                                                             'biallelic', var.gt,
                                                             mum_gt, dad_gt,
@@ -255,9 +285,6 @@ class AutosomalFilter(object):
 
     def monoallelic_homozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
         # todo will need modification when CNVs (and UPDs) added
-
-        # populate_inheritance_report(self.inheritance_report, 'autosomal', 'monoallelic',
-        #                             var.gt, mum_gt, dad_gt, mum_aff, dad_aff)
         self.inheritance_report.populate_inheritance_report('autosomal',
                                                             'monoallelic', var.gt,
                                                             mum_gt, dad_gt,
@@ -280,7 +307,15 @@ class AutosomalFilter(object):
         pass
 
     def imprinted_homozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
-        pass
+        self.inheritance_report.populate_inheritance_report('autosomal',
+                                                            'imprinted',
+                                                            var.gt,
+                                                            mum_gt, dad_gt,
+                                                            mum_aff, dad_aff)
+        #all fail
+        logging.info(varid + " failed inheritance filter for homozygous "
+                             "variant in imprinted gene")
+
 
     def biallelic_no_parents_filter(self, varid, var):
         if var.genotype == '1':
@@ -317,11 +352,11 @@ class AutosomalFilter(object):
             add_single_var_to_candidates(varid, var, self.hgncid, 'imprinted',
                                            self.candidate_variants)
         elif var.genotype == '2':
-            add_single_var_to_candidates(varid, var, self.hgncid, 'imprinted',
-                                         self.candidate_variants)
+            logging.info(varid + " failed inheritance filter for homozygous "
+                                 "variant in imprinted gene")
             #todo add flag for CNV here or modify inheritance to include CNV data
         else:
-            logging.info(varid + " failed inheritance filter for biallelic "
+            logging.info(varid + " failed inheritance filter for imprinted "
                                  "variant, invalid genotype")
 
 
