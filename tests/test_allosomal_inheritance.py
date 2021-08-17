@@ -181,7 +181,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                        None)
 
     def test_allosomal_no_parents(self):
-        # all should pass - only testing one for now
+        # in X all should pass - only testing one for now
         variants_per_gene_1 = create_test_variants_per_gene(self.variants_1,
                                                                self.family_XX_no_parents)
         inheritancefilter_1 = InheritanceFiltering(variants_per_gene_1,
@@ -198,6 +198,42 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                         'X_1097183_A_GG'][
                         'child'],
                 'hgncid': '1234'}}, 'compound_hets': {}}
+
+        self.assertEqual(inheritancefilter_1.candidate_variants,
+                         test_candidate_variants_1)
+
+        # in Y should pass if 1/1
+
+        variants_per_gene_2 = create_test_variants_per_gene(self.variants_2Y,
+                                                            self.family_XY_no_parents)
+        inheritancefilter_2 = InheritanceFiltering(variants_per_gene_2,
+                                                   self.family_XY_no_parents,
+                                                   self.genes_monoallelic_Y_hemizygous, None,
+                                                   None)
+        inheritancefilter_2.inheritance_filter_genes()
+        test_candidate_variants_2 = {'single_variants': {
+            'Y_1097183_A_GG': {
+                'mode': {'monoallelic_Y_hemizygous'},
+                'variant':
+                    variants_per_gene_2[
+                        '1234'][
+                        'Y_1097183_A_GG'][
+                        'child'],
+                'hgncid': '1234'}}, 'compound_hets': {}}
+
+        self.assertEqual(inheritancefilter_2.candidate_variants,
+                         test_candidate_variants_2)
+
+        # Y fail if 0/1
+        variants_per_gene_1 = create_test_variants_per_gene(self.variants_1Y,
+                                                            self.family_XY_no_parents)
+        inheritancefilter_1 = InheritanceFiltering(variants_per_gene_1,
+                                                   self.family_XY_no_parents,
+                                                   self.genes_monoallelic_Y_hemizygous,
+                                                   None,
+                                                   None)
+        inheritancefilter_1.inheritance_filter_genes()
+        test_candidate_variants_1 = {'single_variants': {}, 'compound_hets': {}}
 
         self.assertEqual(inheritancefilter_1.candidate_variants,
                          test_candidate_variants_1)
