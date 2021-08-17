@@ -38,7 +38,7 @@ class AllosomalFilter(object):
 
             genotype = self.get_variant_genotype(variants[v]['child'], v)
             # if dad gt = 0/1 should go to a different (mosaic) pipeline - fail for now
-            if dad_gt == '0/1':
+            if dad_gt == '0/1' and variants[v]['child'].chrom == 'X':
                 print("failed due to 0/1 paternal genotype in X: " + v)
                 exit(1)
             # if genotype is none then variant fails
@@ -328,7 +328,7 @@ class AllosomalFilter(object):
                                                             'hemizygous',
                                                             mum_gt, dad_gt,
                                                             mum_aff, dad_aff)
-        if dad_aff and dad_gt == '1/1':
+        if not dad_aff and dad_gt == '1/1':
             logging.info(
                 varid + " failed inheritance filter for hemizygous "
                         "variant in monoallelic_Y_hemizygous gene")
@@ -370,7 +370,7 @@ class AllosomalFilter(object):
             if variant.gt == '0/1':
                 genotype = 'heterozygous'
             elif variant.gt == '1/1':
-                genotype = 'homozygous'
+                genotype = 'hemizygous'
             else:
                 logging.info(v + " fails invalid genotype " + variant.gt)
                 return None

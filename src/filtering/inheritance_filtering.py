@@ -53,6 +53,7 @@ class InheritanceFiltering(object):
     def inheritance_filter_genes(self):
         # inheritance filters for use with a gene list
         for hgncid in self.variants_per_gene.keys():
+
             if hgncid in self.genes.keys():
                 if self.genes[hgncid]['chr'] in ['X', 'Y']:
                     allosomalfiltering = AllosomalFilter(self, hgncid)
