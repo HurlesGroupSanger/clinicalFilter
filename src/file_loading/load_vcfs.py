@@ -87,7 +87,7 @@ def readvcf(filename, regions, sex):
                          'DDD_AF', 'DDD_father_AF', 'REVEL', 'PolyPhen',
                          'Protein_position',
                          'HGVSc', 'HGVSp', 'DNM_TYPE', 'END', 'SVTYPE', 'SVLEN',
-                         'CNVFILTER']
+                         'CNVFILTER', 'HGNC_ID_ALL']
     formatfields = ['GT', 'GQ', 'PID', 'AD', 'CIFER_INHERITANCE', 'CN']
 
     # create infostring containing only the fields present
@@ -153,12 +153,13 @@ def readvcf(filename, regions, sex):
         vdata['cnv_type'] = oldata[22]
         vdata['cnv_length'] = oldata[23]
         vdata['cnv_filter'] = oldata[24]
-        vdata['gt'] = oldata[25]
-        vdata['gq'] = oldata[26]
-        vdata['pid'] = oldata[27]
-        vdata['ad'] = oldata[28]
-        vdata['cnv_inh'] = oldata[29]
-        vdata['copy_num'] = oldata[30]
+        vdata['hgnc_id_all'] = oldata[25]
+        vdata['gt'] = oldata[26]
+        vdata['gq'] = oldata[27]
+        vdata['pid'] = oldata[28]
+        vdata['ad'] = oldata[29]
+        vdata['cnv_inh'] = oldata[30]
+        vdata['copy_num'] = oldata[31]
 
         # if vdata['dnm'] == 'DNM':
         #     if len(vdata['ref']) == len(vdata['alt']):
