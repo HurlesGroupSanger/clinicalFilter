@@ -18,7 +18,7 @@ class SNV(Variant):
                'hgnc_id="{}", max_af="{}", max_af_pops="{}", ddd_af="{}", ' \
                'ddd_father_af="{}", revel="{}", polyphen="{}", hgvsc="{}", hgvsp="{}", dnm="{}", ' \
                'gt="{}", gq="{}", pid="{}", ad={}, sex="{}", ' \
-               'genotype="{}", inheritance_type="{}", triogenotype="{}")'.format(
+               'genotype="{}", triogenotype="{}")'.format(
             self.chrom, self.pos,
             self.ref, self.alt,
             self.consequence,
@@ -34,12 +34,11 @@ class SNV(Variant):
             self.gt, self.gq, self.pid, self.ad,
             self.sex,
             self.get_genotype(),
-            self.inheritance_type,
             self.triogenotype)
 
     def standardise_gt(self):
         '''Reformat gt to ensure that lowest number allele is first and that
-        the separater is / '''
+        the separator is / '''
         newgt = self.gt
         newgt = newgt.replace('|', '/')
         gtsplit = list(newgt)
