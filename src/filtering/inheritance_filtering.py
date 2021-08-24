@@ -9,18 +9,20 @@ from filtering.inheritance_report import InheritanceReport
 
 class InheritanceFiltering(object):
 
-    def __init__(self, variants_per_gene, family, genes, regions, trusted_variants):
+    def __init__(self, variants_per_gene, family, genes, regions, trusted_variants, candidate_variants, inhreport):
         self.variants_per_gene = variants_per_gene
         self.family = family
         self.genes = genes
         self.regions = regions
         self.trusted_variants = trusted_variants
-        self.candidate_variants = None
-        self.inhreport = None
-        self.candidate_variants = {}
-        self.candidate_variants['single_variants'] = {}
-        self.candidate_variants['compound_hets'] = {}
-        self.inhreport = InheritanceReport()
+        self.candidate_variants = candidate_variants
+        self.inhreport = inhreport
+        # self.candidate_variants = None
+        # self.inhreport = None
+        # self.candidate_variants = {}
+        # self.candidate_variants['single_variants'] = {}
+        # self.candidate_variants['compound_hets'] = {}
+        # self.inhreport = InheritanceReport()
         self.parents = None
         if self.family.has_both_parents():
             self.parents = 'both'
@@ -44,11 +46,11 @@ class InheritanceFiltering(object):
             # todo filtering for trusted variants
             pass
 
-        compoundhets = CompoundHetScreen(self.candidate_variants, self.family)
-        screened_candidate_variants = compoundhets.screen_compound_hets()
+        # compoundhets = CompoundHetScreen(self.candidate_variants, self.family)
+        # screened_candidate_variants = compoundhets.screen_compound_hets()
 
         # print(self.candidate_variants)
-        return screened_candidate_variants, self.inhreport.inheritance_report
+        # return screened_candidate_variants, self.inhreport.inheritance_report
 
     def inheritance_filter_genes(self):
         # inheritance filters for use with a gene list

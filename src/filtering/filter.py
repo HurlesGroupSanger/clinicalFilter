@@ -7,7 +7,10 @@ from file_loading.load_vcfs import load_variants
 from variants.trio_genotype import add_trio_genotypes
 from filtering.preinheritance_filtering import PreInheritanceFiltering
 from filtering.inheritance_filtering import InheritanceFiltering
+from filtering.inheritance_cnv import CNVFiltering
 from filtering.postinheritance_filter import PostInheritanceFiltering
+from filtering.inheritance_report import InheritanceReport
+from filtering.compound_hets import CompoundHetScreen
 
 class Filter(object):
     '''Class for filtering variants'''
@@ -19,6 +22,13 @@ class Filter(object):
         self.known_regions = known_regions
         self.trusted_variants = trusted_variants
         self.outdir = outdir
+        self.candidate_variants = None
+        self.candidate_variants = {}
+        self.candidate_variants['single_variants'] = {}
+        self.candidate_variants['compound_hets'] = {}
+        self.inhreport = None
+        self.inhreport = InheritanceReport()
+        self.screened_candidate_variants = {}
 
     def filter_trio(self):
         """filter each trio"""
@@ -57,18 +67,28 @@ class Filter(object):
         preinheritancefilter = PreInheritanceFiltering(variants)
         variants_per_gene = preinheritancefilter.preinheritance_filter()
 
-        #inheritance filters
-        inheritancefilter = InheritanceFiltering(variants_per_gene, self.family, genes, regions, trusted_variants)
-        candidate_variants, inheritance_report = inheritancefilter.inheritance_filter()
+        #inheritance filters for SNVs
+        inheritancefilter = InheritanceFiltering(variants_per_gene, self.family, genes, regions, trusted_variants, self.candidate_variants, self.inhreport)
+        # candidate_variants, inheritance_report = inheritancefilter.inheritance_filter()
+        inheritancefilter.inheritance_filter()
         # candidate_variants, inheritance_report = inheritance_filter(variants_per_gene, self.family, genes, regions, trusted_variants)
         # import pprint as pp
         # pp.pprint(inheritance_report)
-        print(candidate_variants)
-        print(genes['2516'])
-        exit(0)
+        # print(candidate_variants)
+        # print(genes['2516'])
+        # exit(0)
+
+        # inheritance filters for CNVs
+        cnvfilter = CNVFiltering(variants, self.family, genes, regions, trusted_variants, self.candidate_variants)
+        cnvfilter.cnv_filter()
+
+        # compound het screen
+        compoundhets = CompoundHetScreen(self.candidate_variants, self.family)
+        compoundhets.screen_compound_hets()
+        # self.screened_candidate_variants = compoundhets.screen_compound_hets()
 
         #post inheritance filters
-        postinheritancefilter = PostInheritanceFiltering(candidate_variants, self.family)
+        postinheritancefilter = PostInheritanceFiltering(self.candidate_variants, self.family)
         filtered_candidate_variants = postinheritancefilter.postinheritance_filter()
 
         # print(candidate_variants)
@@ -76,5 +96,5 @@ class Filter(object):
         # print(candidate_variants['compound_hets'].keys())
         # print(candidate_variants['single_variants'].keys())
 
-        return filtered_candidate_variants, inheritance_report
+        return filtered_candidate_variants, self.inheritance_report
 

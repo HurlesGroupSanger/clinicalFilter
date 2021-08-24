@@ -53,7 +53,7 @@ class CompoundHetScreen(object):
         # for gn in candidate_variants['compound_hets'].keys():
         #     print(gn)
         # print(candidate_variants['compound_hets'])
-        return self.candidate_variants
+        # return self.candidate_variants
 
     def is_compound_pair(self, varid1, var1, varid2, var2):
         '''Test to see if a pair of variants could be a compound het'''
