@@ -47,7 +47,7 @@ def add_trio_genotypes_both_parents(variants):
             elif variants['child'][v].cnv_inh == 'biparental_inh':
                 parentgeno = childgeno + childgeno
             else:
-                print("Error: trio genotype for CNV can't be determined " + v)
+                logging.info(v + " Error: trio genotype for CNV can't be determined, CNV inh = " + variants['child'][v].cnv_inh)
                 parentgeno = '??'
             triogenotype = childgeno + parentgeno
             variants['child'][v].set_triogenotype(triogenotype)

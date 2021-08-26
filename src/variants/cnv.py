@@ -43,6 +43,9 @@ class CNV(Variant):
     def get_genotype(self):
         return self.genotype
 
+    def set_triogenotype(self, triogeno):
+        self.triogenotype = triogeno
+
     def is_snv(self):
         """ checks whether the variant is for a CNV
         """

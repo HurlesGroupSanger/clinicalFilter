@@ -21,8 +21,10 @@ def load_variants(family, outdir, regions=None):
         sortedregs = outdir + "/reg.tmp_sorted"
         sortcmd = "sort -k1,1V -k2,2n -k3,3n " + regionfile + " > " + sortedregs
         os.system(sortcmd)
-
         child_vars = readvcf(proband_vcf, sortedregs, family.proband.get_sex())
+        # remove regions files used for bcftools queries
+        os.system("rm " + regionfile)
+        os.system("rm " + sortedregs)
     else:
         child_vars = readvcf(proband_vcf, None, family.proband.get_sex())
 
@@ -56,10 +58,6 @@ def load_variants(family, outdir, regions=None):
         os.system("rm " + childregionfile)
         os.system("rm " + childsortedregs)
 
-    # remove regions files used for bcftools queries
-    os.system("rm " + regionfile)
-    os.system("rm " + sortedregs)
-
     variants = {}
     variants['child'] = child_vars
     variants['mum'] = mum_vars
@@ -74,14 +72,10 @@ def readvcf(filename, regions, sex):
     vars = {}
 
     # get list of info fields in the vcf
-    fieldlistcmd = "bcftools view -h " + filename + " z | grep ^##INFO | sed 's/^.*ID=// ; s/,.*//'"
-    fieldlist = runcommand(fieldlistcmd)
+    #fieldlistcmd = "bcftools view -h " + filename + " z | grep ^##INFO | sed 's/^.*ID=// ; s/,.*//'"
+    #fieldlist = runcommand(fieldlistcmd)
     #fields = fieldlist.split("\n")
 
-    # infofields_wanted = ['Consequence', 'Gene', 'SYMBOL', 'Feature', 'CANONICAL',
-    #               'MANE', 'HGNC_ID', 'MAX_AF', 'MAX_AF_POPS',
-    #               'DDD_AF', 'REVEL', 'PolyPhen', 'Protein_position', 'HGVSc', 'HGVSp']
-    # formatfields = ['GT', 'GQ', 'PID', 'AD']
 
     infofields_wanted = ['Consequence', 'Gene', 'SYMBOL', 'Feature',
                          'CANONICAL',
@@ -123,7 +117,6 @@ def readvcf(filename, regions, sex):
     for ol in outputlines:
         oldata = ol.split("\t")
         alt = oldata[3]
-        #print(alt)
         if alt == '*':  # get rid of any where alt allele is *
             continue
         # populate hash with variant data
