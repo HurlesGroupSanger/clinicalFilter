@@ -12,17 +12,19 @@ from variants.cnv import CNV
 def load_variants(family, outdir, regions=None):
     '''get variants in child and parents'''
     proband_vcf = family.proband.get_vcf_path()
+    if regions:
+        regionfile = outdir + "/reg.tmp"
+        with open(regionfile, 'w') as rf:
+            for r in regions:
+                rf.write(r + "\n")
 
-    regionfile = outdir + "/reg.tmp"
-    with open(regionfile, 'w') as rf:
-        for r in regions:
-            rf.write(r + "\n")
+        sortedregs = outdir + "/reg.tmp_sorted"
+        sortcmd = "sort -k1,1V -k2,2n -k3,3n " + regionfile + " > " + sortedregs
+        os.system(sortcmd)
 
-    sortedregs = outdir + "/reg.tmp_sorted"
-    sortcmd = "sort -k1,1V -k2,2n -k3,3n " + regionfile + " > " + sortedregs
-    os.system(sortcmd)
-
-    child_vars = readvcf(proband_vcf, sortedregs, family.proband.get_sex())
+        child_vars = readvcf(proband_vcf, sortedregs, family.proband.get_sex())
+    else:
+        child_vars = readvcf(proband_vcf, None, family.proband.get_sex())
 
     mum_vars = {}
     dad_vars = {}
@@ -74,7 +76,7 @@ def readvcf(filename, regions, sex):
     # get list of info fields in the vcf
     fieldlistcmd = "bcftools view -h " + filename + " z | grep ^##INFO | sed 's/^.*ID=// ; s/,.*//'"
     fieldlist = runcommand(fieldlistcmd)
-    fields = fieldlist.split("\n")
+    #fields = fieldlist.split("\n")
 
     # infofields_wanted = ['Consequence', 'Gene', 'SYMBOL', 'Feature', 'CANONICAL',
     #               'MANE', 'HGNC_ID', 'MAX_AF', 'MAX_AF_POPS',
@@ -104,12 +106,12 @@ def readvcf(filename, regions, sex):
 
     if regions is None:
         bcfcmdroot = "bcftools norm -m - " + filename + \
-                     " | bcftools view -e 'INFO/MAX_AF>0.005 | FORMAT/GT[0]!=" + \
-                     '"alt"' + "'  | bcftools query -u -f '%CHROM\t%POS\t%REF\t%ALT{0}\t"
+                     " | bcftools view -e 'INFO/MAX_AF>0.005 | FORMAT/GT[0]=" + \
+                     '"ref"' + "'  | bcftools query -u -f '%CHROM\t%POS\t%REF\t%ALT{0}\t"
     else:
         bcfcmdroot = "bcftools norm -m - -R " + regions + " " + filename + \
-                     " | bcftools view -e 'INFO/MAX_AF>0.005 | FORMAT/GT[0]!=" + \
-                     '"alt"' + "'  | bcftools query -u -f '%CHROM\t%POS\t%REF\t%ALT{0}\t"
+                     " | bcftools view -e 'INFO/MAX_AF>0.005 | FORMAT/GT[0]=" + \
+                     '"ref"' + "'  | bcftools query -u -f '%CHROM\t%POS\t%REF\t%ALT{0}\t"
 
     bcfcmd = bcfcmdroot + infostring + "[\t%" + formatstring + "]\n'"
     output = runcommand(bcfcmd)
@@ -118,10 +120,10 @@ def readvcf(filename, regions, sex):
         outputlines = output.split('\n')
     else:
         logging.error("Variants not loaded from " + filename)
-
     for ol in outputlines:
         oldata = ol.split("\t")
         alt = oldata[3]
+        #print(alt)
         if alt == '*':  # get rid of any where alt allele is *
             continue
         # populate hash with variant data
@@ -160,7 +162,7 @@ def readvcf(filename, regions, sex):
         vdata['pid'] = oldata[29]
         vdata['ad'] = oldata[30]
         vdata['cnv_inh'] = oldata[31]
-        vdata['copy_num'] = oldata[32]
+        vdata['cn'] = oldata[32]
 
         # if vdata['dnm'] == 'DNM':
         #     if len(vdata['ref']) == len(vdata['alt']):
@@ -176,9 +178,6 @@ def readvcf(filename, regions, sex):
         var = SNV
         if alt in ['<DEL>', '<DUP>']:
             var = CNV
-            print(vdata)
-            print(var)
-            exit(0)
         vars[varid] = var(vdata)
 
     logging.info("Variants loaded from " + filename)

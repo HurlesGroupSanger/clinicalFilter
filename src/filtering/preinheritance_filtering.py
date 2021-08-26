@@ -31,6 +31,10 @@ class PreInheritanceFiltering(object):
                         'inframe_insertion', 'inframe_deletion', 'stop_lost']
 
         for v in self.variants['child'].keys():
+            # we only want SNVs in variants per gene
+            if not self.variants['child'][v].is_snv():
+                continue
+
             # fail if child GQ < 40
             if int(self.variants['child'][v].gq) < 40 and self.variants['child'][
                 v].chrom not in ['X', 'Y']:

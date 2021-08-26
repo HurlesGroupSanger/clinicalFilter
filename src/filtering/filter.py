@@ -41,10 +41,11 @@ class Filter(object):
         trusted_variants = None
 
         if self.known_genes:
-            genes = load_genes(self.known_genes)
-            for g in genes.keys():
-                reg = genes[g]['chr'] + "\t" + genes[g]['start'] + "\t" + genes[g]['end']
-                vcfregions.add(reg)
+            pass
+            # genes = load_genes(self.known_genes)
+            # for g in genes.keys():
+            #     reg = genes[g]['chr'] + "\t" + genes[g]['start'] + "\t" + genes[g]['end']
+            #     vcfregions.add(reg)
 
         if self.known_regions:
             #TODO add regions to the vcfregions set and populate regions variable

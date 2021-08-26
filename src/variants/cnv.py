@@ -20,7 +20,7 @@ class CNV(Variant):
             self.ref, self.alt,
             self.cnv_type, self.cnv_length,
             self.cnv_filter, self.consequence,
-            self.hgnc_all, self.symbol_all,
+            self.hgnc_id_all, self.symbol_all,
             self.gt, self.cn, self.cnv_inh,
             self.sex,
             self.get_genotype(),
