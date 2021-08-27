@@ -41,8 +41,7 @@ class Filter(object):
         trusted_variants = None
 
         if self.known_genes:
-            pass
-            # genes = load_genes(self.known_genes)
+            genes = load_genes(self.known_genes)
             # for g in genes.keys():
             #     reg = genes[g]['chr'] + "\t" + genes[g]['start'] + "\t" + genes[g]['end']
             #     vcfregions.add(reg)
@@ -72,12 +71,6 @@ class Filter(object):
         inheritancefilter = InheritanceFiltering(variants_per_gene, self.family, genes, regions, trusted_variants, self.candidate_variants, self.inhreport)
         # candidate_variants, inheritance_report = inheritancefilter.inheritance_filter()
         inheritancefilter.inheritance_filter()
-        # candidate_variants, inheritance_report = inheritance_filter(variants_per_gene, self.family, genes, regions, trusted_variants)
-        # import pprint as pp
-        # pp.pprint(inheritance_report)
-        # print(candidate_variants)
-        # print(genes['2516'])
-        # exit(0)
 
         # inheritance filters for CNVs
         cnvfilter = CNVFiltering(variants, self.family, genes, regions, trusted_variants, self.candidate_variants)
@@ -97,5 +90,5 @@ class Filter(object):
         # print(candidate_variants['compound_hets'].keys())
         # print(candidate_variants['single_variants'].keys())
 
-        return filtered_candidate_variants, self.inheritance_report
+        return filtered_candidate_variants, self.inhreport
 

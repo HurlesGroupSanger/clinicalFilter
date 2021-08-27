@@ -29,6 +29,8 @@ class AllosomalFilter(object):
         '''
         variants = self.variants_per_gene[self.hgncid]
         for v in variants.keys():
+            if not variants[v]['child'].is_snv():
+                continue
             mum_genotype = variants[v]['child'].get_mum_genotype()
             dad_genotype = variants[v]['child'].get_dad_genotype()
             mum_gt = convert_genotype_to_gt(mum_genotype)
@@ -154,6 +156,8 @@ class AllosomalFilter(object):
         #all allosomal variants on X with no parents pass, Y fail if 0/1
         variants = self.variants_per_gene[self.hgncid]
         for v in variants.keys():
+            if not variants[v]['child'].is_snv():
+                continue
             genotype = self.get_variant_genotype(variants[v]['child'], v)
             if genotype is None:
                 continue

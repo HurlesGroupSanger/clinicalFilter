@@ -36,7 +36,8 @@ class AutosomalFilter(object):
         variants = self.variants_per_gene[self.hgncid]
 
         for v in variants.keys():
-
+            if not variants[v]['child'].is_snv():
+                continue
             mum_genotype = variants[v]['child'].get_mum_genotype()
             dad_genotype = variants[v]['child'].get_dad_genotype()
             mum_gt = convert_genotype_to_gt(mum_genotype)
@@ -93,6 +94,8 @@ class AutosomalFilter(object):
         variants = self.variants_per_gene[self.hgncid]
 
         for v in variants.keys():
+            if not variants[v]['child'].is_snv():
+                continue
             for inh in self.gene['mode']:
                 if inh == 'Biallelic':
                     self.biallelic_no_parents_filter(v, variants[v]['child'])
