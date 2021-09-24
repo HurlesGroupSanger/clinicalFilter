@@ -47,7 +47,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
              'consequence': 'transcript_ablation', 'ensg': 'ENSG01234',
              'symbol': 'MECP1', 'feature': 'ENST01234', 'canonical': 'YES',
              'mane': 'NM01234', 'hgnc_id': 'HGNC:123', 'cnv_filter': 'Pass',
-             'hgcn_id_all': 'HGNC:1|HGNC:2|HGNC:3',
+             'hgcn_id_all': 'HGNC:1|HGNC:2|HGNC:3', 'cnv_end':'11071936',
              'symbol_all': 'MECP1|MECP2|MECP3', 'sex': 'XY', 'cn': '0',
              'cnv_inh':'biparental_inh'}
 

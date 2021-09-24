@@ -83,7 +83,8 @@ def readvcf(filename, regions, sex):
                          'DDD_AF', 'DDD_father_AF', 'REVEL', 'PolyPhen',
                          'Protein_position',
                          'HGVSc', 'HGVSp', 'DNM_TYPE', 'END', 'SVTYPE', 'SVLEN',
-                         'CNVFILTER', 'HGNC_ID_ALL', 'SYMBOL_ALL']
+                         'CNVFILTER', 'HGNC_ID_ALL', 'SYMBOL_ALL', 'AC_XX',
+                         'AN_XX', 'nhomalt_XX', 'AC_XY', 'AN_XY', 'nhomalt_XY']
     formatfields = ['GT', 'GQ', 'PID', 'AD', 'CIFER_INHERITANCE', 'CN']
 
     # create infostring containing only the fields present
@@ -150,12 +151,18 @@ def readvcf(filename, regions, sex):
         vdata['cnv_filter'] = oldata[24]
         vdata['hgnc_id_all'] = oldata[25]
         vdata['symbol_all'] = oldata[26]
-        vdata['gt'] = oldata[27]
-        vdata['gq'] = oldata[28]
-        vdata['pid'] = oldata[29]
-        vdata['ad'] = oldata[30]
-        vdata['cnv_inh'] = oldata[31]
-        vdata['cn'] = oldata[32]
+        vdata['ac_XX'] = oldata[27]
+        vdata['an_XX'] = oldata[28]
+        vdata['nhomalt_XX'] = oldata[29]
+        vdata['ac_XY'] = oldata[30]
+        vdata['an_XY'] = oldata[31]
+        vdata['nhomalt_XY'] = oldata[32]
+        vdata['gt'] = oldata[33]
+        vdata['gq'] = oldata[34]
+        vdata['pid'] = oldata[35]
+        vdata['ad'] = oldata[36]
+        vdata['cnv_inh'] = oldata[37]
+        vdata['cn'] = oldata[38]
 
         # if vdata['dnm'] == 'DNM':
         #     if len(vdata['ref']) == len(vdata['alt']):
