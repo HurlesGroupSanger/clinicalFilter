@@ -41,6 +41,7 @@ class SNV(Variant):
     def calculate_ac_het_hemi(self):
         '''calculate AC_het and AC_hemi'''
         AC_hemi = 0
+        AC_het = 0
         #change all '.' to '0'
         if self.AC_XX == '.':
             self.AC_XX = '0'
@@ -51,12 +52,12 @@ class SNV(Variant):
         if self.nhomalt_XY == '.':
             self.nhomalt_XY = '0'
 
-        total_AC = int(self.AC_XX) + int(self.AC_XY)
-        total_nhom = int(self.nhomalt_XX) + int(self.nhomalt_XY)
-        AC_het = total_AC - (2 * total_nhom)
-
         if self.chrom == 'X' or self.chrom == 'Y':
-            AC_hemi = 2 * int(self.nhomalt_XY)
+            AC_hemi = int(self.nhomalt_XY)
+        else:
+            total_AC = int(self.AC_XX) + int(self.AC_XY)
+            total_nhom = int(self.nhomalt_XX) + int(self.nhomalt_XY)
+            AC_het = total_AC - (2 * total_nhom)
 
         if AC_het < 0 or AC_hemi < 0:
             logging.info("Warning - negative AC_het or AC_hemi for " + \
