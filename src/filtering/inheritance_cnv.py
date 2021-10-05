@@ -51,7 +51,6 @@ class CNVFiltering(object):
             if self.variants['child'][v].cnv_filter == 'Fail':
                 logging.info(v + " CNV failed quality filters")
                 continue
-            print(self.variants['child'][v])
             #get gene modes
             modes = set()
             if self.genes:

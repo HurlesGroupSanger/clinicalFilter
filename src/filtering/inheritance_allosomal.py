@@ -41,8 +41,7 @@ class AllosomalFilter(object):
             genotype = self.get_variant_genotype(variants[v]['child'], v)
             # if dad gt = 0/1 should go to a different (mosaic) pipeline - fail for now
             if dad_gt == '0/1' and variants[v]['child'].chrom == 'X':
-                print("failed due to 0/1 paternal genotype in X: " + v)
-                exit(1)
+                logging.info(v + " failed due to 0/1 paternal genotype in X: ")
             # if genotype is none then variant fails
             if genotype is None:
                 continue
