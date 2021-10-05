@@ -4,7 +4,9 @@ import copy
 from tests.test_utils import create_test_candidate_vars
 from tests.test_utils import create_test_person
 from tests.test_utils import create_test_family
-from tests.test_utils import create_test_variants_per_gene
+from tests.test_utils import create_test_cnv
+
+from filtering.filter import CNVFiltering
 
 class TestAutosomalInheritanceFilter(unittest.TestCase):
 
@@ -43,16 +45,29 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.genes_X_linked_dominant = copy.deepcopy(self.genes_hemizygous)
         self.genes_X_linked_dominant['1234']['mode'] = {'X-linked dominant'}
 
-        self.cn0vardata = {'chrom': '1', 'pos': '10971936', 'ref': 'T', 'alt': '<DEL>',
+        self.cn0vardata_bi = {'chrom': '1', 'pos': '10971936', 'ref': 'T', 'alt': '<DEL>',
              'consequence': 'transcript_ablation', 'ensg': 'ENSG01234',
              'symbol': 'MECP1', 'feature': 'ENST01234', 'canonical': 'YES',
              'mane': 'NM01234', 'hgnc_id': 'HGNC:123', 'cnv_filter': 'Pass',
-             'hgcn_id_all': 'HGNC:1|HGNC:2|HGNC:3', 'cnv_end':'11071936',
+             'hgnc_id_all': 'HGNC:1|HGNC:2|HGNC:3', 'cnv_end':'11071936',
              'symbol_all': 'MECP1|MECP2|MECP3', 'sex': 'XY', 'cn': '0',
-             'cnv_inh':'biparental_inh'}
+             'cnv_inh':'biparental_inh', 'cnv_length':'5000'}
+        self.cn0vardata_denovo = copy.deepcopy(self.cn0vardata_bi)
+        self.cn0vardata_denovo['cnv_inh']= 'not_inherited'
+        self.cn0vardata_pat = copy.deepcopy(self.cn0vardata_bi)
+        self.cn0vardata_pat['cnv_inh']= 'paternal_inh'
+        self.cn0vardata_mat = copy.deepcopy(self.cn0vardata_bi)
+        self.cn0vardata_mat['cnv_inh']= 'maternal_inh'
 
     def test_inh_matches_parent_aff_status(self):
         #pass if paternal and dad affected
+        testcnv1 = create_test_cnv(self.cn0vardata_pat)
+        testvars1 = {'child':{'1_10971936_A_DEL':testcnv1}}
+        cnvfilter_dadaff = CNVFiltering(testvars1, self.family_dad_aff, self.genes_monoallelic, None,
+                                 None, None)
+        cnvfilter_dadaff.cnv_filter()
+        self.assertEqual(cnvfilter_dadaff.candidate_variants,
+                         None)
         #fail if paternal and dad unaffected
         # pass if maternal and mum affected
         # fail if maternal and mum unaffected

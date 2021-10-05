@@ -59,7 +59,6 @@ def main():
     # pp.pprint(inheritance_reports_per_family)
 
     create_output(families, variants_per_family, inheritance_reports_per_family, args.outdir)
-    exit(0)
     # vcf_file = '/Volumes/team29/re3/new_clinical_filtering/test_data/vcfs/DDDP100001.gatk.vep.revel.2020-10-29.vcf.gz'
     # readvcf(vcf_file)
 

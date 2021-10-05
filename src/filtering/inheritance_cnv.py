@@ -51,7 +51,7 @@ class CNVFiltering(object):
             if self.variants['child'][v].cnv_filter == 'Fail':
                 logging.info(v + " CNV failed quality filters")
                 continue
-                exit(0)
+            print(self.variants['child'][v])
             #get gene modes
             modes = set()
             if self.genes:
@@ -71,7 +71,7 @@ class CNVFiltering(object):
                     #ddg2p filter
                     passddg2p = self.cnv_ddg2p_filter(v)
                     if not passddg2p:
-                        posscomphet = self.cnv_candidate_compound_het_filter(v)
+                        posscomphet = self.cnv_candidate_compound_het_filter(v, modes)
                         if not posscomphet:
                             logging.info(
                                 v + " failed CNV filter, inheritance doesn't "
@@ -112,6 +112,8 @@ class CNVFiltering(object):
         # OR
         # male (XY) proband X chromosome, maternal inh and mum unaffected
         # no variants are added to candidates at this stage
+        if not self.variants['child'][varid].cnv_inh in ['paternal_inh', 'maternal_inh', 'biparental_inh']:
+            return True
         if self.variants['child'][varid].cnv_inh == 'paternal_inh' and self.dad_aff:
             return True
         elif self.variants['child'][varid].cnv_inh == 'maternal_inh' and self.mum_aff:
@@ -225,3 +227,5 @@ class CNVFiltering(object):
                 genemodes = self.genes[hgncid]['mode']
                 for m in genemodes:
                     modes.add(m)
+
+

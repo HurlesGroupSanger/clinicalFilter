@@ -3,6 +3,7 @@
 # methods to create person, family and variant objects to use in tests
 
 from variants.snv import SNV
+from variants.cnv import CNV
 from family.families import Person
 from family.families import Family
 from variants.trio_genotype import add_trio_genotypes
@@ -18,6 +19,12 @@ def create_test_family(child, mum, dad):
 def create_test_snv(vardata):
     '''create an SNV from a variant hash'''
     Var = SNV
+    var = Var(vardata)
+    return var
+
+def create_test_cnv(vardata):
+    '''create an SNV from a variant hash'''
+    Var = CNV
     var = Var(vardata)
     return var
 

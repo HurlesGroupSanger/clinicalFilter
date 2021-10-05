@@ -17,12 +17,6 @@ class InheritanceFiltering(object):
         self.trusted_variants = trusted_variants
         self.candidate_variants = candidate_variants
         self.inhreport = inhreport
-        # self.candidate_variants = None
-        # self.inhreport = None
-        # self.candidate_variants = {}
-        # self.candidate_variants['single_variants'] = {}
-        # self.candidate_variants['compound_hets'] = {}
-        # self.inhreport = InheritanceReport()
         self.parents = None
         if self.family.has_both_parents():
             self.parents = 'both'

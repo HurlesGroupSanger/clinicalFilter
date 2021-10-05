@@ -142,9 +142,9 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                           self.family_both_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
-                                                 self.family_both_aff,
-                                                 self.genes_biallelic, None,
-                                                 None)
+                                                     self.family_both_aff,
+                                                     self.genes_biallelic, None,
+                                                     None)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_compound_het_100 = {'single_variants': {},
                                                 'compound_hets': {'1234': {

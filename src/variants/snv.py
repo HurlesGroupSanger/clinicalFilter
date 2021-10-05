@@ -43,10 +43,10 @@ class SNV(Variant):
         AC_hemi = 0
         AC_het = 0
         #change all '.' to '0'
-        if self.AC_XX == '.':
-            self.AC_XX = '0'
-        if self.AC_XY == '.':
-            self.AC_XY = '0'
+        if self.ac_XX == '.':
+            self.ac_XX = '0'
+        if self.ac_XY == '.':
+            self.ac_XY = '0'
         if self.nhomalt_XX == '.':
             self.nhomalt_XX = '0'
         if self.nhomalt_XY == '.':
@@ -55,7 +55,7 @@ class SNV(Variant):
         if self.chrom == 'X' or self.chrom == 'Y':
             AC_hemi = int(self.nhomalt_XY)
         else:
-            total_AC = int(self.AC_XX) + int(self.AC_XY)
+            total_AC = int(self.ac_XX) + int(self.ac_XY)
             total_nhom = int(self.nhomalt_XX) + int(self.nhomalt_XY)
             AC_het = total_AC - (2 * total_nhom)
 

@@ -44,13 +44,7 @@ class AutosomalFilter(object):
             dad_gt = convert_genotype_to_gt(dad_genotype)
             mum_aff = self.family.mum.affected
             dad_aff = self.family.dad.affected
-            #
-            # print(variants[v]['child'].genotype)
-            # print(mum_gt)
-            # print(dad_gt)
-            # print(mum_aff)
-            # print(dad_aff)
-            # exit(0)
+
 
             if variants[v]['child'].genotype == '1':
                 #heterozygous
