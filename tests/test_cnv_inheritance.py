@@ -58,6 +58,10 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.cn0vardata_pat['cnv_inh']= 'paternal_inh'
         self.cn0vardata_mat = copy.deepcopy(self.cn0vardata_bi)
         self.cn0vardata_mat['cnv_inh']= 'maternal_inh'
+        self.cn1vardata_bi = copy.deepcopy(self.cn0vardata_bi)
+        self.cn1vardata_bi['cn'] = '1'
+        self.xvardata_mat = copy.deepcopy(self.cn0vardata_mat)
+        self.xvardata_mat['chrom'] = 'X'
 
     def test_inh_matches_parent_aff_status(self):
         #pass if paternal and dad affected
@@ -66,17 +70,73 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         cnvfilter_dadaff = CNVFiltering(testvars1, self.family_dad_aff, self.genes_monoallelic, None,
                                  None, None)
         cnvfilter_dadaff.cnv_filter()
-        self.assertEqual(cnvfilter_dadaff.candidate_variants,
-                         None)
+        self.assertEqual(cnvfilter_dadaff.inhmatch, True)
         #fail if paternal and dad unaffected
+        cnvfilter_dadunaff = CNVFiltering(testvars1, self.family_both_unaff,
+                                        self.genes_monoallelic, None,
+                                        None, None)
+        cnvfilter_dadunaff.cnv_filter()
+        self.assertEqual(cnvfilter_dadunaff.inhmatch, False)
         # pass if maternal and mum affected
+        testcnv2 = create_test_cnv(self.cn0vardata_mat)
+        testvars2 = {'child': {'1_10971936_A_DEL': testcnv2}}
+        cnvfilter_mumaff = CNVFiltering(testvars2, self.family_mum_aff,
+                                        self.genes_monoallelic, None,
+                                        None, None)
+        cnvfilter_mumaff.cnv_filter()
+        self.assertEqual(cnvfilter_mumaff.inhmatch, True)
         # fail if maternal and mum unaffected
+        cnvfilter_mumunaff = CNVFiltering(testvars2, self.family_both_unaff,
+                                          self.genes_monoallelic, None,
+                                          None, None)
+        cnvfilter_mumunaff.cnv_filter()
+        self.assertEqual(cnvfilter_mumunaff.inhmatch, False)
         #pass if biparental and cn = 0
+        testcnv3 = create_test_cnv(self.cn0vardata_bi)
+        testvars3 = {'child': {'1_10971936_A_DEL': testcnv3}}
+        cnvfilter_bothunaff = CNVFiltering(testvars3, self.family_both_unaff,
+                                          self.genes_monoallelic, None,
+                                          None, None)
+        cnvfilter_bothunaff.cnv_filter()
+        self.assertEqual(cnvfilter_bothunaff.inhmatch, True)
         #pass if biparental and either/both parents affected
+        testcnv4 = create_test_cnv(self.cn1vardata_bi)
+        testvars4 = {'child': {'1_10971936_A_DEL': testcnv4}}
+        cnvfilter_dadaff2 = CNVFiltering(testvars4, self.family_dad_aff,
+                                        self.genes_monoallelic, None,
+                                        None, None)
+        cnvfilter_mumaff2 = CNVFiltering(testvars4, self.family_mum_aff,
+                                         self.genes_monoallelic, None,
+                                         None, None)
+        cnvfilter_bothaff2 = CNVFiltering(testvars4, self.family_both_aff,
+                                         self.genes_monoallelic, None,
+                                         None, None)
+        cnvfilter_dadaff2.cnv_filter()
+        cnvfilter_mumaff2.cnv_filter()
+        cnvfilter_bothaff2.cnv_filter()
+        self.assertEqual(cnvfilter_dadaff2.inhmatch, True)
+        self.assertEqual(cnvfilter_mumaff2.inhmatch, True)
+        self.assertEqual(cnvfilter_bothaff2.inhmatch, True)
         #fail if biparental, cn = 1 and parents both unaff
+        cnvfilter_bothunaff2 = CNVFiltering(testvars4, self.family_both_unaff,
+                                          self.genes_monoallelic, None,
+                                          None, None)
+        cnvfilter_bothunaff2.cnv_filter()
+        self.assertEqual(cnvfilter_bothunaff2.inhmatch, False)
         #pass if male, X, maternal inh and mum unaffected
+        testcnv5 = create_test_cnv(self.xvardata_mat)
+        testvars5 = {'child': {'1_10971936_A_DEL': testcnv5}}
+        cnvfilter_unaff3 = CNVFiltering(testvars5, self.family_both_unaff,
+                                         self.genes_monoallelic, None,
+                                         None, None)
+        cnvfilter_unaff3.cnv_filter()
+        self.assertEqual(cnvfilter_unaff3.inhmatch, True)
         # pass if male, X, maternal inh and mum affected(?)
-        pass
+        cnvfilter_mumaff3 = CNVFiltering(testvars5, self.family_mum_aff,
+                                        self.genes_monoallelic, None,
+                                        None, None)
+        cnvfilter_mumaff3.cnv_filter()
+        self.assertEqual(cnvfilter_mumaff3.inhmatch, True)
 
     def test_non_ddg2p_filter(self):
         #should pass if cnv length > 1000000, fail if smaller and no ddg2p overlap

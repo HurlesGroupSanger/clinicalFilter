@@ -56,8 +56,8 @@ class CNVFiltering(object):
             if self.genes:
                 self.get_ddg2p_modes(v, modes)
         #inheritance
-            inhmatch = self.cnv_inheritance_filter(v)
-            if not inhmatch:
+            self.inhmatch = self.cnv_inheritance_filter(v)
+            if not self.inhmatch:
                 #possible compound het
                 posscomphet = self.cnv_candidate_compound_het_filter(v, modes)
                 if not posscomphet:
@@ -121,7 +121,7 @@ class CNVFiltering(object):
             return True
         elif self.variants['child'][varid].cnv_inh == 'biparental_inh' and (self.mum_aff or self.dad_aff):
             return True
-        elif self.family.proband.sex == 'XY' and not self.mum_aff and self.variants['child'][varid].cnv_inh == 'maternal_inh':
+        elif self.family.proband.sex == 'XY' and self.variants['child'][varid].chrom == 'X' and not self.mum_aff and self.variants['child'][varid].cnv_inh == 'maternal_inh':
             return True
         else:
             return False
