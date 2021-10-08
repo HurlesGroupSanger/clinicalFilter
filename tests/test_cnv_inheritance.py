@@ -32,7 +32,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                   self.dad_aff)
 
         self.genes_biallelic = {
-            '1234': {'chr': '5', 'start': '10971836', 'end': '11904446',
+            '1234': {'chr': '5', 'start': '10971836', 'end': '10984446',
                      'symbol': 'MECP2', 'status': {'Probable DD gene'},
                      'mode': {'Biallelic'},
                      'mechanism': {'Loss of function'}}
@@ -62,6 +62,15 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.cn1vardata_bi['cn'] = '1'
         self.xvardata_mat = copy.deepcopy(self.cn0vardata_mat)
         self.xvardata_mat['chrom'] = 'X'
+        self.cn0vardata_long = copy.deepcopy(self.cn0vardata_bi)
+        self.cn0vardata_long['cnv_length'] = '10000001'
+        self.dupvardata_surround = copy.deepcopy(self.cn0vardata_bi)
+        self.dupvardata_surround['alt'] = '<DUP>'
+        self.dupvardata_surround['cn'] = '3'
+        self.dupvardata_surround['pos'] = '10970000'
+        self.dupvardata_surround['cnv_end'] = '10990000'
+        self.dupvardata_surround['cnv_length'] = '20000'
+
 
     def test_inh_matches_parent_aff_status(self):
         #pass if paternal and dad affected
@@ -139,14 +148,44 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(cnvfilter_mumaff3.inhmatch, True)
 
     def test_non_ddg2p_filter(self):
-        #should pass if cnv length > 1000000, fail if smaller and no ddg2p overlap
-        pass
+        #needs to be tested on a variant/family that firstly passes inheritance_filter
+        #cnv < 1M fail
+        testcnvshort = create_test_cnv(self.cn0vardata_bi)
+        testvarsshort = {'child': {'1_10971936_A_DEL': testcnvshort}}
+        cnvfiltershort = CNVFiltering(testvarsshort, self.family_dad_aff,
+                                        self.genes_monoallelic, None,
+                                        None, None)
+        cnvfiltershort.cnv_filter()
+        self.assertEqual(cnvfiltershort.passnonddg2p, False)
+        #cnv > 1M pass
+        testcnvlong = create_test_cnv(self.cn0vardata_long)
+        testvarslong = {'child': {'1_10971936_A_DEL': testcnvlong}}
+        cnvfilterlong = CNVFiltering(testvarslong, self.family_dad_aff,
+                                      self.genes_monoallelic, None,
+                                      None, None)
+        cnvfilterlong.cnv_filter()
+        self.assertEqual(cnvfilterlong.passnonddg2p, True)
 
     def test_ddg2p_filter(self):
+        #need to test with CNVs that pass inheritance filter but are <1M
         # - fail duplications which completely surround monoallelic, hemizygous and
         #   x-linked dominant genes with loss of function mechanism
+        testcnvdup1 = create_test_cnv(self.dupvardata_surround)
+        testvarsdup1 = {'child': {'1_10971936_A_DEL': testcnvdup1}}
+        cnvfilterdup1 = CNVFiltering(testvarsdup1, self.family_dad_aff,
+                                      self.genes_monoallelic, None,
+                                      None, None)
+        cnvfilterdup1.cnv_filter()
+        self.assertEqual(cnvfilterdup1.passddg2p, False)
         # - Biallelic gene pass if copy number (CN) = 0 and mechanism in
         #   Uncertain", "Loss of function", "Dominant negative"
+        testcnv0 = create_test_cnv(self.cn0vardata_bi)
+        testvars0 = {'child': {'1_10971936_A_DEL': testcnv0}}
+        cnvfilter0 = CNVFiltering(testvars0, self.family_dad_aff,
+                                     self.genes_biallelic, None,
+                                     None, None)
+        cnvfilter0.cnv_filter()
+        self.assertEqual(cnvfilter0.passddg2p, True)
         # - Monoallelic, X-linked dominant or Hemizygous in male pass if CN=0,
         #   1 or 3 and any mechanism
         # - Hemizygous in female pass if CN=3 and mechanism = "Increased gene

@@ -65,11 +65,11 @@ class CNVFiltering(object):
                                      "match and not possible compound het")
             else:
                 #non-ddg2p filter
-                passnonddg2p = self.cnv_non_ddg2p_filter(v)
-                if not passnonddg2p:
+                self.passnonddg2p = self.cnv_non_ddg2p_filter(v)
+                if not self.passnonddg2p:
                     #ddg2p filter
-                    passddg2p = self.cnv_ddg2p_filter(v)
-                    if not passddg2p:
+                    self.passddg2p = self.cnv_ddg2p_filter(v)
+                    if not self.passddg2p:
                         posscomphet = self.cnv_candidate_compound_het_filter(v, modes)
                         if not posscomphet:
                             logging.info(
@@ -84,11 +84,11 @@ class CNVFiltering(object):
             if self.variants['child'][v].cnv_filter == 'Fail':
                 logging.info(v + " CNV failed quality filters")
                 continue
-            passnonddg2p = self.cnv_non_ddg2p_filter(v)
-            if not passnonddg2p:
+            self.passnonddg2p = self.cnv_non_ddg2p_filter(v)
+            if not self.passnonddg2p:
                 # ddg2p filter
-                passddg2p = self.cnv_ddg2p_filter(v)
-                if not passddg2p:
+                self.passddg2p = self.cnv_ddg2p_filter(v)
+                if not self.passddg2p:
                     posscomphet = self.cnv_candidate_compound_het_filter(v)
                     if not posscomphet:
                         logging.info(
@@ -149,6 +149,10 @@ class CNVFiltering(object):
     def cnv_non_ddg2p_filter(self, varid):
         # return True or False for pass or fail
         if int(self.variants['child'][varid].cnv_length) > 1000000:
+            #print(varid)
+            #print(self.variants['child'][varid])
+            #print(self.candidate_variants)
+            #exit(0)
             add_single_var_to_candidates(varid, self.variants['child'][varid], '-', '-',
                                          self.candidate_variants)
             return True
@@ -173,7 +177,7 @@ class CNVFiltering(object):
                         logging.info(
                             varid + " duplication completely surrounds monoallelic, hemizygous or heterozygus gene with LoF mechanism")
             #Biallelic gene pass if copy number (CN) = 0 and mechanism in "Uncertain", "Loss of function", "Dominant negative"
-            if int(self.variants['child'][varid].cn) >= 0 and "Biallelic" in self.genes[hgncid]['mode']:
+            if int(self.variants['child'][varid].cn) == 0 and "Biallelic" in self.genes[hgncid]['mode']:
                 biallelicmechs = set({"Uncertain", "Loss of function", "Dominant negative"})
                 if len(set.intersection(self.genes[hgncid]['mechanism'], biallelicmechs)) > 0:
                     cnvpass = True

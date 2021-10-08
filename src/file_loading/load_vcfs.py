@@ -82,7 +82,7 @@ def readvcf(filename, regions, sex):
                          'MANE', 'HGNC_ID', 'MAX_AF', 'MAX_AF_POPS',
                          'DDD_AF', 'DDD_father_AF', 'REVEL', 'PolyPhen',
                          'Protein_position',
-                         'HGVSc', 'HGVSp', 'DNM_TYPE', 'END', 'SVTYPE', 'SVLEN',
+                         'HGVSc', 'HGVSp', 'pp_trio_DNM2', 'pp_DNG', 'VAF', 'END', 'SVTYPE', 'SVLEN',
                          'CNVFILTER', 'HGNC_ID_ALL', 'SYMBOL_ALL', 'AC_XX',
                          'AN_XX', 'nhomalt_XX', 'AC_XY', 'AN_XY', 'nhomalt_XY']
     formatfields = ['GT', 'GQ', 'PID', 'AD', 'CIFER_INHERITANCE', 'CN']
@@ -144,36 +144,38 @@ def readvcf(filename, regions, sex):
         vdata['hgvsc'] = oldata[18]
         vdata['hgvsp'] = oldata[19]
         vdata['sex'] = sex
-        vdata['dnm'] = oldata[20]
-        vdata['cnv_end'] = oldata[21]
-        vdata['cnv_type'] = oldata[22]
-        vdata['cnv_length'] = oldata[23]
-        vdata['cnv_filter'] = oldata[24]
-        vdata['hgnc_id_all'] = oldata[25]
-        vdata['symbol_all'] = oldata[26]
-        vdata['ac_XX'] = oldata[27]
-        vdata['an_XX'] = oldata[28]
-        vdata['nhomalt_XX'] = oldata[29]
-        vdata['ac_XY'] = oldata[30]
-        vdata['an_XY'] = oldata[31]
-        vdata['nhomalt_XY'] = oldata[32]
-        vdata['gt'] = oldata[33]
-        vdata['gq'] = oldata[34]
-        vdata['pid'] = oldata[35]
-        vdata['ad'] = oldata[36]
-        vdata['cnv_inh'] = oldata[37]
-        vdata['cn'] = oldata[38]
+        vdata['pp_trio_dnm2'] = oldata[20]
+        vdata['pp_dng'] = oldata[21]
+        vdata['vaf'] = oldata[22]
+        vdata['cnv_end'] = oldata[23]
+        vdata['cnv_type'] = oldata[24]
+        vdata['cnv_length'] = oldata[25]
+        vdata['cnv_filter'] = oldata[26]
+        vdata['hgnc_id_all'] = oldata[27]
+        vdata['symbol_all'] = oldata[28]
+        vdata['ac_XX'] = oldata[29]
+        vdata['an_XX'] = oldata[30]
+        vdata['nhomalt_XX'] = oldata[31]
+        vdata['ac_XY'] = oldata[32]
+        vdata['an_XY'] = oldata[33]
+        vdata['nhomalt_XY'] = oldata[34]
+        vdata['gt'] = oldata[35]
+        vdata['gq'] = oldata[36]
+        vdata['pid'] = oldata[37]
+        vdata['ad'] = oldata[38]
+        vdata['cnv_inh'] = oldata[39]
+        vdata['cn'] = oldata[40]
 
-        # if vdata['dnm'] == 'DNM':
-        #     if len(vdata['ref']) == len(vdata['alt']):
-        #         vdata['denovo_snv'] = True
-        #     else:
-        #         vdata['denovo_indel'] = True
-        # else:
-        #     if len(vdata['ref']) == len(vdata['alt']):
-        #         vdata['denovo_snv'] = False
-        #     else:
-        #         vdata['denovo_indel'] = False
+        if not vdata['pp_trio_dnm2'] == '.' or not vdata['pp_dng'] == '.':
+            if len(vdata['ref']) == len(vdata['alt']):
+                vdata['denovo_snv'] = True
+            else:
+                vdata['denovo_indel'] = True
+        else:
+            if len(vdata['ref']) == len(vdata['alt']):
+                vdata['denovo_snv'] = False
+            else:
+                vdata['denovo_indel'] = False
 
         var = SNV
         if alt in ['<DEL>', '<DUP>']:
