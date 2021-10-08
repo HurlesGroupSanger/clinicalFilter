@@ -167,15 +167,9 @@ def readvcf(filename, regions, sex):
         vdata['cn'] = oldata[40]
 
         if not vdata['pp_trio_dnm2'] == '.' or not vdata['pp_dng'] == '.':
-            if len(vdata['ref']) == len(vdata['alt']):
-                vdata['denovo_snv'] = True
-            else:
-                vdata['denovo_indel'] = True
+            vdata['dnm'] = True
         else:
-            if len(vdata['ref']) == len(vdata['alt']):
-                vdata['denovo_snv'] = False
-            else:
-                vdata['denovo_indel'] = False
+            vdata['dnm'] = False
 
         var = SNV
         if alt in ['<DEL>', '<DUP>']:
