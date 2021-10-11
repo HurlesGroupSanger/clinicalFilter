@@ -12,8 +12,13 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
 
     def setUp(self):
         self.maxDiff = None
+        self.candidate_variants = {}
+        self.candidate_variants['single_variants'] = {}
+        self.candidate_variants['compound_hets'] = {}
         self.child = create_test_person('fam', 'child_id', 'dad_id', 'mum_id',
                                         'XY', '2', '/vcf/path')
+        self.child_female = create_test_person('fam', 'child_id', 'dad_id', 'mum_id',
+                                        'XX', '2', '/vcf/path')
         self.mum = create_test_person('fam', 'mum_id', '0', '0', 'XX', '1',
                                       '/vcf/path')
         self.mum_aff = create_test_person('fam', 'mum_id', '0', '0', 'XX', '2',
@@ -24,6 +29,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                           '/vcf/path')
         self.family_both_unaff = create_test_family(self.child, self.mum,
                                                     self.dad)
+        self.family_both_unaff_female = create_test_family(self.child_female, self.mum,
+                                                    self.dad)
         self.family_mum_aff = create_test_family(self.child, self.mum_aff,
                                                  self.dad)
         self.family_dad_aff = create_test_family(self.child, self.mum,
@@ -32,7 +39,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                   self.dad_aff)
 
         self.genes_biallelic = {
-            '1234': {'chr': '5', 'start': '10971836', 'end': '10984446',
+            '1234': {'chr': '1', 'start': '10971836', 'end': '10984446',
                      'symbol': 'MECP2', 'status': {'Probable DD gene'},
                      'mode': {'Biallelic'},
                      'mechanism': {'Loss of function'}}
@@ -44,14 +51,16 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.genes_hemizygous['1234']['chr'] = {'X'}
         self.genes_X_linked_dominant = copy.deepcopy(self.genes_hemizygous)
         self.genes_X_linked_dominant['1234']['mode'] = {'X-linked dominant'}
+        self.genes_increased_dose = copy.deepcopy(self.genes_hemizygous)
+        self.genes_increased_dose['1234']['mechanism'] = {'Increased gene dosage'}
 
         self.cn0vardata_bi = {'chrom': '1', 'pos': '10971936', 'ref': 'T', 'alt': '<DEL>',
              'consequence': 'transcript_ablation', 'ensg': 'ENSG01234',
              'symbol': 'MECP1', 'feature': 'ENST01234', 'canonical': 'YES',
-             'mane': 'NM01234', 'hgnc_id': 'HGNC:123', 'cnv_filter': 'Pass',
-             'hgnc_id_all': 'HGNC:1|HGNC:2|HGNC:3', 'cnv_end':'11071936',
+             'mane': 'NM01234', 'hgnc_id': 'HGNC:123', 'cnv_type': 'DEL', 'cnv_filter': 'Pass',
+             'hgnc_id_all': 'HGNC:1234|HGNC:2|HGNC:3', 'cnv_end':'11071936',
              'symbol_all': 'MECP1|MECP2|MECP3', 'sex': 'XY', 'cn': '0',
-             'cnv_inh':'biparental_inh', 'cnv_length':'5000'}
+             'cnv_inh':'biparental_inh', 'cnv_length':'5000', 'gt': '.'}
         self.cn0vardata_denovo = copy.deepcopy(self.cn0vardata_bi)
         self.cn0vardata_denovo['cnv_inh']= 'not_inherited'
         self.cn0vardata_pat = copy.deepcopy(self.cn0vardata_bi)
@@ -70,6 +79,11 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.dupvardata_surround['pos'] = '10970000'
         self.dupvardata_surround['cnv_end'] = '10990000'
         self.dupvardata_surround['cnv_length'] = '20000'
+        self.dupvardata_surround['cnv_type'] = 'DUP'
+        self.cn3vardata_denovo = copy.deepcopy(self.cn0vardata_denovo)
+        self.cn3vardata_denovo['cnv_type'] = 'DUP'
+        self.cn3vardata_denovo['alt'] = '<DUP>'
+        self.cn3vardata_denovo['cn'] = '3'
 
 
     def test_inh_matches_parent_aff_status(self):
@@ -154,7 +168,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         testvarsshort = {'child': {'1_10971936_A_DEL': testcnvshort}}
         cnvfiltershort = CNVFiltering(testvarsshort, self.family_dad_aff,
                                         self.genes_monoallelic, None,
-                                        None, None)
+                                        None, self.candidate_variants)
         cnvfiltershort.cnv_filter()
         self.assertEqual(cnvfiltershort.passnonddg2p, False)
         #cnv > 1M pass
@@ -162,7 +176,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         testvarslong = {'child': {'1_10971936_A_DEL': testcnvlong}}
         cnvfilterlong = CNVFiltering(testvarslong, self.family_dad_aff,
                                       self.genes_monoallelic, None,
-                                      None, None)
+                                      None, self.candidate_variants)
         cnvfilterlong.cnv_filter()
         self.assertEqual(cnvfilterlong.passnonddg2p, True)
 
@@ -174,7 +188,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         testvarsdup1 = {'child': {'1_10971936_A_DEL': testcnvdup1}}
         cnvfilterdup1 = CNVFiltering(testvarsdup1, self.family_dad_aff,
                                       self.genes_monoallelic, None,
-                                      None, None)
+                                      None, self.candidate_variants)
         cnvfilterdup1.cnv_filter()
         self.assertEqual(cnvfilterdup1.passddg2p, False)
         # - Biallelic gene pass if copy number (CN) = 0 and mechanism in
@@ -183,16 +197,43 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         testvars0 = {'child': {'1_10971936_A_DEL': testcnv0}}
         cnvfilter0 = CNVFiltering(testvars0, self.family_dad_aff,
                                      self.genes_biallelic, None,
-                                     None, None)
+                                     None, self.candidate_variants)
         cnvfilter0.cnv_filter()
         self.assertEqual(cnvfilter0.passddg2p, True)
         # - Monoallelic, X-linked dominant or Hemizygous in male pass if CN=0,
         #   1 or 3 and any mechanism
+        testcnv2 = create_test_cnv(self.cn0vardata_denovo)
+        testvars2 = {'child': {'1_10971936_A_DEL': testcnv2}}
+        cnvfilter2 = CNVFiltering(testvars2, self.family_both_unaff,
+                                  self.genes_hemizygous, None,
+                                  None, self.candidate_variants)
+        cnvfilter2.cnv_filter()
+        self.assertEqual(cnvfilter2.passddg2p, True)
+
+        cnvfilter3 = CNVFiltering(testvars2, self.family_both_unaff_female,
+                                  self.genes_hemizygous, None,
+                                  None, self.candidate_variants)
+        cnvfilter3.cnv_filter()
+        self.assertEqual(cnvfilter3.passddg2p, False)
+
         # - Hemizygous in female pass if CN=3 and mechanism = "Increased gene
         #   dosage"
+        testcnv4 = create_test_cnv(self.cn3vardata_denovo)
+        testvars4 = {'child': {'1_10971936_A_DUP': testcnv4}}
+        cnvfilter4 = CNVFiltering(testvars4, self.family_both_unaff_female,
+                                  self.genes_hemizygous, None,
+                                  None, self.candidate_variants)
+        cnvfilter4.cnv_filter()
+        self.assertEqual(cnvfilter4.passddg2p, False)
+
+        cnvfilter5 = CNVFiltering(testvars4, self.family_both_unaff_female,
+                                  self.genes_increased_dose, None,
+                                  None, self.candidate_variants)
+        cnvfilter5.cnv_filter()
+        self.assertEqual(cnvfilter5.passddg2p, True)
         # - Pass intragenic DUP in monoallelic or X-linked dominant gene with
         #   loss of function mechanism and any part of the gene is outside of the CNV boundary
-        pass
+
 
     def test_candidate_compound_het_filter(self):
         # add var to candidate compound hets if:

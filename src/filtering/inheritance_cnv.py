@@ -149,10 +149,6 @@ class CNVFiltering(object):
     def cnv_non_ddg2p_filter(self, varid):
         # return True or False for pass or fail
         if int(self.variants['child'][varid].cnv_length) > 1000000:
-            #print(varid)
-            #print(self.variants['child'][varid])
-            #print(self.candidate_variants)
-            #exit(0)
             add_single_var_to_candidates(varid, self.variants['child'][varid], '-', '-',
                                          self.candidate_variants)
             return True
@@ -176,6 +172,7 @@ class CNVFiltering(object):
                     if (int(self.variants['child'][varid].pos) < int(self.genes[hgncid]['start'])) and (int(self.variants['child'][varid].cnv_end) > int(self.genes[hgncid]['end'])):
                         logging.info(
                             varid + " duplication completely surrounds monoallelic, hemizygous or heterozygus gene with LoF mechanism")
+                        return cnvpass
             #Biallelic gene pass if copy number (CN) = 0 and mechanism in "Uncertain", "Loss of function", "Dominant negative"
             if int(self.variants['child'][varid].cn) == 0 and "Biallelic" in self.genes[hgncid]['mode']:
                 biallelicmechs = set({"Uncertain", "Loss of function", "Dominant negative"})
@@ -185,6 +182,7 @@ class CNVFiltering(object):
                                                  self.variants['child'][varid],
                                                  hgncid, 'biallelic',
                                                  self.candidate_variants)
+                    return cnvpass
             #Monoallelic, X-linked dominant or Hemizygous in male pass if CN=0, 1 or 3 and any mechanism
             cns_wanted = ['0', '1', '3']
             if "Monoallelic" in self.genes[hgncid]['mode'] or "X-linked dominant" in self.genes[hgncid]['mode']:
@@ -194,6 +192,7 @@ class CNVFiltering(object):
                                                  self.variants['child'][varid],
                                                  hgncid, (",").join(self.genes[hgncid]['mode']),
                                                  self.candidate_variants)
+                    return cnvpass
             if "Hemizygous" in self.genes[hgncid]['mode'] and self.family.proband.sex == 'XY':
                 cnvpass = True
                 add_single_var_to_candidates(varid,
@@ -201,14 +200,15 @@ class CNVFiltering(object):
                                              hgncid, (",").join(
                         self.genes[hgncid]['mode']),
                                              self.candidate_variants)
+                return cnvpass
             #Hemizygous in female pass if CN=3 and mechanism = "Increased gene dosage"
-            if "Hemizygous" in self.genes[
-                hgncid]['mode'] and self.family.proband.sex == 'XX' and "Increased gene dosage" in self.genes[hgncid]['mechanism']:
+            if "Hemizygous" in self.genes[hgncid]['mode'] and self.family.proband.sex == 'XX' and "Increased gene dosage" in self.genes[hgncid]['mechanism'] and self.variants['child'][varid].cn == '3':
                 cnvpass = True
                 add_single_var_to_candidates(varid,
                                              self.variants['child'][varid],
                                              hgncid, "Hemizygous",
                                              self.candidate_variants)
+                return cnvpass
             #Pass intragenic DUP in monoallelic or X-linked dominant gene with loss of function mechanism and any part of the gene is outside of the CNV boundary
             if self.variants['child'][varid].alt == "<DUP>":
                 if ("Monoallelic" in self.genes[hgncid]['mode'] or "X-linked dominant" in self.genes[hgncid]['mode']) and "Loss of function" in self.genes[hgncid]['mechanism']:
@@ -218,6 +218,7 @@ class CNVFiltering(object):
                                                      self.variants['child'][varid],
                                                      hgncid, (",").join(self.genes[hgncid]['mode']),
                                                      self.candidate_variants)
+                        return cnvpass
 
         return cnvpass
 
