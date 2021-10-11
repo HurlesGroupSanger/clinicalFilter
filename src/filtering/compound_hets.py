@@ -13,6 +13,7 @@ class CompoundHetScreen(object):
     def screen_compound_hets(self):
         # sort out compound hets
         compound_het_passes = {}
+        print(self.candidate_variants['compound_hets'])
         for gn in self.candidate_variants['compound_hets'].keys():
             # print(gn)
             if len(self.candidate_variants['compound_hets'][gn].keys()) < 2:

@@ -23,7 +23,6 @@ class CNVFiltering(object):
             self.parents = 'mum_only'
         self.mum_aff = self.family.mum.affected
         self.dad_aff = self.family.dad.affected
-        self.ddg2p_modes = set()
 
     def cnv_filter(self):
         # filter CNVs here
@@ -51,10 +50,8 @@ class CNVFiltering(object):
             if self.variants['child'][v].cnv_filter == 'Fail':
                 logging.info(v + " CNV failed quality filters")
                 continue
-            #get gene modes
-            modes = set()
             if self.genes:
-                self.get_ddg2p_modes(v, modes)
+                modes = self.get_ddg2p_modes(v)
         #inheritance
             self.inhmatch = self.cnv_inheritance_filter(v)
             if not self.inhmatch:
@@ -70,8 +67,8 @@ class CNVFiltering(object):
                     #ddg2p filter
                     self.passddg2p = self.cnv_ddg2p_filter(v)
                     if not self.passddg2p:
-                        posscomphet = self.cnv_candidate_compound_het_filter(v, modes)
-                        if not posscomphet:
+                        self.posscomphet = self.cnv_candidate_compound_het_filter(v, modes)
+                        if not self.posscomphet:
                             logging.info(
                                 v + " failed CNV filter, inheritance doesn't "
                                     "match and not possible compound het")
@@ -89,8 +86,8 @@ class CNVFiltering(object):
                 # ddg2p filter
                 self.passddg2p = self.cnv_ddg2p_filter(v)
                 if not self.passddg2p:
-                    posscomphet = self.cnv_candidate_compound_het_filter(v)
-                    if not posscomphet:
+                    self.posscomphet = self.cnv_candidate_compound_het_filter(v)
+                    if not self.posscomphet:
                         logging.info(
                             v + " failed CNV filter, inheritance doesn't "
                                 "match and not possible compound het")
@@ -128,18 +125,22 @@ class CNVFiltering(object):
 
     def cnv_candidate_compound_het_filter(self, varid, modes):
         # return True or False for pass or fail
+        print(self.variants['child'][varid])
+        desired_cn = ['1', '3']
         # could the CNV be part of a compound het? If so, add to candidate compound hets
-        if not (self.variants['child'][varid].cn == '0' or self.variants['child'][varid].cn == '3'):
+        if not self.variants['child'][varid].cn in desired_cn:
             return False
         else:
             # is any gene covered by the CNV biallelic, or CN = 1 and male hemizygous
-            if 'Biallelic' in modes:
-                add_compound_het_to_candidates(varid, self.variants['child'][varid], "-",
+            if 'Biallelic' in modes.keys():
+                for hgncid in modes['Biallelic']:
+                    add_compound_het_to_candidates(varid, self.variants['child'][varid], hgncid,
                                                "Biallelic",
                                                self.candidate_variants)
                 return True
-            elif 'Hemizygous' in modes and self.variants['child'][varid].cn == '1' and self.family.proband.sex == 'XY':
-                add_compound_het_to_candidates(varid, self.variants['child'][varid], "-",
+            elif 'Hemizygous' in modes.keys() and self.variants['child'][varid].cn == '1' and self.family.proband.sex == 'XY':
+                for hgncid in modes['Hemizygous']:
+                    add_compound_het_to_candidates(varid, self.variants['child'][varid], hgncid,
                                                "Hemizygous",
                                                self.candidate_variants)
                 return True
@@ -221,7 +222,9 @@ class CNVFiltering(object):
 
         return cnvpass
 
-    def get_ddg2p_modes(self, varid, modes):
+    #def get_ddg2p_modes(self):
+    def get_ddg2p_modes(self, varid):
+        modes = {}
         # when a gene list is given, find the modes of all
         hgncids = self.variants['child'][varid].hgnc_id_all.split("|")
         for hid in hgncids:
@@ -229,6 +232,8 @@ class CNVFiltering(object):
             if hgncid in self.genes.keys():
                 genemodes = self.genes[hgncid]['mode']
                 for m in genemodes:
-                    modes.add(m)
-
+                    if not m in modes.keys():
+                        modes[m] = []
+                    modes[m].append(hgncid)
+        return modes
 

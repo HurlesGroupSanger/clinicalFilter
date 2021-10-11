@@ -56,6 +56,21 @@ class CNV(Variant):
         """
         return True
 
+    def get_mum_genotype(self):
+        if self.triogenotype[3:6] == 'REF':
+            mum_genotype = '0'
+        else:
+            mum_genotype = '1'
+        return mum_genotype
+
+    def get_dad_genotype(self):
+        if self.triogenotype[6:9] == 'REF':
+            dad_genotype = '0'
+        else:
+            dad_genotype = '1'
+        return dad_genotype
+        pass
+
     def is_het(self):
         pass
 

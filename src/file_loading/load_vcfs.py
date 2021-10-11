@@ -115,8 +115,11 @@ def readvcf(filename, regions, sex):
         outputlines = output.split('\n')
     else:
         logging.error("Variants not loaded from " + filename)
+
     for ol in outputlines:
         oldata = ol.split("\t")
+        if len(oldata) < 2:
+            continue
         alt = oldata[3]
         if alt == '*':  # get rid of any where alt allele is *
             continue
