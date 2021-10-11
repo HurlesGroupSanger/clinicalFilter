@@ -13,7 +13,6 @@ class CompoundHetScreen(object):
     def screen_compound_hets(self):
         # sort out compound hets
         compound_het_passes = {}
-        print(self.candidate_variants['compound_hets'])
         for gn in self.candidate_variants['compound_hets'].keys():
             # print(gn)
             if len(self.candidate_variants['compound_hets'][gn].keys()) < 2:
@@ -51,10 +50,6 @@ class CompoundHetScreen(object):
                                 'mode']
 
         self.candidate_variants['compound_hets'] = compound_het_passes
-        # for gn in candidate_variants['compound_hets'].keys():
-        #     print(gn)
-        # print(candidate_variants['compound_hets'])
-        # return self.candidate_variants
 
     def is_compound_pair(self, varid1, var1, varid2, var2):
         '''Test to see if a pair of variants could be a compound het'''

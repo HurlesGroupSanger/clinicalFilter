@@ -19,6 +19,7 @@ class PreInheritanceFiltering(object):
 
         variants_per_gene = self.create_variants_per_gene()
         self.revel_filter(variants_per_gene)
+        self.dnms_filter(variants_per_gene)
         return variants_per_gene
 
 
@@ -90,3 +91,13 @@ class PreInheritanceFiltering(object):
                         if len(variants_per_gene[gn].keys()) < 1:
                             del variants_per_gene[gn]
 
+    def dnms_filter(self, variants_per_gene):
+        '''remove DNMs that don't pass filters'''
+        for gn in list(variants_per_gene.keys()):
+            for varid in list(variants_per_gene[gn].keys()):
+                childvar = variants_per_gene[gn][varid]['child']
+                if childvar.triogenotype == '100' and childvar.dnm == False:
+                    logging.info(varid + " triogenotype = 100 and failed DNM filter")
+                    del variants_per_gene[gn][varid]
+                    if len(variants_per_gene[gn].keys()) < 1:
+                        del variants_per_gene[gn]

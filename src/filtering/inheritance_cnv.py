@@ -125,7 +125,6 @@ class CNVFiltering(object):
 
     def cnv_candidate_compound_het_filter(self, varid, modes):
         # return True or False for pass or fail
-        print(self.variants['child'][varid])
         desired_cn = ['1', '3']
         # could the CNV be part of a compound het? If so, add to candidate compound hets
         if not self.variants['child'][varid].cn in desired_cn:
