@@ -56,8 +56,8 @@ class CNVFiltering(object):
             self.inhmatch = self.cnv_inheritance_filter(v)
             if not self.inhmatch:
                 #possible compound het
-                posscomphet = self.cnv_candidate_compound_het_filter(v, modes)
-                if not posscomphet:
+                self.posscomphet = self.cnv_candidate_compound_het_filter(v, modes)
+                if not self.posscomphet:
                     logging.info(v + " failed CNV filter, inheritance doesn't "
                                      "match and not possible compound het")
             else:

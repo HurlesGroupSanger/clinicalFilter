@@ -1,7 +1,6 @@
 import unittest
 import copy
 
-from tests.test_utils import create_test_candidate_vars
 from tests.test_utils import create_test_person
 from tests.test_utils import create_test_family
 from tests.test_utils import create_test_cnv
@@ -69,6 +68,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.cn0vardata_mat['cnv_inh']= 'maternal_inh'
         self.cn1vardata_bi = copy.deepcopy(self.cn0vardata_bi)
         self.cn1vardata_bi['cn'] = '1'
+        self.cn1vardata_mat = copy.deepcopy(self.cn0vardata_mat)
+        self.cn1vardata_mat['cn'] = '1'
         self.xvardata_mat = copy.deepcopy(self.cn0vardata_mat)
         self.xvardata_mat['chrom'] = 'X'
         self.cn0vardata_long = copy.deepcopy(self.cn0vardata_bi)
@@ -84,6 +85,11 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.cn3vardata_denovo['cnv_type'] = 'DUP'
         self.cn3vardata_denovo['alt'] = '<DUP>'
         self.cn3vardata_denovo['cn'] = '3'
+        self.cn3vardata_mat = copy.deepcopy(self.cn3vardata_denovo)
+        self.cn3vardata_mat['cnv_inh'] = 'maternal_inh'
+        self.intragenic_dup = copy.deepcopy(self.dupvardata_surround)
+        self.intragenic_dup['cnv_end'] = '10980000'
+        self.intragenic_dup['cnv_length'] = '10000'
 
 
     def test_inh_matches_parent_aff_status(self):
@@ -91,13 +97,13 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         testcnv1 = create_test_cnv(self.cn0vardata_pat)
         testvars1 = {'child':{'1_10971936_A_DEL':testcnv1}}
         cnvfilter_dadaff = CNVFiltering(testvars1, self.family_dad_aff, self.genes_monoallelic, None,
-                                 None, None)
+                                 None, self.candidate_variants)
         cnvfilter_dadaff.cnv_filter()
         self.assertEqual(cnvfilter_dadaff.inhmatch, True)
         #fail if paternal and dad unaffected
         cnvfilter_dadunaff = CNVFiltering(testvars1, self.family_both_unaff,
                                         self.genes_monoallelic, None,
-                                        None, None)
+                                        None, self.candidate_variants)
         cnvfilter_dadunaff.cnv_filter()
         self.assertEqual(cnvfilter_dadunaff.inhmatch, False)
         # pass if maternal and mum affected
@@ -105,13 +111,13 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         testvars2 = {'child': {'1_10971936_A_DEL': testcnv2}}
         cnvfilter_mumaff = CNVFiltering(testvars2, self.family_mum_aff,
                                         self.genes_monoallelic, None,
-                                        None, None)
+                                        None, self.candidate_variants)
         cnvfilter_mumaff.cnv_filter()
         self.assertEqual(cnvfilter_mumaff.inhmatch, True)
         # fail if maternal and mum unaffected
         cnvfilter_mumunaff = CNVFiltering(testvars2, self.family_both_unaff,
                                           self.genes_monoallelic, None,
-                                          None, None)
+                                          None, self.candidate_variants)
         cnvfilter_mumunaff.cnv_filter()
         self.assertEqual(cnvfilter_mumunaff.inhmatch, False)
         #pass if biparental and cn = 0
@@ -119,7 +125,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         testvars3 = {'child': {'1_10971936_A_DEL': testcnv3}}
         cnvfilter_bothunaff = CNVFiltering(testvars3, self.family_both_unaff,
                                           self.genes_monoallelic, None,
-                                          None, None)
+                                          None, self.candidate_variants)
         cnvfilter_bothunaff.cnv_filter()
         self.assertEqual(cnvfilter_bothunaff.inhmatch, True)
         #pass if biparental and either/both parents affected
@@ -127,13 +133,13 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         testvars4 = {'child': {'1_10971936_A_DEL': testcnv4}}
         cnvfilter_dadaff2 = CNVFiltering(testvars4, self.family_dad_aff,
                                         self.genes_monoallelic, None,
-                                        None, None)
+                                        None, self.candidate_variants)
         cnvfilter_mumaff2 = CNVFiltering(testvars4, self.family_mum_aff,
                                          self.genes_monoallelic, None,
-                                         None, None)
+                                         None, self.candidate_variants)
         cnvfilter_bothaff2 = CNVFiltering(testvars4, self.family_both_aff,
                                          self.genes_monoallelic, None,
-                                         None, None)
+                                         None, self.candidate_variants)
         cnvfilter_dadaff2.cnv_filter()
         cnvfilter_mumaff2.cnv_filter()
         cnvfilter_bothaff2.cnv_filter()
@@ -143,7 +149,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         #fail if biparental, cn = 1 and parents both unaff
         cnvfilter_bothunaff2 = CNVFiltering(testvars4, self.family_both_unaff,
                                           self.genes_monoallelic, None,
-                                          None, None)
+                                          None, self.candidate_variants)
         cnvfilter_bothunaff2.cnv_filter()
         self.assertEqual(cnvfilter_bothunaff2.inhmatch, False)
         #pass if male, X, maternal inh and mum unaffected
@@ -151,13 +157,13 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         testvars5 = {'child': {'1_10971936_A_DEL': testcnv5}}
         cnvfilter_unaff3 = CNVFiltering(testvars5, self.family_both_unaff,
                                          self.genes_monoallelic, None,
-                                         None, None)
+                                         None, self.candidate_variants)
         cnvfilter_unaff3.cnv_filter()
         self.assertEqual(cnvfilter_unaff3.inhmatch, True)
         # pass if male, X, maternal inh and mum affected(?)
         cnvfilter_mumaff3 = CNVFiltering(testvars5, self.family_mum_aff,
                                         self.genes_monoallelic, None,
-                                        None, None)
+                                        None, self.candidate_variants)
         cnvfilter_mumaff3.cnv_filter()
         self.assertEqual(cnvfilter_mumaff3.inhmatch, True)
 
@@ -191,6 +197,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                       None, self.candidate_variants)
         cnvfilterdup1.cnv_filter()
         self.assertEqual(cnvfilterdup1.passddg2p, False)
+
         # - Biallelic gene pass if copy number (CN) = 0 and mechanism in
         #   Uncertain", "Loss of function", "Dominant negative"
         testcnv0 = create_test_cnv(self.cn0vardata_bi)
@@ -200,6 +207,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                      None, self.candidate_variants)
         cnvfilter0.cnv_filter()
         self.assertEqual(cnvfilter0.passddg2p, True)
+
         # - Monoallelic, X-linked dominant or Hemizygous in male pass if CN=0,
         #   1 or 3 and any mechanism
         testcnv2 = create_test_cnv(self.cn0vardata_denovo)
@@ -233,11 +241,62 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(cnvfilter5.passddg2p, True)
         # - Pass intragenic DUP in monoallelic or X-linked dominant gene with
         #   loss of function mechanism and any part of the gene is outside of the CNV boundary
+        testcnv6 = create_test_cnv(self.intragenic_dup)
+        testvars6 = {'child': {'1_10971936_A_DUP': testcnv6}}
+        cnvfilter6 = CNVFiltering(testvars6, self.family_both_aff,
+                                  self.genes_X_linked_dominant, None,
+                                  None, self.candidate_variants)
+        cnvfilter6.cnv_filter()
+        self.assertEqual(cnvfilter6.passddg2p, True)
 
+        testcnv7 = create_test_cnv(self.dupvardata_surround)
+        testvars7 = {'child': {'1_10971936_A_DUP': testcnv7}}
+        cnvfilter7 = CNVFiltering(testvars7, self.family_both_aff,
+                                  self.genes_X_linked_dominant, None,
+                                  None, self.candidate_variants)
+        cnvfilter7.cnv_filter()
+        self.assertEqual(cnvfilter7.passddg2p, True)
 
     def test_candidate_compound_het_filter(self):
         # add var to candidate compound hets if:
         # cn = 1 or 3 and biallelic and DDG2P gene
+        testcnv1 = create_test_cnv(self.cn1vardata_mat)
+        testvars1 = {'child': {'1_10971936_A_DEL': testcnv1}}
+        cnvfilter1 = CNVFiltering(testvars1, self.family_both_unaff,
+                                  self.genes_biallelic, None,
+                                  None, self.candidate_variants)
+        cnvfilter1.cnv_filter()
+        self.assertEqual(cnvfilter1.posscomphet, True)
+
+        testcnv2 = create_test_cnv(self.cn3vardata_mat)
+        testvars2 = {'child': {'1_10971936_A_DEL': testcnv2}}
+        cnvfilter2 = CNVFiltering(testvars2, self.family_both_unaff,
+                                  self.genes_biallelic, None,
+                                  None, self.candidate_variants)
+        cnvfilter2.cnv_filter()
+        self.assertEqual(cnvfilter2.posscomphet, True)
+
+        cnvfilter3 = CNVFiltering(testvars2, self.family_both_unaff,
+                                  self.genes_monoallelic, None,
+                                  None, self.candidate_variants)
+        cnvfilter3.cnv_filter()
+        self.assertEqual(cnvfilter3.posscomphet, False)
         # or if cn = 1, male, hemizygous and DDG2P gene
-        pass
+        cnvfilter4 = CNVFiltering(testvars1, self.family_both_unaff,
+                                  self.genes_hemizygous, None,
+                                  None, self.candidate_variants)
+        cnvfilter4.cnv_filter()
+        self.assertEqual(cnvfilter4.posscomphet, True)
+
+        cnvfilter5 = CNVFiltering(testvars2, self.family_both_unaff,
+                                  self.genes_hemizygous, None,
+                                  None, self.candidate_variants)
+        cnvfilter5.cnv_filter()
+        self.assertEqual(cnvfilter5.posscomphet, False)
+
+        cnvfilter6 = CNVFiltering(testvars1, self.family_both_unaff_female,
+                                  self.genes_hemizygous, None,
+                                  None, self.candidate_variants)
+        cnvfilter6.cnv_filter()
+        self.assertEqual(cnvfilter6.posscomphet, False)
 
