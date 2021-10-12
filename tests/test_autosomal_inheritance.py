@@ -7,12 +7,17 @@ from tests.test_utils import create_test_variants_per_gene
 
 from variants.trio_genotype import add_trio_genotypes
 from filtering.inheritance_filtering import InheritanceFiltering
-
+from filtering.inheritance_report import InheritanceReport
 
 class TestAutosomalInheritanceFilter(unittest.TestCase):
 
     def setUp(self):
         self.maxDiff = None
+        self.candidate_variants = {}
+        self.candidate_variants['single_variants'] = {}
+        self.candidate_variants['compound_hets'] = {}
+        self.inhreport = None
+        self.inhreport = InheritanceReport()
         self.hetvardata = {'chrom': '5', 'pos': '10971838', 'ref': 'A',
                            'alt': 'GG',
                            'consequence': 'start_lost', 'ensg': 'ensg',
@@ -23,7 +28,10 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                            'revel': '.', 'polyphen': '.', 'hgvsc': '.',
                            'hgvsp': '.', 'sex': 'XY', 'dnm': '.',
                            'gt': '0/1', 'gq': '50',
-                           'pid': '.', 'protein_position': '123', 'ad': '4,4'}
+                           'pid': '.', 'protein_position': '123', 'ad': '4,4',
+                            'ac_XX': '0',
+                            'ac_XY': '0', 'an_XX': '0', 'an_XY': '0',
+                            'nhomalt_XX': '0', 'nhomalt_XY': '0'}
         self.homaltvardata = self.hetvardata.copy()
         self.homaltvardata['gt'] = '1/1'
         self.homrefvardata = self.hetvardata.copy()
@@ -144,7 +152,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
                                                      self.family_both_aff,
                                                      self.genes_biallelic, None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_compound_het_100 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -165,7 +174,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_compound_het_111 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -185,7 +195,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_compound_het_110 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -205,7 +216,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_compound_het_112 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -225,7 +237,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_compound_het_102 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -245,7 +258,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_compound_het_101 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -265,7 +279,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_compound_het_121 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -285,7 +300,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_compound_het_120 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -305,7 +321,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_compound_het_122 = {'single_variants': {},
                                                 'compound_hets': {}}
@@ -318,7 +335,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_compound_het_100 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -338,7 +356,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_compound_het_111 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -358,7 +377,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_compound_het_110 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -378,7 +398,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_compound_het_112 = {'single_variants': {},
                                                 'compound_hets': {}}
@@ -390,7 +411,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_compound_het_102 = {'single_variants': {},
                                                 'compound_hets': {}}
@@ -402,7 +424,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_compound_het_101 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -422,7 +445,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_compound_het_121 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -442,7 +466,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_compound_het_120 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -462,7 +487,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_compound_het_122 = {'single_variants': {},
                                                 'compound_hets': {}}
@@ -475,7 +501,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_compound_het_100 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -495,7 +522,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_compound_het_111 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -515,7 +543,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_compound_het_110 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -535,7 +564,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_compound_het_112 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -555,7 +585,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_compound_het_102 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -575,7 +606,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_compound_het_101 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -595,7 +627,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_compound_het_121 = {'single_variants': {},
                                                 'compound_hets': {}}
@@ -607,7 +640,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_compound_het_120 = {'single_variants': {},
                                                 'compound_hets': {}}
@@ -619,7 +653,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_compound_het_122 = {'single_variants': {},
                                                 'compound_hets': {}}
@@ -632,7 +667,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_compound_het_100 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -652,7 +688,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_compound_het_111 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -672,7 +709,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_compound_het_110 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -692,7 +730,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_compound_het_112 = {'single_variants': {},
                                                 'compound_hets': {}}
@@ -704,7 +743,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_compound_het_102 = {'single_variants': {},
                                                 'compound_hets': {}}
@@ -716,7 +756,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_compound_het_101 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -736,7 +777,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_compound_het_121 = {'single_variants': {},
                                                 'compound_hets': {}}
@@ -748,7 +790,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_compound_het_120 = {'single_variants': {},
                                                 'compound_hets': {}}
@@ -760,7 +803,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_compound_het_122 = {'single_variants': {},
                                                 'compound_hets': {}}
@@ -775,7 +819,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_200.inheritance_filter_genes()
         test_candidate_variants_200 = {'single_variants': {},
                                                 'compound_hets': {}}
@@ -787,7 +832,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_211 = InheritanceFiltering(variants_per_gene_211,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_211.inheritance_filter_genes()
         test_candidate_variants_211 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -806,7 +852,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_210.inheritance_filter_genes()
         test_candidate_variants_210 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_210.candidate_variants,
@@ -817,7 +864,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_212.inheritance_filter_genes()
         test_candidate_variants_212 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -836,7 +884,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_202.inheritance_filter_genes()
         test_candidate_variants_202 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_202.candidate_variants,
@@ -847,7 +896,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_201.inheritance_filter_genes()
         test_candidate_variants_201 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_201.candidate_variants,
@@ -858,7 +908,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_221 = InheritanceFiltering(variants_per_gene_221,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_221.inheritance_filter_genes()
         test_candidate_variants_221 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -877,7 +928,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_220.inheritance_filter_genes()
         test_candidate_variants_220 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_220.candidate_variants,
@@ -888,7 +940,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
                                                  self.family_both_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_222.inheritance_filter_genes()
         test_candidate_variants_222 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -908,7 +961,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_200.inheritance_filter_genes()
         test_candidate_variants_200 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_200.candidate_variants,
@@ -919,7 +973,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_211 = InheritanceFiltering(variants_per_gene_211,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_211.inheritance_filter_genes()
         test_candidate_variants_211 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -938,7 +993,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_210.inheritance_filter_genes()
         test_candidate_variants_210 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_210.candidate_variants,
@@ -949,7 +1005,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_212.inheritance_filter_genes()
         test_candidate_variants_212 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_212.candidate_variants,
@@ -960,7 +1017,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_202.inheritance_filter_genes()
         test_candidate_variants_202 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_202.candidate_variants,
@@ -971,7 +1029,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_201.inheritance_filter_genes()
         test_candidate_variants_201 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_201.candidate_variants,
@@ -982,7 +1041,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_221 = InheritanceFiltering(variants_per_gene_221,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_221.inheritance_filter_genes()
         test_candidate_variants_221 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1001,7 +1061,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_220.inheritance_filter_genes()
         test_candidate_variants_220 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_220.candidate_variants,
@@ -1012,7 +1073,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
                                                  self.family_mum_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_222.inheritance_filter_genes()
         test_candidate_variants_222 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_222.candidate_variants,
@@ -1024,7 +1086,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_200.inheritance_filter_genes()
         test_candidate_variants_200 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_200.candidate_variants,
@@ -1035,7 +1098,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_211 = InheritanceFiltering(variants_per_gene_211,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_211.inheritance_filter_genes()
         test_candidate_variants_211 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1054,7 +1118,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_210.inheritance_filter_genes()
         test_candidate_variants_210 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_210.candidate_variants,
@@ -1065,7 +1130,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_212.inheritance_filter_genes()
         test_candidate_variants_212 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1084,7 +1150,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_202.inheritance_filter_genes()
         test_candidate_variants_202 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_202.candidate_variants,
@@ -1095,7 +1162,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_201.inheritance_filter_genes()
         test_candidate_variants_201 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_201.candidate_variants,
@@ -1106,7 +1174,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_221 = InheritanceFiltering(variants_per_gene_221,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_221.inheritance_filter_genes()
         test_candidate_variants_221 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_221.candidate_variants,
@@ -1117,7 +1186,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_220.inheritance_filter_genes()
         test_candidate_variants_220 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_220.candidate_variants,
@@ -1128,7 +1198,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
                                                  self.family_dad_aff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_222.inheritance_filter_genes()
         test_candidate_variants_222 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_222.candidate_variants,
@@ -1140,7 +1211,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_200.inheritance_filter_genes()
         test_candidate_variants_200 = {'single_variants': {},
                                                 'compound_hets': {}}
@@ -1152,7 +1224,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_211 = InheritanceFiltering(variants_per_gene_211,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_211.inheritance_filter_genes()
         test_candidate_variants_211 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1171,7 +1244,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_210.inheritance_filter_genes()
         test_candidate_variants_210 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_210.candidate_variants,
@@ -1182,7 +1256,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_212.inheritance_filter_genes()
         test_candidate_variants_212 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_212.candidate_variants,
@@ -1193,7 +1268,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_202.inheritance_filter_genes()
         test_candidate_variants_202 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_202.candidate_variants,
@@ -1204,7 +1280,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_201.inheritance_filter_genes()
         test_candidate_variants_201 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_201.candidate_variants,
@@ -1215,7 +1292,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_221 = InheritanceFiltering(variants_per_gene_221,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_221.inheritance_filter_genes()
         test_candidate_variants_221 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_221.candidate_variants,
@@ -1226,7 +1304,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_220.inheritance_filter_genes()
         test_candidate_variants_220 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_220.candidate_variants,
@@ -1237,7 +1316,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
                                                  self.family_both_unaff,
                                                  self.genes_biallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_222.inheritance_filter_genes()
         test_candidate_variants_222 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_222.candidate_variants,
@@ -1250,7 +1330,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
                                                  self.family_both_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1270,7 +1351,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
                                                  self.family_both_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1290,7 +1372,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
                                                  self.family_both_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1310,7 +1393,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
                                                  self.family_both_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1330,7 +1414,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
                                                  self.family_both_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1350,7 +1435,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
                                                  self.family_both_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1370,7 +1456,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
                                                  self.family_both_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1390,7 +1477,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
                                                  self.family_both_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1410,7 +1498,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
                                                  self.family_both_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1423,7 +1512,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1443,7 +1533,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1463,7 +1554,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1475,7 +1567,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1487,7 +1580,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1499,7 +1593,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {
                                                     '5_10971838_A_GG': {
@@ -1519,7 +1614,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1531,7 +1627,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1543,7 +1640,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1557,7 +1655,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -1577,7 +1676,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
                                                  self.family_dad_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1590,7 +1690,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -1610,7 +1711,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
                                                  self.family_dad_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1623,7 +1725,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -1643,7 +1746,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
                                                  self.family_dad_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1655,7 +1759,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
                                                  self.family_dad_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1667,7 +1772,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
                                                  self.family_dad_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1679,7 +1785,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
                                                  self.family_dad_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1693,7 +1800,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -1713,7 +1821,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
                                                  self.family_both_unaff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1725,7 +1834,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
                                                  self.family_both_unaff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1737,7 +1847,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
                                                  self.family_both_unaff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1749,7 +1860,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
                                                  self.family_both_unaff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1761,7 +1873,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
                                                  self.family_both_unaff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1773,7 +1886,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
                                                  self.family_both_unaff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1785,7 +1899,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
                                                  self.family_both_unaff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1797,7 +1912,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
                                                  self.family_both_unaff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1811,7 +1927,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                  self.family_both_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_200.inheritance_filter_genes()
         test_candidate_variants_200 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1823,7 +1940,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                  self.family_both_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_210.inheritance_filter_genes()
         test_candidate_variants_210 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1835,7 +1953,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
                                                  self.family_both_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_201.inheritance_filter_genes()
         test_candidate_variants_201 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1848,7 +1967,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_211.inheritance_filter_genes()
         test_candidate_variants_211 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -1868,7 +1988,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
                                                  self.family_both_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_202.inheritance_filter_genes()
         test_candidate_variants_202 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1880,7 +2001,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
                                                  self.family_both_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_220.inheritance_filter_genes()
         test_candidate_variants_220 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1893,7 +2015,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_212.inheritance_filter_genes()
         test_candidate_variants_212 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -1914,7 +2037,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_221.inheritance_filter_genes()
         test_candidate_variants_221 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -1935,7 +2059,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_222.inheritance_filter_genes()
         test_candidate_variants_222 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -1956,7 +2081,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_200.inheritance_filter_genes()
         test_candidate_variants_200 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1968,7 +2094,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_210.inheritance_filter_genes()
         test_candidate_variants_210 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1980,7 +2107,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_201.inheritance_filter_genes()
         test_candidate_variants_201 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -1993,7 +2121,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_211.inheritance_filter_genes()
         test_candidate_variants_211 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -2005,7 +2134,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_202.inheritance_filter_genes()
         test_candidate_variants_202 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -2017,7 +2147,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_220.inheritance_filter_genes()
         test_candidate_variants_220 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -2029,7 +2160,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_212.inheritance_filter_genes()
         test_candidate_variants_212 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -2042,7 +2174,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_221.inheritance_filter_genes()
         test_candidate_variants_221 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -2054,7 +2187,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
                                                  self.family_mum_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_222.inheritance_filter_genes()
         test_candidate_variants_222 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -2067,7 +2201,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                  self.family_dad_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_200.inheritance_filter_genes()
         test_candidate_variants_200 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -2079,7 +2214,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                  self.family_dad_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_210.inheritance_filter_genes()
         test_candidate_variants_210 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -2091,7 +2227,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
                                                  self.family_dad_aff,
                                                  self.genes_monoallelic, None,
-                                                 None)
+                                                 None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_201.inheritance_filter_genes()
         test_candidate_variants_201 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -2104,7 +2241,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_211.inheritance_filter_genes()
         test_candidate_variants_211 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -2117,7 +2255,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_202.inheritance_filter_genes()
         test_candidate_variants_202 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2131,7 +2270,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_220.inheritance_filter_genes()
         test_candidate_variants_220 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2145,7 +2285,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_212.inheritance_filter_genes()
         test_candidate_variants_212 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -2158,7 +2299,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_221.inheritance_filter_genes()
         test_candidate_variants_221 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2172,7 +2314,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_222.inheritance_filter_genes()
         test_candidate_variants_222 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2187,7 +2330,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_200.inheritance_filter_genes()
         test_candidate_variants_200 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2201,7 +2345,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_210.inheritance_filter_genes()
         test_candidate_variants_210 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2215,7 +2360,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_201.inheritance_filter_genes()
         test_candidate_variants_201 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2229,7 +2375,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_211.inheritance_filter_genes()
         test_candidate_variants_211 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2243,7 +2390,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_202.inheritance_filter_genes()
         test_candidate_variants_202 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2257,7 +2405,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_220.inheritance_filter_genes()
         test_candidate_variants_220 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2271,7 +2420,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_212.inheritance_filter_genes()
         test_candidate_variants_212 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2285,7 +2435,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_221.inheritance_filter_genes()
         test_candidate_variants_221 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2299,7 +2450,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_222.inheritance_filter_genes()
         test_candidate_variants_222 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2316,7 +2468,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2337,7 +2490,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2358,7 +2512,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2379,7 +2534,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2400,7 +2556,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2421,7 +2578,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2442,7 +2600,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2463,7 +2622,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2484,7 +2644,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2499,7 +2660,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2520,7 +2682,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2541,7 +2704,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2555,7 +2719,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2569,7 +2734,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2583,7 +2749,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2604,7 +2771,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2618,7 +2786,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2632,7 +2801,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2647,7 +2817,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2668,7 +2839,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2682,7 +2854,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2703,7 +2876,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2717,7 +2891,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2738,7 +2913,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2752,7 +2928,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2766,7 +2943,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2780,7 +2958,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2795,7 +2974,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2816,7 +2996,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2830,7 +3011,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2844,7 +3026,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2858,7 +3041,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2872,7 +3056,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2886,7 +3071,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2900,7 +3086,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2914,7 +3101,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -2931,7 +3119,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2952,7 +3141,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2973,7 +3163,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -2994,7 +3185,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3015,7 +3207,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3036,7 +3229,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3057,7 +3251,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3078,7 +3273,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3099,7 +3295,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3114,7 +3311,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3135,7 +3333,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3156,7 +3355,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3170,7 +3370,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3184,7 +3385,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3198,7 +3400,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3219,7 +3422,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3233,7 +3437,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3247,7 +3452,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3262,7 +3468,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3283,7 +3490,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3297,7 +3505,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3318,7 +3527,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3332,7 +3542,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3353,7 +3564,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3367,7 +3579,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3381,7 +3594,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3395,7 +3609,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3410,7 +3625,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3431,7 +3647,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3445,7 +3662,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3459,7 +3677,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3487,7 +3706,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3501,7 +3721,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3515,7 +3736,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3529,7 +3751,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_mosaic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3587,7 +3810,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3608,7 +3832,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3629,7 +3854,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3650,7 +3876,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3671,7 +3898,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3692,7 +3920,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3713,7 +3942,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3734,7 +3964,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3755,7 +3986,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3770,7 +4002,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3791,7 +4024,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3812,7 +4046,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3834,7 +4069,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3856,7 +4092,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3870,7 +4107,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3891,7 +4129,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3905,7 +4144,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3927,7 +4167,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_mum_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -3942,7 +4183,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3963,7 +4205,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -3985,7 +4228,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -4006,7 +4250,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -4028,7 +4273,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -4049,7 +4295,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -4063,7 +4310,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -4085,7 +4333,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -4099,7 +4348,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_dad_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -4114,7 +4364,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -4135,7 +4386,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -4157,7 +4409,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_101.inheritance_filter_genes()
         test_candidate_variants_101 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -4179,7 +4432,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_111.inheritance_filter_genes()
         test_candidate_variants_111 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -4201,7 +4455,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -4215,7 +4470,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -4229,7 +4485,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -4243,7 +4500,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_121.inheritance_filter_genes()
         test_candidate_variants_121 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -4257,7 +4515,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_unaff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {},
                                        'compound_hets': {}}
@@ -4273,7 +4532,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_both_aff,
                                                      self.genes_imprinted,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_200.inheritance_filter_genes()
         test_candidate_variants_200 = {'single_variants': {}, 'compound_hets': {}}
 
@@ -4288,7 +4548,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_no_parents,
                                                      self.genes_biallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_1.inheritance_filter_genes()
         test_candidate_variants_1 = {'single_variants': {},
                                                 'compound_hets': {'1234': {
@@ -4310,7 +4571,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                    self.family_no_parents,
                                                    self.genes_biallelic,
                                                    None,
-                                                   None)
+                                                   None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_2.inheritance_filter_genes()
         test_candidate_variants_2 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -4333,7 +4595,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                      self.family_no_parents,
                                                      self.genes_monoallelic,
                                                      None,
-                                                     None)
+                                                     None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_1.inheritance_filter_genes()
         test_candidate_variants_1 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -4354,7 +4617,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                    self.family_no_parents,
                                                    self.genes_monoallelic,
                                                    None,
-                                                   None)
+                                                   None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_2.inheritance_filter_genes()
         test_candidate_variants_2 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -4377,7 +4641,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                    self.family_no_parents,
                                                    self.genes_mosaic,
                                                    None,
-                                                   None)
+                                                   None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_1.inheritance_filter_genes()
         test_candidate_variants_1 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -4398,7 +4663,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                    self.family_no_parents,
                                                    self.genes_mosaic,
                                                    None,
-                                                   None)
+                                                   None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_2.inheritance_filter_genes()
         test_candidate_variants_2 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -4421,7 +4687,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                    self.family_no_parents,
                                                    self.genes_imprinted,
                                                    None,
-                                                   None)
+                                                   None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_1.inheritance_filter_genes()
         test_candidate_variants_1 = {'single_variants': {
             '5_10971838_A_GG': {
@@ -4442,9 +4709,13 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                    self.family_no_parents,
                                                    self.genes_imprinted,
                                                    None,
-                                                   None)
+                                                   None, self.candidate_variants,
+                                                      self.inhreport)
         inheritancefilter_2.inheritance_filter_genes()
         test_candidate_variants_2 = {'single_variants': {}, 'compound_hets': {}}
 
         self.assertEqual(inheritancefilter_2.candidate_variants,
                          test_candidate_variants_2)
+
+if __name__ == '__main__':
+    unittest.main()

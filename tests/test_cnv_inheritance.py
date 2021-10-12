@@ -300,3 +300,6 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         cnvfilter6.cnv_filter()
         self.assertEqual(cnvfilter6.posscomphet, False)
 
+
+if __name__ == '__main__':
+    unittest.main()

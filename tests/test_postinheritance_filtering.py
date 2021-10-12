@@ -17,7 +17,9 @@ class TestPostInheritanceFilter(unittest.TestCase):
                         'max_af': '0', 'max_af_pops': '.', 'ddd_af': '0',
                         'revel': '.', 'polyphen': '.', 'hgvsc': '.',
                         'hgvsp': '.', 'sex': 'XY', 'dnm': '.',
-                        'gt': '0/1', 'gq': '50', 'pid': '.'}
+                        'gt': '0/1', 'gq': '50', 'pid': '.', 'ac_XX': '0',
+                        'ac_XY': '0', 'an_XX': '0', 'an_XY': '0',
+                        'nhomalt_XX': '0', 'nhomalt_XY': '0'}
 
         self.child = create_test_person('fam', 'child_id', 'dad_id', 'mum_id',
                                         'M', '2', '/vcf/path')

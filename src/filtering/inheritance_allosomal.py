@@ -165,12 +165,13 @@ class AllosomalFilter(object):
                     add_single_var_to_candidates(v, variants[v]['child'], self.hgncid, inh.lower(),
                                                  self.candidate_variants)
             elif variants[v]['child'].chrom == 'Y':
-                if variants[v]['child'].gt == '1/1':
-                    add_single_var_to_candidates(v, variants[v]['child'],
+                for inh in self.gene['mode']:
+                    if variants[v]['child'].gt == '1/1':
+                        add_single_var_to_candidates(v, variants[v]['child'],
                                                  self.hgncid, inh.lower(),
                                                  self.candidate_variants)
-                else:
-                    logging.info(
+                    else:
+                        logging.info(
                         v + "fails inheritance filters non-hemizygous GT in " + inh)
             else:
                 logging.info(
