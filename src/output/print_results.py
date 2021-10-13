@@ -8,8 +8,6 @@ import json
 
 def create_output(families, variants, inheritance_reports, outdir):
 
-    # print(dir(inheritance_reports))
-    # exit(0)
     if len(families.keys()) > 1:
         outfile = outdir + "/" + "clinical_filter.txt"
         inhreportfile = outdir + "/" + "clinical_filter_inheritance_report.txt"
@@ -22,7 +20,7 @@ def create_output(families, variants, inheritance_reports, outdir):
               'dad_aff', 'triogenotype', 'chrom', 'pos', 'ref', 'alt', 'DNM', 'symbol',
               'hgnc_id', 'transcript', 'canonical', 'MANE', 'consequence',
               'HGVSc', 'HGVSp', 'protein_position', 'polyphen', 'REVEL', 'max_af', 'ddd_af', 'GT',
-              'GQ', 'AD', 'cnv_length', 'result', 'mode', 'mnv',
+              'GQ', 'AD', 'cnv_length', 'cnv_copy_number', 'result', 'mode', 'mnv',
               'phased_15bp', 'phased_any']
 
     results = {}
@@ -58,7 +56,7 @@ def print_output(results, header, outfile):
                         results[fam][var]['MANE'], results[fam][var]['consequence'], results[fam][var]['HGVSc'],
                         results[fam][var]['HGVSp'], results[fam][var]['protein_position'], results[fam][var]['polyphen'], results[fam][var]['REVEL'],
                         results[fam][var]['max_af'], results[fam][var]['ddd_af'], results[fam][var]['GT'],
-                        results[fam][var]['GQ'], results[fam][var]['AD'], results[fam][var]['cnv_length'], (",").join(results[fam][var]['result']),
+                        results[fam][var]['GQ'], results[fam][var]['AD'], results[fam][var]['cnv_length'], results[fam][var]['cn'], (",").join(results[fam][var]['result']),
                         (",").join(results[fam][var]['mode']), results[fam][var]['mnv'], results[fam][var]['phased_15bp'],
                         results[fam][var]['phased_any'] ])
                 o.write(line)
@@ -207,6 +205,7 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res['GQ'] = var['variant'].gq
     res['AD'] = var['variant'].ad
     res['cnv_length'] = var['variant'].cnv_length
+    res['cn'] = var['variant'].cn
     res['triogenotype'] = var['variant'].triogenotype
 
     if var['variant'].dnm == "DNM":
