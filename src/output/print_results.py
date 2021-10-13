@@ -1,5 +1,6 @@
 """copyright"""
 
+import json
 
 # -identify variants in both compound het and single variants dicts
 # -identify and flag possible MNVs
@@ -7,12 +8,15 @@
 
 def create_output(families, variants, inheritance_reports, outdir):
 
-    # print(inheritance_reports)
+    # print(dir(inheritance_reports))
+    # exit(0)
     if len(families.keys()) > 1:
         outfile = outdir + "/" + "clinical_filter.txt"
+        inhreportfile = outdir + "/" + "clinical_filter_inheritance_report.txt"
     else:
         proband = families[list(families.keys())[0]].proband.person_id
         outfile = outdir + "/" + proband + "_clinical_filter.txt"
+        inhreportfile = outdir + "/" + proband + "_clinical_filter_inheritance_report.txt"
 
     header = ['family_id', 'proband', 'sex', 'mum', 'dad', 'mum_aff',
               'dad_aff', 'triogenotype', 'chrom', 'pos', 'ref', 'alt', 'DNM', 'symbol',
@@ -22,6 +26,7 @@ def create_output(families, variants, inheritance_reports, outdir):
               'phased_15bp', 'phased_any']
 
     results = {}
+    inhreports = {}
 
     for fam in variants.keys():
         phasedvars, phased_varids = identify_phased_variants(
@@ -33,9 +38,10 @@ def create_output(families, variants, inheritance_reports, outdir):
         results[fam] = create_output_data(fam, families, variants, mnvs, variants_in_cis,
                                           phased_varids)
 
-    # todo - add something to print out inheritance report matrices for each family
+        inhreports[fam] = inheritance_reports[fam].__dict__
 
     print_output(results, header, outfile)
+    print_inh_reports(inhreports, inhreportfile)
 
 def print_output(results, header, outfile):
 
@@ -57,6 +63,11 @@ def print_output(results, header, outfile):
                         results[fam][var]['phased_any'] ])
                 o.write(line)
                 o.write("\n")
+
+def print_inh_reports(inhreports, inhreportfile):
+    inhjson = json.dumps(inhreports)
+    with open(inhreportfile, 'w') as o:
+        o.write(inhjson)
 
 def create_output_data(fam, families, variants, mnvs, variants_in_cis,
                        phased_varids):

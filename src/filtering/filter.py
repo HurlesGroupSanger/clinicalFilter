@@ -71,6 +71,8 @@ class Filter(object):
         inheritancefilter = InheritanceFiltering(variants_per_gene, self.family, genes, regions, trusted_variants, self.candidate_variants, self.inhreport)
         # candidate_variants, inheritance_report = inheritancefilter.inheritance_filter()
         inheritancefilter.inheritance_filter()
+        # print(inheritancefilter.inhreport.__dict__)
+        # exit(0)
 
         # inheritance filters for CNVs
         cnvfilter = CNVFiltering(variants, self.family, genes, regions, trusted_variants, self.candidate_variants)
