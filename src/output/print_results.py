@@ -66,6 +66,7 @@ def print_inh_reports(inhreports, inhreportfile):
     inhjson = json.dumps(inhreports)
     with open(inhreportfile, 'w') as o:
         o.write(inhjson)
+        o.write("\n")
 
 def create_output_data(fam, families, variants, mnvs, variants_in_cis,
                        phased_varids):

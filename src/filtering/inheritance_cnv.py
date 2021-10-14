@@ -21,8 +21,10 @@ class CNVFiltering(object):
             self.parents = 'dad_only'
         elif self.family.has_mum():
             self.parents = 'mum_only'
-        self.mum_aff = self.family.mum.affected
-        self.dad_aff = self.family.dad.affected
+        if self.family.has_mum():
+            self.mum_aff = self.family.mum.affected
+        if self.family.has_dad():
+            self.dad_aff = self.family.dad.affected
 
     def cnv_filter(self):
         # filter CNVs here
@@ -81,12 +83,14 @@ class CNVFiltering(object):
             if self.variants['child'][v].cnv_filter == 'Fail':
                 logging.info(v + " CNV failed quality filters")
                 continue
+            if self.genes:
+                modes = self.get_ddg2p_modes(v)
             self.passnonddg2p = self.cnv_non_ddg2p_filter(v)
             if not self.passnonddg2p:
                 # ddg2p filter
                 self.passddg2p = self.cnv_ddg2p_filter(v)
                 if not self.passddg2p:
-                    self.posscomphet = self.cnv_candidate_compound_het_filter(v)
+                    self.posscomphet = self.cnv_candidate_compound_het_filter(v, modes)
                     if not self.posscomphet:
                         logging.info(
                             v + " failed CNV filter, inheritance doesn't "
