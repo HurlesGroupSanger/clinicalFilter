@@ -58,7 +58,7 @@ class AllosomalFilter(object):
                                                                         dad_gt,
                                                                         mum_aff,
                                                                         dad_aff)
-                    elif inh == 'X-linked over-dominant':
+                    elif inh == 'X-linked over-dominance':
                         self.gn_X_linked_over_dominant_gt_homozygous_parents_filter(v,
                                                                         variants[
                                                                             v][
@@ -90,7 +90,7 @@ class AllosomalFilter(object):
                                                                                dad_gt,
                                                                                mum_aff,
                                                                                dad_aff)
-                    elif inh == 'X-linked over-dominant':
+                    elif inh == 'X-linked over-dominance':
                         self.gn_X_linked_over_dominant_gt_hemizygous_parents_filter(
                             v,
                             variants[
@@ -206,12 +206,12 @@ class AllosomalFilter(object):
     def gn_X_linked_over_dominant_gt_homozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
         # X-linked over dominant gene, homozygous proband all fail
         self.inheritance_report.populate_inheritance_report('allosomal',
-                                                            'X-linked_over_dominant',
+                                                            'X-linked_over_dominance',
                                                             'homozygous',
                                                             mum_gt, dad_gt,
                                                             mum_aff, dad_aff)
         logging.info(varid + " failed inheritance filter for homozygous "
-                             "variant in X-linked over dominant gene")
+                             "variant in X-linked over dominance gene")
 
     def gn_hemizygous_gt_hemizygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
         #pass unless mum is 1/1 and unaffected
@@ -244,12 +244,12 @@ class AllosomalFilter(object):
     def gn_X_linked_over_dominant_gt_hemizygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
         # X-linked over dominant gene, hemizygous proband all fail
         self.inheritance_report.populate_inheritance_report('allosomal',
-                                                            'X-linked_over_dominant',
+                                                            'X-linked_over_dominance',
                                                             'hemizygous',
                                                             mum_gt, dad_gt,
                                                             mum_aff, dad_aff)
         logging.info(varid + " failed inheritance filter for hemizygous "
-                             "variant in X-linked over dominant gene")
+                             "variant in X-linked over dominance gene")
 
     def gn_hemizygous_gt_heterozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
         # Hemizygous gene, heterozygous proband. Fail if either parent is 1/1 and unaffected, or if both parents 1/1 and affected
@@ -296,35 +296,35 @@ class AllosomalFilter(object):
         # X-linked over-dominant gene, heterozygous proband. If dad aff pass if DNM
         # if dad unaff pass if DNM or mum_aff and 1/1 or mum unaff and not 0/1
         self.inheritance_report.populate_inheritance_report('allosomal',
-                                                            'X-linked_over_dominant',
+                                                            'X-linked_over_dominance',
                                                             'heterozygous',
                                                             mum_gt, dad_gt,
                                                             mum_aff, dad_aff)
         if dad_aff:
             if mum_gt == '0/0' and dad_gt == '0/0':
                 add_single_var_to_candidates(varid, var, self.hgncid,
-                                             'X-linked over-dominant',
+                                             'X-linked over-dominance',
                                              self.candidate_variants)
             else:
                 logging.info(varid + " failed inheritance filter for heterozygous "
-                                 "variant in X-linked over-dominant gene")
+                                 "variant in X-linked over-dominance gene")
         else:#dad unaff
             if mum_gt == '0/0' and dad_gt == '0/0':
                 add_single_var_to_candidates(varid, var, self.hgncid,
-                                             'X-linked over-dominant',
+                                             'X-linked over-dominance',
                                              self.candidate_variants)
             elif mum_aff and mum_gt == '0/1':
                 add_single_var_to_candidates(varid, var, self.hgncid,
-                                             'X-linked over-dominant',
+                                             'X-linked over-dominance',
                                              self.candidate_variants)
             elif not mum_aff and not mum_gt == '0/1':
                 add_single_var_to_candidates(varid, var, self.hgncid,
-                                             'X-linked over-dominant',
+                                             'X-linked over-dominance',
                                              self.candidate_variants)
             else:
                 logging.info(
                     varid + " failed inheritance filter for heterozygous "
-                            "variant in X-linked over-dominant gene")
+                            "variant in X-linked over-dominance gene")
 
     def gn_mono_y_hem_gt_hemizygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
         self.inheritance_report.populate_inheritance_report('allosomal',
