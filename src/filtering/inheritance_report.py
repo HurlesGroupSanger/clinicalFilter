@@ -61,10 +61,10 @@ class InheritanceReport(object):
         inheritance_report['allosomal']['X-linked_dominant']['child_het'] = copy.deepcopy(aff_matrix)
         inheritance_report['allosomal']['X-linked_dominant']['child_hemi'] = copy.deepcopy(aff_matrix)
         inheritance_report['allosomal']['X-linked_dominant']['child_hom'] = copy.deepcopy(aff_matrix)
-        inheritance_report['allosomal']['X-linked_over_dominant'] = {}
-        inheritance_report['allosomal']['X-linked_over_dominant']['child_het'] = copy.deepcopy(aff_matrix)
-        inheritance_report['allosomal']['X-linked_over_dominant']['child_hemi'] = copy.deepcopy(aff_matrix)
-        inheritance_report['allosomal']['X-linked_over_dominant']['child_hom'] = copy.deepcopy(aff_matrix)
+        inheritance_report['allosomal']['X-linked_over_dominance'] = {}
+        inheritance_report['allosomal']['X-linked_over_dominance']['child_het'] = copy.deepcopy(aff_matrix)
+        inheritance_report['allosomal']['X-linked_over_dominance']['child_hemi'] = copy.deepcopy(aff_matrix)
+        inheritance_report['allosomal']['X-linked_over_dominance']['child_hom'] = copy.deepcopy(aff_matrix)
         inheritance_report['allosomal']['monoallelic_Y_hemizygous'] = {}
         inheritance_report['allosomal']['monoallelic_Y_hemizygous']['child_hemi'] = copy.deepcopy(aff_matrix)
 

@@ -131,7 +131,7 @@ class AllosomalFilter(object):
                                                                                dad_gt,
                                                                                mum_aff,
                                                                                dad_aff)
-                    elif inh == 'X-linked over-dominant':
+                    elif inh == 'X-linked over-dominance':
                         self.gn_X_linked_over_dominant_gt_heterozygous_parents_filter(
                             v,
                             variants[

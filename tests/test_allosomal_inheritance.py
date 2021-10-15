@@ -143,8 +143,8 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
         }
         self.genes_X_linked_dominant = copy.deepcopy(self.genes_hemizygous)
         self.genes_X_linked_dominant['1234']['mode'] = {'X-linked dominant'}
-        self.genes_X_linked_over_dominant = copy.deepcopy(self.genes_hemizygous)
-        self.genes_X_linked_over_dominant['1234']['mode'] = {'X-linked over-dominant'}
+        self.genes_X_linked_over_dominance = copy.deepcopy(self.genes_hemizygous)
+        self.genes_X_linked_over_dominance['1234']['mode'] = {'X-linked over-dominance'}
         self.genes_monoallelic_Y_hemizygous = copy.deepcopy(self.genes_hemizygous)
         self.genes_monoallelic_Y_hemizygous['1234']['mode'] = {'monoallelic_Y_hem'}
         self.genes_monoallelic_Y_hemizygous['1234']['chr'] = 'Y'
@@ -978,7 +978,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_aff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                      self.family_XX_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -993,7 +993,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_aff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                      self.family_XX_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1008,7 +1008,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_aff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
                                                      self.family_XX_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1023,7 +1023,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_aff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
                                                      self.family_XX_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1038,7 +1038,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_aff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
                                                      self.family_XX_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1053,7 +1053,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_aff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
                                                      self.family_XX_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1069,7 +1069,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_mum_aff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                      self.family_XX_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1084,7 +1084,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_mum_aff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                      self.family_XX_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1099,7 +1099,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_mum_aff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
                                                      self.family_XX_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1114,7 +1114,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_mum_aff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
                                                      self.family_XX_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1129,7 +1129,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_mum_aff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
                                                      self.family_XX_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1144,7 +1144,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_mum_aff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
                                                      self.family_XX_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1160,7 +1160,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_dad_aff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                      self.family_XX_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1175,7 +1175,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_dad_aff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                      self.family_XX_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1190,7 +1190,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_dad_aff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
                                                      self.family_XX_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1205,7 +1205,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_dad_aff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
                                                      self.family_XX_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1220,7 +1220,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_dad_aff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
                                                      self.family_XX_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1235,7 +1235,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_dad_aff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
                                                      self.family_XX_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1251,7 +1251,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_unaff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                      self.family_XX_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1266,7 +1266,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_unaff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                      self.family_XX_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1281,7 +1281,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_unaff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
                                                      self.family_XX_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1296,7 +1296,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_unaff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
                                                      self.family_XX_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1311,7 +1311,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_unaff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
                                                      self.family_XX_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -1326,7 +1326,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_unaff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
                                                      self.family_XX_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2353,7 +2353,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_both_aff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                      self.family_XY_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2368,7 +2368,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_both_aff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                      self.family_XY_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2383,7 +2383,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_both_aff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
                                                      self.family_XY_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2398,7 +2398,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_both_aff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
                                                      self.family_XY_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2413,7 +2413,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_both_aff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
                                                      self.family_XY_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2428,7 +2428,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_both_aff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
                                                      self.family_XY_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2444,7 +2444,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_mum_aff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                      self.family_XY_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2459,7 +2459,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_mum_aff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                      self.family_XY_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2474,7 +2474,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_mum_aff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
                                                      self.family_XY_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2489,7 +2489,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_mum_aff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
                                                      self.family_XY_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2504,7 +2504,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_mum_aff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
                                                      self.family_XY_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2519,7 +2519,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_mum_aff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
                                                      self.family_XY_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2535,7 +2535,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_dad_aff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                      self.family_XY_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2550,7 +2550,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_dad_aff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                      self.family_XY_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2565,7 +2565,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_dad_aff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
                                                      self.family_XY_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2580,7 +2580,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_dad_aff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
                                                      self.family_XY_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2595,7 +2595,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_dad_aff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
                                                      self.family_XY_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2610,7 +2610,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_dad_aff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
                                                      self.family_XY_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2626,7 +2626,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_both_unaff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
                                                      self.family_XY_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2641,7 +2641,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_both_unaff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
                                                      self.family_XY_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2656,7 +2656,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_both_unaff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
                                                      self.family_XY_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2671,7 +2671,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_both_unaff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
                                                      self.family_XY_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2686,7 +2686,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_both_unaff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
                                                      self.family_XY_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -2701,7 +2701,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XY_both_unaff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
                                                      self.family_XY_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3643,14 +3643,14 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
                                                      self.family_XX_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             'X_1097183_A_GG': {
-                'mode': {'X-linked over-dominant'},
+                'mode': {'X-linked over-dominance'},
                 'variant':
                     variants_per_gene_100[
                         '1234'][
@@ -3665,7 +3665,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
                                                      self.family_XX_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3680,7 +3680,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
                                                      self.family_XX_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3695,7 +3695,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
                                                      self.family_XX_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3710,7 +3710,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
                                                      self.family_XX_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3725,7 +3725,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
                                                      self.family_XX_both_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3741,14 +3741,14 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_mum_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
                                                      self.family_XX_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             'X_1097183_A_GG': {
-                'mode': {'X-linked over-dominant'},
+                'mode': {'X-linked over-dominance'},
                 'variant':
                     variants_per_gene_100[
                         '1234'][
@@ -3763,14 +3763,14 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_mum_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
                                                      self.family_XX_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
         inheritancefilter_110.inheritance_filter_genes()
         test_candidate_variants_110 = {'single_variants': {
             'X_1097183_A_GG': {
-                'mode': {'X-linked over-dominant'},
+                'mode': {'X-linked over-dominance'},
                 'variant':
                     variants_per_gene_110[
                         '1234'][
@@ -3785,7 +3785,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_mum_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
                                                      self.family_XX_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3800,7 +3800,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_mum_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
                                                      self.family_XX_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3815,14 +3815,14 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_mum_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
                                                      self.family_XX_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
         inheritancefilter_112.inheritance_filter_genes()
         test_candidate_variants_112 = {'single_variants': {
             'X_1097183_A_GG': {
-                'mode': {'X-linked over-dominant'},
+                'mode': {'X-linked over-dominance'},
                 'variant':
                     variants_per_gene_112[
                         '1234'][
@@ -3837,7 +3837,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_mum_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
                                                      self.family_XX_mum_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3853,14 +3853,14 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_dad_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
                                                      self.family_XX_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             'X_1097183_A_GG': {
-                'mode': {'X-linked over-dominant'},
+                'mode': {'X-linked over-dominance'},
                 'variant':
                     variants_per_gene_100[
                         '1234'][
@@ -3875,7 +3875,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_dad_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
                                                      self.family_XX_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3890,7 +3890,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_dad_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
                                                      self.family_XX_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3905,7 +3905,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_dad_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
                                                      self.family_XX_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3920,7 +3920,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_dad_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
                                                      self.family_XX_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3935,7 +3935,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_dad_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
                                                      self.family_XX_dad_aff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3951,14 +3951,14 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_unaff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
                                                      self.family_XX_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
         inheritancefilter_100.inheritance_filter_genes()
         test_candidate_variants_100 = {'single_variants': {
             'X_1097183_A_GG': {
-                'mode': {'X-linked over-dominant'},
+                'mode': {'X-linked over-dominance'},
                 'variant':
                     variants_per_gene_100[
                         '1234'][
@@ -3973,7 +3973,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_unaff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
                                                      self.family_XX_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -3988,14 +3988,14 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_unaff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
                                                      self.family_XX_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
         inheritancefilter_120.inheritance_filter_genes()
         test_candidate_variants_120 = {'single_variants': {
             'X_1097183_A_GG': {
-                'mode': {'X-linked over-dominant'},
+                'mode': {'X-linked over-dominance'},
                 'variant':
                     variants_per_gene_120[
                         '1234'][
@@ -4010,14 +4010,14 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_unaff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
                                                      self.family_XX_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
         inheritancefilter_102.inheritance_filter_genes()
         test_candidate_variants_102 = {'single_variants': {
             'X_1097183_A_GG': {
-                'mode': {'X-linked over-dominant'},
+                'mode': {'X-linked over-dominance'},
                 'variant':
                     variants_per_gene_102[
                         '1234'][
@@ -4032,7 +4032,7 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_unaff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
                                                      self.family_XX_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
@@ -4047,14 +4047,14 @@ class TestAllosomalInheritanceFilter(unittest.TestCase):
                                                               self.family_XX_both_unaff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
                                                      self.family_XX_both_unaff,
-                                                     self.genes_X_linked_over_dominant,
+                                                     self.genes_X_linked_over_dominance,
                                                      None,
                                                      None, self.candidate_variants,
                                                       self.inhreport)
         inheritancefilter_122.inheritance_filter_genes()
         test_candidate_variants_122 = {'single_variants': {
             'X_1097183_A_GG': {
-                'mode': {'X-linked over-dominant'},
+                'mode': {'X-linked over-dominance'},
                 'variant':
                     variants_per_gene_122[
                         '1234'][
