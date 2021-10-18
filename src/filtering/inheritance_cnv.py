@@ -93,8 +93,7 @@ class CNVFiltering(object):
                     self.posscomphet = self.cnv_candidate_compound_het_filter(v, modes)
                     if not self.posscomphet:
                         logging.info(
-                            v + " failed CNV filter, inheritance doesn't "
-                                "match and not possible compound het")
+                            v + " failed CNV filter and not possible compound het")
 
     def cnv_filter_single_parent(self):
         pass

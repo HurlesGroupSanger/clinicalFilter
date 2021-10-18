@@ -13,7 +13,7 @@ class CNV(Variant):
         # return str(self.__dict__)
         return 'CNV(chrom="{}", pos="{}", cnv_end="{}", ref="{}", alt="{}", ' \
                'cnv_type="{}", cnv_length="{}", cnv_filter="{}", consequence="{}", ' \
-               'hgnc_all="{}", symbol_all="{}", gt="{}", cn="{}", ' \
+               'hgnc_id_all="{}", symbol_all="{}", gt="{}", cn="{}", ' \
                'cnv_inh="{}", sex="{}", genotype="{}", triogenotype="{}")'.format(
             self.chrom, self.pos,
             self.cnv_end,

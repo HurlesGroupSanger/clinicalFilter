@@ -247,7 +247,6 @@ class AutosomalFilter(object):
 
 
     def biallelic_homozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
-        # todo will need modification when CNVs (and UPDs) added
         self.inheritance_report.populate_inheritance_report('autosomal',
                                                             'biallelic', var.gt,
                                                             mum_gt, dad_gt,
@@ -274,6 +273,18 @@ class AutosomalFilter(object):
             if mum_gt == '0/1' and dad_gt == '0/1':
                 add_single_var_to_candidates(varid, var, self.hgncid, 'biallelic',
                                              self.candidate_variants)
+                vpass = 'y'
+            elif mum_gt == '0/1' and dad_gt == '0/0':
+                #allow homs apparently inherited from one parent as these may
+                #have one hom and one cnv
+                add_compound_het_to_candidates(varid, var, self.hgncid,
+                                               'biallelic',
+                                               self.candidate_variants)
+                vpass = 'y'
+            elif mum_gt == '0/0' and dad_gt == '0/1':
+                add_compound_het_to_candidates(varid, var, self.hgncid,
+                                               'biallelic',
+                                               self.candidate_variants)
                 vpass = 'y'
 
         if vpass == 'n':

@@ -78,6 +78,31 @@ class CompoundHetScreen(object):
                                                      "screen, X chrom and dad unaffected and hom ref for"
                                                      " 1 variant")
                 return False
+            elif var1.triogenotype in ['201', '210'] or var1.triogenotype in ['201', '210']:
+                #triogenotype of 201 or 210 only passes is one variant is a
+                #deletion with copy number 1
+                if var1.is_cnv() and not var2.is_cnv():
+                    varcnv = var1
+                    varsnv = var2
+                elif var2.is_cnv() and not var1.is_cnv():
+                    varcnv = var2
+                    varsnv = var1
+                else:
+                    logging.info(varid1 + " " + varid2 + " failed compound het "
+                                                     "screen, homozygous on one alllle and other allele not CNV")
+                if varcnv.cn == '1':
+                    if varsnv.triogenotype == '201' and varcnv.triogenotype == 'DELDELREF':
+                        return True
+                    elif varsnv.triogenotype == '210' and varcnv.triogenotype == 'DELREFDEL':
+                        return True
+                    else:
+                        logging.info(
+                            varid1 + " " + varid2 + " failed compound het "
+                                                    "screen, CNV and SNV pair with triogenotypes not consistant with compound het")
+                else:
+                    logging.info(varid1 + " " + varid2 + " failed compound het "
+                                                         "screen, homozygous on one alllle and other allele not CNV with copy number of 1")
+
             elif (var1.get_mum_genotype() == '0' and \
                   var2.get_mum_genotype() != '0' and \
                   var1.get_dad_genotype() != '0' and \

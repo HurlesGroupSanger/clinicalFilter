@@ -184,13 +184,16 @@ def identify_mnvs(phasedvars):
 def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     # get variant specific information to go in the output lines
     res = {}
-
     res['chrom'] = var['variant'].chrom
     res['pos'] = var['variant'].pos
     res['ref'] = var['variant'].ref
     res['alt'] = var['variant'].alt
-    res['symbol'] = var['variant'].symbol
-    res['hgnc_id'] = var['variant'].hgnc_id
+    if var['variant'].is_snv():
+        res['symbol'] = var['variant'].symbol
+        res['hgnc_id'] = var['variant'].hgnc_id
+    elif var['variant'].is_cnv():
+        res['symbol'] = var['variant'].symbol_all
+        res['hgnc_id'] = var['variant'].hgnc_id_all.replace('HGNC:','')
     res['transcript'] = var['variant'].feature
     res['canonical'] = var['variant'].canonical
     res['MANE'] = var['variant'].mane
