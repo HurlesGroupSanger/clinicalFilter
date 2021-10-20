@@ -96,8 +96,9 @@ class PreInheritanceFiltering(object):
         for gn in list(variants_per_gene.keys()):
             for varid in list(variants_per_gene[gn].keys()):
                 childvar = variants_per_gene[gn][varid]['child']
-                if childvar.triogenotype == '100' and childvar.dnm == False:
-                    logging.info(varid + " triogenotype = 100 and failed DNM filter")
+                if (childvar.triogenotype == '100' or childvar.triogenotype == '200') and childvar.dnm == False:
+                    logging.info(varid + " triogenotype = " + childvar.triogenotype + " and failed DNM filter")
                     del variants_per_gene[gn][varid]
                     if len(variants_per_gene[gn].keys()) < 1:
                         del variants_per_gene[gn]
+
