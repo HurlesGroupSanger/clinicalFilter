@@ -136,12 +136,20 @@ class CNVFiltering(object):
             # is any gene covered by the CNV biallelic, or CN = 1 and male hemizygous
             if 'Biallelic' in modes.keys():
                 for hgncid in modes['Biallelic']:
+                    self.variants['child'][varid].reportable_symbol.append(
+                        self.genes[hgncid]['symbol'])
+                    self.variants['child'][varid].reportable_hgnc_id.append(
+                        hgncid)
                     add_compound_het_to_candidates(varid, self.variants['child'][varid], hgncid,
                                                "Biallelic",
                                                self.candidate_variants)
                 return True
             elif 'Hemizygous' in modes.keys() and self.variants['child'][varid].cn == '1' and self.family.proband.sex == 'XY':
                 for hgncid in modes['Hemizygous']:
+                    self.variants['child'][varid].reportable_symbol.append(
+                        self.genes[hgncid]['symbol'])
+                    self.variants['child'][varid].reportable_hgnc_id.append(
+                        hgncid)
                     add_compound_het_to_candidates(varid, self.variants['child'][varid], hgncid,
                                                "Hemizygous",
                                                self.candidate_variants)
@@ -164,6 +172,7 @@ class CNVFiltering(object):
         # get all genes covered by the CNV and go through each one at a time to see if any pass
         hgncids = self.variants['child'][varid].hgnc_id_all.split("|")
         for hid in hgncids:
+            surrounding_dup = False
             hgncid = hid[5:]
             if not hgncid in self.genes.keys():
                 continue
@@ -174,13 +183,18 @@ class CNVFiltering(object):
                 if "Loss of function" in self.genes[hgncid]['mechanism'] and len(set.intersection(self.genes[hgncid]['mode'], dupmodes)) > 0:
                     if (int(self.variants['child'][varid].pos) < int(self.genes[hgncid]['start'])) and (int(self.variants['child'][varid].cnv_end) > int(self.genes[hgncid]['end'])):
                         logging.info(
-                            varid + " duplication completely surrounds monoallelic, hemizygous or heterozygus gene with LoF mechanism")
-                        return cnvpass
+                            varid + " duplication completely surrounds monoallelic, hemizygous or heterozygus gene with LoF mechanism " + self.genes[hgncid]['symbol'] + " hgnc:" + hgncid)
+                        surrounding_dup = True
+                        #return cnvpass #don't return CNV pass as other genes may pass
             #Biallelic gene pass if copy number (CN) = 0 and mechanism in "Uncertain", "Loss of function", "Dominant negative"
             if int(self.variants['child'][varid].cn) == 0 and "Biallelic" in self.genes[hgncid]['mode']:
                 biallelicmechs = set({"Uncertain", "Loss of function", "Dominant negative"})
                 if len(set.intersection(self.genes[hgncid]['mechanism'], biallelicmechs)) > 0:
                     cnvpass = True
+                    self.variants['child'][varid].reportable_symbol.append(
+                        self.genes[hgncid]['symbol'])
+                    self.variants['child'][varid].reportable_hgnc_id.append(
+                        hgncid)
                     add_single_var_to_candidates(varid,
                                                  self.variants['child'][varid],
                                                  hgncid, 'biallelic',
@@ -188,35 +202,50 @@ class CNVFiltering(object):
                     return cnvpass
             #Monoallelic, X-linked dominant or Hemizygous in male pass if CN=0, 1 or 3 and any mechanism
             cns_wanted = ['0', '1', '3']
-            if "Monoallelic" in self.genes[hgncid]['mode'] or "X-linked dominant" in self.genes[hgncid]['mode']:
-                if self.variants['child'][varid].cn in cns_wanted:
+            if not surrounding_dup == True:
+                if "Monoallelic" in self.genes[hgncid]['mode'] or "X-linked dominant" in self.genes[hgncid]['mode']:
+                    if self.variants['child'][varid].cn in cns_wanted:
+                        self.variants['child'][varid].reportable_symbol.append(self.genes[hgncid]['symbol'])
+                        self.variants['child'][varid].reportable_hgnc_id.append(
+                            hgncid)
+                        cnvpass = True
+                        add_single_var_to_candidates(varid,
+                                                     self.variants['child'][varid],
+                                                     hgncid, (",").join(self.genes[hgncid]['mode']),
+                                                     self.candidate_variants)
+                        return cnvpass
+                if "Hemizygous" in self.genes[hgncid]['mode'] and self.family.proband.sex == 'XY':
                     cnvpass = True
+                    self.variants['child'][varid].reportable_symbol.append(
+                        self.genes[hgncid]['symbol'])
+                    self.variants['child'][varid].reportable_hgnc_id.append(
+                        hgncid)
                     add_single_var_to_candidates(varid,
                                                  self.variants['child'][varid],
-                                                 hgncid, (",").join(self.genes[hgncid]['mode']),
+                                                 hgncid, (",").join(
+                            self.genes[hgncid]['mode']),
                                                  self.candidate_variants)
                     return cnvpass
-            if "Hemizygous" in self.genes[hgncid]['mode'] and self.family.proband.sex == 'XY':
-                cnvpass = True
-                add_single_var_to_candidates(varid,
-                                             self.variants['child'][varid],
-                                             hgncid, (",").join(
-                        self.genes[hgncid]['mode']),
-                                             self.candidate_variants)
-                return cnvpass
-            #Hemizygous in female pass if CN=3 and mechanism = "Increased gene dosage"
-            if "Hemizygous" in self.genes[hgncid]['mode'] and self.family.proband.sex == 'XX' and "Increased gene dosage" in self.genes[hgncid]['mechanism'] and self.variants['child'][varid].cn == '3':
-                cnvpass = True
-                add_single_var_to_candidates(varid,
-                                             self.variants['child'][varid],
-                                             hgncid, "Hemizygous",
-                                             self.candidate_variants)
-                return cnvpass
+                #Hemizygous in female pass if CN=3 and mechanism = "Increased gene dosage"
+                if "Hemizygous" in self.genes[hgncid]['mode'] and self.family.proband.sex == 'XX' and "Increased gene dosage" in self.genes[hgncid]['mechanism'] and self.variants['child'][varid].cn == '3':
+                    cnvpass = True
+                    self.variants['child'][varid].reportable_symbol.append(
+                        self.genes[hgncid]['symbol'])
+                    self.variants['child'][varid].reportable_hgnc_id.append(
+                        hgncid)
+                    add_single_var_to_candidates(varid,
+                                                 self.variants['child'][varid],
+                                                 hgncid, "Hemizygous",
+                                                 self.candidate_variants)
+                    return cnvpass
             #Pass intragenic DUP in monoallelic or X-linked dominant gene with loss of function mechanism and any part of the gene is outside of the CNV boundary
             if self.variants['child'][varid].alt == "<DUP>":
                 if ("Monoallelic" in self.genes[hgncid]['mode'] or "X-linked dominant" in self.genes[hgncid]['mode']) and "Loss of function" in self.genes[hgncid]['mechanism']:
-                    if int(self.variants['child'][varid].pos) > int(self.genes[hgncid]['start']) or int(self.variants['child'][varid].cnv_end) > int(self.genes[hgncid]['end']):
+                    if int(self.variants['child'][varid].pos) > int(self.genes[hgncid]['start']) or int(self.variants['child'][varid].cnv_end) < int(self.genes[hgncid]['end']):
                         cnvpass = True
+                        self.variants['child'][varid].reportable_symbol.append(self.genes[hgncid]['symbol'])
+                        self.variants['child'][varid].reportable_hgnc_id.append(
+                            hgncid)
                         add_single_var_to_candidates(varid,
                                                      self.variants['child'][varid],
                                                      hgncid, (",").join(self.genes[hgncid]['mode']),

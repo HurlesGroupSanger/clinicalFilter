@@ -192,8 +192,12 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
         res['symbol'] = var['variant'].symbol
         res['hgnc_id'] = var['variant'].hgnc_id
     elif var['variant'].is_cnv():
-        res['symbol'] = var['variant'].symbol_all
-        res['hgnc_id'] = var['variant'].hgnc_id_all.replace('HGNC:','')
+        if len(var['variant'].reportable_symbol) == 0:
+            res['symbol'] = '.'
+            res['hgnc_id'] = '.'
+        else:
+            res['symbol'] = ('|').join(var['variant'].reportable_symbol)
+            res['hgnc_id'] = ('|').join(var['variant'].reportable_hgnc_id)
     res['transcript'] = var['variant'].feature
     res['canonical'] = var['variant'].canonical
     res['MANE'] = var['variant'].mane

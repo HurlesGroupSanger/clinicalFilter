@@ -8,6 +8,8 @@ class CNV(Variant):
 
     def __init__(self, vardata):
         super().__init__(vardata)
+        self.reportable_symbol = []
+        self.reportable_hgnc_id = []
 
     def __repr__(self):
         # return str(self.__dict__)
