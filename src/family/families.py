@@ -1,38 +1,68 @@
 """
-copyright
+Copyright (c) 2021 Genome Research Limited
+Author: Ruth Eberhardt <re3@sanger.ac.uk>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 """
-import logging
+
 
 class Person(object):
     """
     Person object: ID, VCF, sex, affected status
     """
-    def __init__(self, family_id, person_id, dad_id, mum_id, sex, affected, path):
-        self.family_id = family_id#note that a person may be in >1 family if it is a parent
+
+    def __init__(self, family_id, person_id, dad_id, mum_id, sex, affected,
+                 path):
+        # note that a person may be in >1 family if it is a parent
+        self.family_id = family_id
         self.person_id = person_id
         self.mum_id = mum_id
         self.dad_id = dad_id
         self.vcf_path = path
         self.sex = sex
         self.X_count = self.get_X_count()
-        #convert affected to true/false
+        # convert affected to true/false
         if affected == '2':
             self.affected = True
         elif affected == '1':
             self.affected = False
         else:
-            raise ValueError("Unknown affected status: " + affected + " should be '1' or '2'")
+            raise ValueError(
+                "Unknown affected status: " + affected +
+                " should be '1' or '2'")
 
     def __repr__(self):
         return 'Person(person_id="{}", dad_id="{}", mum_id="{}", sex="{}", ' \
-               'X_count="{}", affected="{}", path="{}")'.format(self.get_id(), \
-                self.get_dad_id(), self.get_mum_id(), self.get_sex(), \
-                self.get_X_count(), self.get_affected_status(), self.get_vcf_path())
+               'X_count="{}", affected="{}", path="{}")'.format(self.get_id(),
+                                                                self.get_dad_id(),
+                                                                self.get_mum_id(),
+                                                                self.get_sex(),
+                                                                self.get_X_count(),
+                                                                self.get_affected_status(),
+                                                                self.get_vcf_path())
 
     def get_X_count(self):
-        '''get X chromosome count for inheritance filters'''
-        X_count = self.sex.count("X")
-        return X_count
+        """
+        get X chromosome count for inheritance filters
+        """
+        x_count = self.sex.count("X")
+        return x_count
 
     def get_id(self):
         """
@@ -77,7 +107,8 @@ class Person(object):
         return self.vcf_path
 
     def get_parents(self):
-        """get ids of parents (if any)
+        """
+        get ids of parents (if any)
         """
         parent_ids = []
         if not self.mum_id == "0":
@@ -96,7 +127,6 @@ class Person(object):
                self.sex == other.sex
 
 
-
 class Family(object):
     """
     Family object: Child, Mum, Dad person objects. Can also be proband only or
@@ -109,32 +139,41 @@ class Family(object):
         self.dad = dad
 
     def __repr__(self):
-        return 'Family(proband={}, dad={}, mum={})'.format(self.proband, self.dad, \
-                self.mum)
+        return 'Family(proband={}, dad={}, mum={})'.format(self.proband,
+                                                           self.dad,
+                                                           self.mum)
 
     def has_mum(self):
-        """do we have the mum? returns true/false"""
+        """
+        do we have the mum? returns true/false
+        """
         if self.mum is None:
             return False
         else:
             return True
 
     def has_dad(self):
-        """do we have the dad? returns true/false"""
+        """
+        do we have the dad? returns true/false
+        """
         if self.dad is None:
             return False
         else:
             return True
 
     def has_both_parents(self):
-        """do we have both parents? returns true/false"""
+        """
+        do we have both parents? returns true/false
+        """
         if self.mum is None or self.dad is None:
             return False
         else:
             return True
 
     def has_no_parents(self):
-        """do we have neither parent? returns true/false"""
+        """
+        do we have neither parent? returns true/false
+        """
         if self.dad is None and self.mum is None:
             return True
         else:
@@ -144,5 +183,3 @@ class Family(object):
         return self.proband == other.proband and \
                self.mum == other.mum and \
                self.dad == other.dad
-
-

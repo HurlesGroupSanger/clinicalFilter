@@ -1,10 +1,32 @@
 """
-copyright
+Copyright (c) 2021 Genome Research Limited
+Author: Ruth Eberhardt <re3@sanger.ac.uk>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 """
 from variants.variant import Variant
 
+
 class CNV(Variant):
-    """class for CNVs"""
+    """
+    CNVs
+    """
 
     def __init__(self, vardata):
         super().__init__(vardata)
@@ -14,33 +36,20 @@ class CNV(Variant):
     def __repr__(self):
         # return str(self.__dict__)
         return 'CNV(chrom="{}", pos="{}", cnv_end="{}", ref="{}", alt="{}", ' \
-               'cnv_type="{}", cnv_length="{}", cnv_filter="{}", consequence="{}", ' \
-               'hgnc_id_all="{}", symbol_all="{}", gt="{}", cn="{}", ' \
-               'cnv_inh="{}", sex="{}", genotype="{}", triogenotype="{}")'.format(
-            self.chrom, self.pos,
-            self.cnv_end,
-            self.ref, self.alt,
-            self.cnv_type, self.cnv_length,
-            self.cnv_filter, self.consequence,
-            self.hgnc_id_all, self.symbol_all,
-            self.gt, self.cn, self.cnv_inh,
-            self.sex,
-            self.get_genotype(),
-            self.triogenotype)
+               'cnv_type="{}", cnv_length="{}", cnv_filter="{}", ' \
+               'consequence="{}", hgnc_id_all="{}", symbol_all="{}", ' \
+               'gt="{}", cn="{}", cnv_inh="{}", sex="{}", genotype="{}", ' \
+               'triogenotype="{}")'.format(
+            self.chrom, self.pos, self.cnv_end, self.ref, self.alt,
+            self.cnv_type, self.cnv_length, self.cnv_filter, self.consequence,
+            self.hgnc_id_all, self.symbol_all, self.gt, self.cn, self.cnv_inh,
+            self.sex, self.get_genotype(), self.triogenotype)
 
     def set_genotype(self):
-        '''converts genotype to 0/1/2'''
+        """
+        Converts genotype to 0/1/2
+        """
         pass
-        # if self.cn == '0':
-        #     self.genotype = '2'
-        # elif self.cn == '1':
-        #     self.genotype = '1'
-        # elif self.cn == '3':
-        #     self.genotype = '1'
-        # elif int(self.cn) > 3:
-        #     self.genotype = '2'
-        # else:
-        #     raise ValueError("invalid copy number")
 
     def get_genotype(self):
         return self.genotype
@@ -49,12 +58,14 @@ class CNV(Variant):
         self.triogenotype = triogeno
 
     def is_snv(self):
-        """ checks whether the variant is for a CNV
+        """
+        Checks whether the variant is an SNV
         """
         return False
 
     def is_cnv(self):
-        """ checks whether the variant is for a CNV
+        """
+        Checks whether the variant is a CNV
         """
         return True
 
@@ -71,7 +82,6 @@ class CNV(Variant):
         else:
             dad_genotype = '1'
         return dad_genotype
-        pass
 
     def is_het(self):
         pass
