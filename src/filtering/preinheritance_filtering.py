@@ -1,16 +1,39 @@
-"""copyright"""
+"""
+Copyright (c) 2021 Genome Research Limited
+Author: Ruth Eberhardt <re3@sanger.ac.uk>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+"""
 
 import logging
 
 from utils.utils import common_elements
 
-class PreInheritanceFiltering(object):
-    '''class for preinheritance filtering'''
 
-    # iterate through variants found in a proband
-    # remove any where GQ < 40 if autosome and any DDD_AF > 0.005
-    # remove any without functional consequence
-    # return a dict of variants per hgnc_id
+class PreInheritanceFiltering(object):
+    """
+    Pre-inheritance filtering
+    iterate through variants found in a proband
+    remove any where GQ < 40 if autosome and any DDD_AF > 0.005
+    remove any without functional consequence
+    return a dict of variants per hgnc_id
+    """
 
     def __init__(self, variants):
         self.variants = variants
@@ -21,7 +44,6 @@ class PreInheritanceFiltering(object):
         self.revel_filter(variants_per_gene)
         self.dnms_filter(variants_per_gene)
         return variants_per_gene
-
 
     def create_variants_per_gene(self):
         variants_per_gene = {}
@@ -37,27 +59,29 @@ class PreInheritanceFiltering(object):
                 continue
 
             # fail if child GQ < 40
-            if int(self.variants['child'][v].gq) < 40 and self.variants['child'][
-                v].chrom not in ['X', 'Y']:
+            if int(self.variants['child'][v].gq) < 40 and \
+                    self.variants['child'][
+                        v].chrom not in ['X', 'Y']:
                 logging.info(
                     v + " failed low GQ: " + self.variants['child'][v].gq)
                 continue
 
-            # fail if DDD_AF > 0.005
+            # fail if DDD_AF > 0.005 (gnomAD AF variants above this threshold
+            # are not loaded)
             if float(self.variants['child'][v].ddd_af) > 0.005:
                 logging.info(
-                    v + " failed high DDD AF: " + self.variants['child'][v].ddd_af)
+                    v + " failed high DDD AF: " + self.variants['child'][
+                        v].ddd_af)
                 continue
 
             cqs = self.variants['child'][v].consequence.split('&')
             coding_cqs = common_elements(cqs, consequences)
             if len(coding_cqs) == 0:
                 logging.info(
-                    v + " failed, no functional consequences: " + self.variants['child'][
+                    v + " failed, no functional consequences: " +
+                    self.variants['child'][
                         v].consequence)
                 continue
-
-            # todo fail if the trio genotype is denovo but the variant doesn't pass de novo filters
 
             hgncid = cqs = self.variants['child'][v].hgnc_id
             if not hgncid in variants_per_gene.keys():
@@ -73,11 +97,13 @@ class PreInheritanceFiltering(object):
         return variants_per_gene
 
     def revel_filter(self, variants_per_gene):
-        '''remove missense variants with REVEL < 0.5 unless DNM'''
+        """
+        Remove missense variants with REVEL < 0.5 unless DNM
+        """
         for gn in list(variants_per_gene.keys()):
             for varid in list(variants_per_gene[gn].keys()):
                 childvar = variants_per_gene[gn][varid]['child']
-                if childvar.dnm == 'DNM':
+                if childvar.dnm == True:
                     continue
                 elif not childvar.consequence == "missense_variant":
                     continue
@@ -85,20 +111,25 @@ class PreInheritanceFiltering(object):
                     continue
                 else:
                     revel = float(childvar.revel)
-                    if revel < 0.5:
-                        logging.info(varid + " failed REVEL filter: " + str(revel))
+                    if revel < 0.4:
+                        logging.info(
+                            varid + " failed REVEL filter: " + str(revel))
                         del variants_per_gene[gn][varid]
                         if len(variants_per_gene[gn].keys()) < 1:
                             del variants_per_gene[gn]
 
     def dnms_filter(self, variants_per_gene):
-        '''remove DNMs that don't pass filters'''
+        """
+        Remove DNMs that don't pass filters
+        """
         for gn in list(variants_per_gene.keys()):
             for varid in list(variants_per_gene[gn].keys()):
                 childvar = variants_per_gene[gn][varid]['child']
-                if (childvar.triogenotype == '100' or childvar.triogenotype == '200') and childvar.dnm == False:
-                    logging.info(varid + " triogenotype = " + childvar.triogenotype + " and failed DNM filter")
+                if (
+                        childvar.triogenotype == '100' or childvar.triogenotype == '200') and childvar.dnm == False:
+                    logging.info(
+                        varid + " triogenotype = " + childvar.triogenotype
+                        + " and failed DNM filter")
                     del variants_per_gene[gn][varid]
                     if len(variants_per_gene[gn].keys()) < 1:
                         del variants_per_gene[gn]
-

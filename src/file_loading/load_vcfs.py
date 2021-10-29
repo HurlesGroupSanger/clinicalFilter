@@ -1,5 +1,24 @@
 """
-copyright
+Copyright (c) 2021 Genome Research Limited
+Author: Ruth Eberhardt <re3@sanger.ac.uk>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 """
 import subprocess
 import logging
@@ -10,7 +29,9 @@ from variants.cnv import CNV
 
 
 def load_variants(family, outdir, regions=None):
-    '''get variants in child and parents'''
+    """
+    get variants in child and parents
+    """
     proband_vcf = family.proband.get_vcf_path()
     if regions:
         regionfile = outdir + "/reg.tmp"
@@ -42,7 +63,8 @@ def load_variants(family, outdir, regions=None):
                 crf.write(reg + "\n")
 
         childsortedregs = outdir + "/childreg.tmp_sorted"
-        childsortcmd = "sort -k1,1V -k2,2n " + childregionfile + " > " + childsortedregs
+        childsortcmd = "sort -k1,1V -k2,2n " + childregionfile + " > " \
+                       + childsortedregs
 
         os.system(childsortcmd)
 
@@ -58,10 +80,8 @@ def load_variants(family, outdir, regions=None):
         os.system("rm " + childregionfile)
         os.system("rm " + childsortedregs)
 
-    variants = {}
-    variants['child'] = child_vars
-    variants['mum'] = mum_vars
-    variants['dad'] = dad_vars
+    variants = {'child': child_vars, 'mum': mum_vars, 'dad': dad_vars}
+
     return variants
 
 
@@ -72,19 +92,18 @@ def readvcf(filename, regions, sex):
     vars = {}
 
     # get list of info fields in the vcf
-    #fieldlistcmd = "bcftools view -h " + filename + " z | grep ^##INFO | sed 's/^.*ID=// ; s/,.*//'"
-    #fieldlist = runcommand(fieldlistcmd)
-    #fields = fieldlist.split("\n")
-
+    # fieldlistcmd = "bcftools view -h " + filename + " z | grep ^##INFO | sed 's/^.*ID=// ; s/,.*//'"
+    # fieldlist = runcommand(fieldlistcmd)
+    # fields = fieldlist.split("\n")
 
     infofields_wanted = ['Consequence', 'Gene', 'SYMBOL', 'Feature',
-                         'CANONICAL',
-                         'MANE', 'HGNC_ID', 'MAX_AF', 'MAX_AF_POPS',
-                         'DDD_AF', 'DDD_father_AF', 'REVEL', 'PolyPhen',
-                         'Protein_position',
-                         'HGVSc', 'HGVSp', 'pp_trio_DNM2', 'pp_DNG', 'VAF', 'END', 'SVTYPE', 'SVLEN',
-                         'CNVFILTER', 'HGNC_ID_ALL', 'SYMBOL_ALL', 'AC_XX',
-                         'AN_XX', 'nhomalt_XX', 'AC_XY', 'AN_XY', 'nhomalt_XY']
+                         'CANONICAL', 'MANE', 'HGNC_ID', 'MAX_AF',
+                         'MAX_AF_POPS', 'DDD_AF', 'DDD_father_AF', 'REVEL',
+                         'PolyPhen', 'Protein_position', 'HGVSc', 'HGVSp',
+                         'pp_trio_DNM2', 'pp_DNG', 'VAF', 'END', 'SVTYPE',
+                         'SVLEN', 'CNVFILTER', 'HGNC_ID_ALL', 'SYMBOL_ALL',
+                         'AC_XX', 'AN_XX', 'nhomalt_XX', 'AC_XY', 'AN_XY',
+                         'nhomalt_XY']
     formatfields = ['GT', 'GQ', 'PID', 'AD', 'CIFER_INHERITANCE', 'CN']
 
     # create infostring containing only the fields present
@@ -100,9 +119,10 @@ def readvcf(filename, regions, sex):
     formatstring = ("\t%").join(formatfields)
 
     if regions is None:
-        bcfcmdroot = "bcftools norm -m - " + filename + \
-                     " | bcftools view -e 'INFO/MAX_AF>0.005 | FORMAT/GT[0]=" + \
-                     '"ref"' + "'  | bcftools query -u -f '%CHROM\t%POS\t%REF\t%ALT{0}\t"
+        bcfcmdroot = "bcftools norm -m - " + filename \
+                     + " | bcftools view -e 'INFO/MAX_AF>0.005 | FORMAT/GT[0]=" \
+                     + '"ref"' \
+                     + "'  | bcftools query -u -f '%CHROM\t%POS\t%REF\t%ALT{0}\t"
     else:
         bcfcmdroot = "bcftools norm -m - -R " + regions + " " + filename + \
                      " | bcftools view -e 'INFO/MAX_AF>0.005 | FORMAT/GT[0]=" + \
@@ -177,6 +197,9 @@ def readvcf(filename, regions, sex):
         var = SNV
         if alt in ['<DEL>', '<DUP>']:
             var = CNV
+        if alt in ['<DEL>', '<DUP>'] and vdata['chrom'] == 'Y':
+            # exclude CNVs on Y
+            continue
         vars[varid] = var(vdata)
 
     logging.info("Variants loaded from " + filename)
@@ -186,7 +209,8 @@ def readvcf(filename, regions, sex):
 
 def runcommand(cmd):
     try:
-        byteOutput = subprocess.check_output(cmd, shell=True)
-        return byteOutput.decode('UTF-8').rstrip()
+        byteoutput = subprocess.check_output(cmd, shell=True)
+        return byteoutput.decode('UTF-8').rstrip()
     except subprocess.CalledProcessError as e:
+        print(e.output)
         return "Error in command"

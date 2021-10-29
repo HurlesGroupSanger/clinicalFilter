@@ -1,12 +1,33 @@
 """
-copyright
+Copyright (c) 2021 Genome Research Limited
+Author: Ruth Eberhardt <re3@sanger.ac.uk>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 """
 from variants.variant import Variant
 import logging
 
 
 class SNV(Variant):
-    """class for SNVs"""
+    """
+    SNVs
+    """
 
     def __init__(self, vardata):
         super().__init__(vardata)
@@ -14,32 +35,25 @@ class SNV(Variant):
         self.calculate_ac_het_hemi()
 
     def __repr__(self):
-        # return str(self.__dict__)
-        return 'SNV(chrom="{}", pos="{}", ref="{}", alt="{}", consequence="{}", ' \
-               'protein_position="{}", ensg="{}", symbol="{}", feature="{}", canonical="{}", mane="{}", ' \
+        return 'SNV(chrom="{}", pos="{}", ref="{}", alt="{}", ' \
+               'consequence="{}", protein_position="{}", ensg="{}", ' \
+               'symbol="{}", feature="{}", canonical="{}", mane="{}", ' \
                'hgnc_id="{}", max_af="{}", max_af_pops="{}", ddd_af="{}", ' \
-               'ddd_father_af="{}", revel="{}", polyphen="{}", hgvsc="{}", hgvsp="{}", dnm="{}", ' \
-               'gt="{}", gq="{}", pid="{}", ad={}, sex="{}", ' \
-               'genotype="{}", triogenotype="{}")'.format(
-            self.chrom, self.pos,
-            self.ref, self.alt,
-            self.consequence,
-            self.protein_position,
-            self.ensg, self.symbol,
-            self.feature,
-            self.canonical, self.mane,
-            self.hgnc_id, self.max_af,
-            self.max_af_pops,
-            self.ddd_af, self.ddd_father_af, self.revel,
-            self.polyphen, self.hgvsc,
-            self.hgvsp, self.dnm,
-            self.gt, self.gq, self.pid, self.ad,
-            self.sex,
-            self.get_genotype(),
+               'ddd_father_af="{}", revel="{}", polyphen="{}", hgvsc="{}", ' \
+               'hgvsp="{}", dnm="{}", gt="{}", gq="{}", pid="{}", ad={}, ' \
+               'sex="{}", genotype="{}", triogenotype="{}")'.format(
+            self.chrom, self.pos, self.ref, self.alt, self.consequence,
+            self.protein_position, self.ensg, self.symbol, self.feature,
+            self.canonical, self.mane, self.hgnc_id, self.max_af,
+            self.max_af_pops, self.ddd_af, self.ddd_father_af, self.revel,
+            self.polyphen, self.hgvsc, self.hgvsp, self.dnm,
+            self.gt, self.gq, self.pid, self.ad, self.sex, self.get_genotype(),
             self.triogenotype)
 
     def calculate_ac_het_hemi(self):
-        '''calculate AC_het and AC_hemi'''
+        """
+        Calculate AC_het and AC_hemi
+        """
         AC_hemi = 0
         AC_het = 0
         #change all '.' to '0'
@@ -60,16 +74,18 @@ class SNV(Variant):
             AC_het = total_AC - (2 * total_nhom)
 
         if AC_het < 0 or AC_hemi < 0:
-            logging.info("Warning - negative AC_het or AC_hemi for " + \
-                         self.chrom + " " + self.pos + " AC_het=" + str(AC_het) + \
-                         " AC_hemi=" + str(AC_hemi))
+            logging.info("Warning - negative AC_het or AC_hemi for "
+                         + self.chrom + " " + self.pos + " AC_het="
+                         + str(AC_het) + " AC_hemi=" + str(AC_hemi))
 
         self.AC_het = str(AC_het)
         self.AC_hemi = str(AC_hemi)
 
     def standardise_gt(self):
-        '''Reformat gt to ensure that lowest number allele is first and that
-        the separator is / '''
+        """
+        Reformat gt to ensure that lowest number allele is first and that
+        the separator is /
+        """
         newgt = self.gt
         newgt = newgt.replace('|', '/')
         gtsplit = list(newgt)
@@ -78,7 +94,9 @@ class SNV(Variant):
         self.gt = newgt
 
     def set_genotype(self):
-        '''converts genotype to 0/1/2'''
+        """
+        Converts genotype to 0/1/2
+        """
         if len(self.gt) != 3:
             raise ValueError("genotype should be three characters")
         else:
@@ -148,18 +166,22 @@ class SNV(Variant):
 
 
     def is_cnv(self):
-        """ checks whether the variant is for a CNV
+        """
+        Checks whether the variant is a CNV
         """
         return False
 
     def is_snv(self):
-        """ checks whether the variant is for a CNV
+        """
+        Checks whether the variant is an SNV
         """
         return True
 
 
     def is_het(self):
-        """is the variant a het?"""
+        """
+        Is the variant a het?
+        """
         if self.genotype == 1:
             return True
         else:
@@ -167,7 +189,9 @@ class SNV(Variant):
 
 
     def is_hom_alt(self):
-        """is the variant hom alt?"""
+        """
+        Is the variant hom alt?
+        """
         if self.genotype == 2:
             return True
         else:
@@ -175,7 +199,9 @@ class SNV(Variant):
 
 
     def is_hom_ref(self):
-        """is the variant hom ref?"""
+        """
+        Is the variant hom ref?
+        """
         if self.genotype == 0:
             return True
         else:

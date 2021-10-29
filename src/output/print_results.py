@@ -1,12 +1,36 @@
-"""copyright"""
+"""
+Copyright (c) 2021 Genome Research Limited
+Author: Ruth Eberhardt <re3@sanger.ac.uk>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+"""
 
 import json
 
-# -identify variants in both compound het and single variants dicts
-# -identify and flag possible MNVs
-# -flag variants in cis in monoallelic genes
 
 def create_output(families, variants, inheritance_reports, outdir):
+    """
+    Create output file
+    Identify variants in both compound het and single variants dicts
+    Identify and flag possible MNVs
+    Flag variants in cis in monoallelic genes
+    """
 
     if len(families.keys()) > 1:
         outfile = outdir + "/" + "clinical_filter.txt"
@@ -14,14 +38,16 @@ def create_output(families, variants, inheritance_reports, outdir):
     else:
         proband = families[list(families.keys())[0]].proband.person_id
         outfile = outdir + "/" + proband + "_clinical_filter.txt"
-        inhreportfile = outdir + "/" + proband + "_clinical_filter_inheritance_report.txt"
+        inhreportfile = outdir + "/" + proband \
+                        + "_clinical_filter_inheritance_report.txt"
 
-    header = ['family_id', 'proband', 'sex', 'mum', 'dad', 'mum_aff',
-              'dad_aff', 'triogenotype', 'chrom', 'pos', 'ref', 'alt', 'DNM', 'symbol',
+    header = ['family_id', 'proband', 'sex', 'mum', 'dad', 'mum_aff', 'dad_aff',
+              'triogenotype', 'chrom', 'pos', 'ref', 'alt', 'DNM', 'symbol',
               'hgnc_id', 'transcript', 'canonical', 'MANE', 'consequence',
-              'HGVSc', 'HGVSp', 'protein_position', 'polyphen', 'REVEL', 'max_af', 'ddd_af', 'GT',
-              'GQ', 'AD', 'cnv_length', 'cnv_copy_number', 'result', 'mode', 'mnv',
-              'phased_15bp', 'phased_any']
+              'HGVSc', 'HGVSp', 'protein_position', 'polyphen', 'REVEL',
+              'max_af', 'ddd_af', 'GT', 'GQ', 'AD', 'cnv_length',
+              'cnv_copy_number', 'result', 'mode', 'mnv', 'phased_15bp',
+              'phased_any']
 
     results = {}
     inhreports = {}
@@ -33,7 +59,8 @@ def create_output(families, variants, inheritance_reports, outdir):
         mnvs = identify_mnvs(phasedvars)
         variants_in_cis = identify_close_vars(phasedvars, 15)
 
-        results[fam] = create_output_data(fam, families, variants, mnvs, variants_in_cis,
+        results[fam] = create_output_data(fam, families, variants, mnvs,
+                                          variants_in_cis,
                                           phased_varids)
 
         inhreports[fam] = inheritance_reports[fam].__dict__
@@ -42,31 +69,58 @@ def create_output(families, variants, inheritance_reports, outdir):
     print_inh_reports(inhreports, inhreportfile)
 
 def print_output(results, header, outfile):
-
     with open(outfile, 'w') as o:
         o.write(("\t").join(header))
         o.write("\n")
 
         for fam in results.keys():
             for var in results[fam].keys():
-                line = ("\t").join([ results[fam][var]['family_id'], results[fam][var]['proband'], results[fam][var]['sex'], results[fam][var]['mum'], results[fam][var]['dad'], results[fam][var]['mum_aff'],
-                        results[fam][var]['dad_aff'], results[fam][var]['triogenotype'], results[fam][var]['chrom'], results[fam][var]['pos'], results[fam][var]['ref'],
-                        results[fam][var]['alt'], results[fam][var]['DNM'], results[fam][var]['symbol'],
-                        results[fam][var]['hgnc_id'], results[fam][var]['transcript'], results[fam][var]['canonical'],
-                        results[fam][var]['MANE'], results[fam][var]['consequence'], results[fam][var]['HGVSc'],
-                        results[fam][var]['HGVSp'], results[fam][var]['protein_position'], results[fam][var]['polyphen'], results[fam][var]['REVEL'],
-                        results[fam][var]['max_af'], results[fam][var]['ddd_af'], results[fam][var]['GT'],
-                        results[fam][var]['GQ'], results[fam][var]['AD'], results[fam][var]['cnv_length'], results[fam][var]['cn'], (",").join(results[fam][var]['result']),
-                        (",").join(results[fam][var]['mode']), results[fam][var]['mnv'], results[fam][var]['phased_15bp'],
-                        results[fam][var]['phased_any'] ])
+                line = ("\t").join([results[fam][var]['family_id'],
+                                    results[fam][var]['proband'],
+                                    results[fam][var]['sex'],
+                                    results[fam][var]['mum'],
+                                    results[fam][var]['dad'],
+                                    results[fam][var]['mum_aff'],
+                                    results[fam][var]['dad_aff'],
+                                    results[fam][var]['triogenotype'],
+                                    results[fam][var]['chrom'],
+                                    results[fam][var]['pos'],
+                                    results[fam][var]['ref'],
+                                    results[fam][var]['alt'],
+                                    results[fam][var]['DNM'],
+                                    results[fam][var]['symbol'],
+                                    results[fam][var]['hgnc_id'],
+                                    results[fam][var]['transcript'],
+                                    results[fam][var]['canonical'],
+                                    results[fam][var]['MANE'],
+                                    results[fam][var]['consequence'],
+                                    results[fam][var]['HGVSc'],
+                                    results[fam][var]['HGVSp'],
+                                    results[fam][var]['protein_position'],
+                                    results[fam][var]['polyphen'],
+                                    results[fam][var]['REVEL'],
+                                    results[fam][var]['max_af'],
+                                    results[fam][var]['ddd_af'],
+                                    results[fam][var]['GT'],
+                                    results[fam][var]['GQ'],
+                                    results[fam][var]['AD'],
+                                    results[fam][var]['cnv_length'],
+                                    results[fam][var]['cn'],
+                                    (",").join(results[fam][var]['result']),
+                                    (",").join(results[fam][var]['mode']),
+                                    results[fam][var]['mnv'],
+                                    str(results[fam][var]['phased_15bp']),
+                                    str(results[fam][var]['phased_any'])])
                 o.write(line)
                 o.write("\n")
+
 
 def print_inh_reports(inhreports, inhreportfile):
     inhjson = json.dumps(inhreports)
     with open(inhreportfile, 'w') as o:
         o.write(inhjson)
         o.write("\n")
+
 
 def create_output_data(fam, families, variants, mnvs, variants_in_cis,
                        phased_varids):
@@ -86,10 +140,12 @@ def create_output_data(fam, families, variants, mnvs, variants_in_cis,
     for varid in variants[fam]['single_variants'].keys():
         if varid in results.keys():
             results[varid]['result'].add('single_variant')
-            results[varid]['mode'] = variants[fam]['single_variants'][varid]['mode'] | results[varid]['mode']
+            results[varid]['mode'] = variants[fam]['single_variants'][varid][
+                                         'mode'] | results[varid]['mode']
         else:
-            results[varid] = get_variant_info(variants[fam]['single_variants'][varid], varid,
-                               mnvs, variants_in_cis, phased_varids)
+            results[varid] = get_variant_info(
+                variants[fam]['single_variants'][varid], varid,
+                mnvs, variants_in_cis, phased_varids)
             results[varid]['result'] = set(['single_variant'])
             fsplit = fam.split("_")
             results[varid]['family_id'] = fsplit[0]
@@ -104,10 +160,13 @@ def create_output_data(fam, families, variants, mnvs, variants_in_cis,
         for varid in variants[fam]['compound_hets'][gn].keys():
             if varid in results.keys():
                 results[varid]['result'].add('compound_het')
-                results[varid]['mode'] = variants[fam]['compound_hets'][gn][varid]['mode'] | results[varid]['mode']
+                results[varid]['mode'] = \
+                    variants[fam]['compound_hets'][gn][varid]['mode'] | \
+                    results[varid]['mode']
             else:
-                results[varid] = get_variant_info(variants[fam]['compound_hets'][gn][varid], varid,
-                                   mnvs, variants_in_cis, phased_varids)
+                results[varid] = get_variant_info(
+                    variants[fam]['compound_hets'][gn][varid], varid,
+                    mnvs, variants_in_cis, phased_varids)
                 results[varid]['result'] = set(['compound_het'])
                 fsplit = fam.split("_")
                 results[varid]['family_id'] = fsplit[0]
@@ -120,9 +179,12 @@ def create_output_data(fam, families, variants, mnvs, variants_in_cis,
 
     return results
 
+
 def identify_phased_variants(variants):
-    # identify variants which are phased, these are then used to detect MNVs
-    # and variants in close proximity
+    """
+    Identify variants which are phased, these are then used to detect MNVs
+    and variants in close proximity
+    """
     phased = {}
     phased_varids = {}
     for v in variants:
@@ -132,16 +194,20 @@ def identify_phased_variants(variants):
             if not variants[v]['variant'].pid in phased.keys():
                 phased[variants[v]['variant'].pid] = {}
             phased[variants[v]['variant'].pid][v] = {}
-            phased[variants[v]['variant'].pid][v]['position'] = variants[v]['variant'].pos
-            phased[variants[v]['variant'].pid][v]['protein_position'] = variants[v][
-                'variant'].protein_position
+            phased[variants[v]['variant'].pid][v]['position'] = variants[v][
+                'variant'].pos
+            phased[variants[v]['variant'].pid][v]['protein_position'] = \
+                variants[v][
+                    'variant'].protein_position
             phased_varids[v] = 1
 
     return (phased, phased_varids)
 
 
 def identify_close_vars(phasedvars, distance):
-    # identify variants in cis and in close proximity
+    """
+    Identify variants in cis and in close proximity
+    """
     close_vars = {}
     if len(phasedvars.keys()) >= 1:
         for pid in phasedvars.keys():
@@ -160,8 +226,11 @@ def identify_close_vars(phasedvars, distance):
 
     return close_vars
 
+
 def identify_mnvs(phasedvars):
-    #identify MNVS - must be in the same codon
+    """
+    Identify MNVS which are in the same codon
+    """
     mnvs = {}
     for vargroup in phasedvars.keys():
         if len(phasedvars[vargroup].keys()) >= 2:
@@ -182,7 +251,9 @@ def identify_mnvs(phasedvars):
 
 
 def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
-    # get variant specific information to go in the output lines
+    """
+    Get variant specific information to go in the output lines
+    """
     res = {}
     res['chrom'] = var['variant'].chrom
     res['pos'] = var['variant'].pos
@@ -215,11 +286,12 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res['cnv_length'] = var['variant'].cnv_length
     res['cn'] = var['variant'].cn
     res['triogenotype'] = var['variant'].triogenotype
+    res['DNM'] = str(var['variant'].dnm)
 
-    if var['variant'].dnm == "DNM":
-        res['DNM'] = "True"
-    else:
-        res['DNM'] = "False"
+#    if var['variant'].dnm == "DNM":
+#        res['DNM'] = "True"
+#    else:
+#        res['DNM'] = "False"
 
     if varid in mnvs.keys():
         res['mnv'] = "True"
@@ -237,4 +309,3 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res['mode'] = var['mode']
 
     return res
-
