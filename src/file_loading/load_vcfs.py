@@ -199,6 +199,8 @@ def readvcf(filename, regions, sex):
             var = CNV
         if alt in ['<DEL>', '<DUP>'] and vdata['chrom'] == 'Y':
             # exclude CNVs on Y
+            logging.info(vdata['chrom'] + "_" + vdata['pos'] + "_" + vdata[
+                'ref'] + " CNV in Y: failed")
             continue
         vars[varid] = var(vdata)
 

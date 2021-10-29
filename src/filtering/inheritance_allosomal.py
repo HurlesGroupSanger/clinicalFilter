@@ -425,7 +425,7 @@ class AllosomalFilter(object):
                     else:
                         logging.info(
                             v + " fails 0/1 variant with low VAF in proband "
-                                "with 1 X chromosome")
+                                "with 1 X chromosome and not DNM")
                         return None
                 else:
                     logging.info(v + " fails invalid genotype " + variant.gt)
