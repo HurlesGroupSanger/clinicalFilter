@@ -92,28 +92,20 @@ def readvcf(filename, regions, sex):
     vars = {}
 
     # get list of info fields in the vcf
-    # fieldlistcmd = "bcftools view -h " + filename + " z | grep ^##INFO | sed 's/^.*ID=// ; s/,.*//'"
-    # fieldlist = runcommand(fieldlistcmd)
-    # fields = fieldlist.split("\n")
-
     infofields_wanted = ['Consequence', 'Gene', 'SYMBOL', 'Feature',
-                         'CANONICAL', 'MANE', 'HGNC_ID', 'MAX_AF',
-                         'MAX_AF_POPS', 'DDD_AF', 'DDD_father_AF', 'REVEL',
-                         'PolyPhen', 'Protein_position', 'HGVSc', 'HGVSp',
-                         'pp_trio_DNM2', 'pp_DNG', 'VAF', 'END', 'SVTYPE',
-                         'SVLEN', 'CNVFILTER', 'HGNC_ID_ALL', 'SYMBOL_ALL',
-                         'AC_XX', 'AN_XX', 'nhomalt_XX', 'AC_XY', 'AN_XY',
-                         'nhomalt_XY']
+                         'CANONICAL', 'MANE_SELECT', 'MANE_PLUS_CLINICAL',
+                         'HGNC_ID', 'MAX_AF', 'MAX_AF_POPS', 'DDD_AF',
+                         'DDD_father_AF', 'REVEL', 'PolyPhen',
+                         'Protein_position', 'HGVSc', 'HGVSp', 'pp_trio_DNM2',
+                         'pp_DNG', 'VAF', 'END', 'SVTYPE', 'SVLEN', 'CNVFILTER',
+                         'HGNC_ID_ALL', 'SYMBOL_ALL', 'AC_XX', 'AN_XX',
+                         'nhomalt_XX', 'AC_XY', 'AN_XY', 'nhomalt_XY']
     formatfields = ['GT', 'GQ', 'PID', 'AD', 'CIFER_INHERITANCE', 'CN']
 
     # create infostring containing only the fields present
     info_query = []
     for inf in infofields_wanted:
         info_query.append("%INFO/" + inf)
-        # if inf in fields:
-        #     info_query.append("%INFO/" + inf)
-        # else:
-        #     info_query.append("")
 
     infostring = ("\t").join(info_query)
     formatstring = ("\t%").join(formatfields)
@@ -156,38 +148,39 @@ def readvcf(filename, regions, sex):
         vdata['feature'] = oldata[7]
         vdata['canonical'] = oldata[8]
         vdata['mane'] = oldata[9]
-        vdata['hgnc_id'] = oldata[10]
-        vdata['max_af'] = oldata[11]
-        vdata['max_af_pops'] = oldata[12]
-        vdata['ddd_af'] = oldata[13]
-        vdata['ddd_father_af'] = oldata[14]
-        vdata['revel'] = oldata[15]
-        vdata['polyphen'] = oldata[16]
-        vdata['protein_position'] = oldata[17]
-        vdata['hgvsc'] = oldata[18]
-        vdata['hgvsp'] = oldata[19]
+        vdata['mane_clinical'] = oldata[10]
+        vdata['hgnc_id'] = oldata[11]
+        vdata['max_af'] = oldata[12]
+        vdata['max_af_pops'] = oldata[13]
+        vdata['ddd_af'] = oldata[14]
+        vdata['ddd_father_af'] = oldata[15]
+        vdata['revel'] = oldata[16]
+        vdata['polyphen'] = oldata[17]
+        vdata['protein_position'] = oldata[18]
+        vdata['hgvsc'] = oldata[19]
+        vdata['hgvsp'] = oldata[20]
         vdata['sex'] = sex
-        vdata['pp_trio_dnm2'] = oldata[20]
-        vdata['pp_dng'] = oldata[21]
-        vdata['vaf'] = oldata[22]
-        vdata['cnv_end'] = oldata[23]
-        vdata['cnv_type'] = oldata[24]
-        vdata['cnv_length'] = oldata[25]
-        vdata['cnv_filter'] = oldata[26]
-        vdata['hgnc_id_all'] = oldata[27]
-        vdata['symbol_all'] = oldata[28]
-        vdata['ac_XX'] = oldata[29]
-        vdata['an_XX'] = oldata[30]
-        vdata['nhomalt_XX'] = oldata[31]
-        vdata['ac_XY'] = oldata[32]
-        vdata['an_XY'] = oldata[33]
-        vdata['nhomalt_XY'] = oldata[34]
-        vdata['gt'] = oldata[35]
-        vdata['gq'] = oldata[36]
-        vdata['pid'] = oldata[37]
-        vdata['ad'] = oldata[38]
-        vdata['cnv_inh'] = oldata[39]
-        vdata['cn'] = oldata[40]
+        vdata['pp_trio_dnm2'] = oldata[21]
+        vdata['pp_dng'] = oldata[22]
+        vdata['vaf'] = oldata[23]
+        vdata['cnv_end'] = oldata[24]
+        vdata['cnv_type'] = oldata[25]
+        vdata['cnv_length'] = oldata[26]
+        vdata['cnv_filter'] = oldata[27]
+        vdata['hgnc_id_all'] = oldata[28]
+        vdata['symbol_all'] = oldata[29]
+        vdata['ac_XX'] = oldata[30]
+        vdata['an_XX'] = oldata[31]
+        vdata['nhomalt_XX'] = oldata[32]
+        vdata['ac_XY'] = oldata[33]
+        vdata['an_XY'] = oldata[34]
+        vdata['nhomalt_XY'] = oldata[35]
+        vdata['gt'] = oldata[36]
+        vdata['gq'] = oldata[37]
+        vdata['pid'] = oldata[38]
+        vdata['ad'] = oldata[39]
+        vdata['cnv_inh'] = oldata[40]
+        vdata['cn'] = oldata[41]
 
         if not vdata['pp_trio_dnm2'] == '.' or not vdata['pp_dng'] == '.':
             vdata['dnm'] = True

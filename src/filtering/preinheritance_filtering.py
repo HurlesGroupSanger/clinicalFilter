@@ -105,7 +105,7 @@ class PreInheritanceFiltering(object):
                 childvar = variants_per_gene[gn][varid]['child']
                 if childvar.dnm == True:
                     continue
-                elif not childvar.consequence == "missense_variant":
+                elif childvar.consequence.find("missense_variant") == -1:
                     continue
                 elif childvar.revel == '.':
                     continue

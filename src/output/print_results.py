@@ -43,19 +43,17 @@ def create_output(families, variants, inheritance_reports, outdir):
 
     header = ['family_id', 'proband', 'sex', 'mum', 'dad', 'mum_aff', 'dad_aff',
               'triogenotype', 'chrom', 'pos', 'ref', 'alt', 'DNM', 'symbol',
-              'hgnc_id', 'transcript', 'canonical', 'MANE', 'consequence',
-              'HGVSc', 'HGVSp', 'protein_position', 'polyphen', 'REVEL',
-              'max_af', 'ddd_af', 'GT', 'GQ', 'AD', 'cnv_length',
-              'cnv_copy_number', 'result', 'mode', 'mnv', 'phased_15bp',
-              'phased_any']
+              'hgnc_id', 'transcript', 'canonical', 'MANE_SELECT',
+              'MANE_PLUS_CLINICAL', 'consequence', 'HGVSc', 'HGVSp',
+              'protein_position', 'polyphen', 'REVEL', 'max_af', 'ddd_af', 'GT',
+              'GQ', 'AD', 'cnv_length', 'cnv_copy_number', 'result', 'mode',
+              'mnv', 'phased_15bp', 'phased_any']
 
     results = {}
     inhreports = {}
 
     for fam in variants.keys():
-        phasedvars, phased_varids = identify_phased_variants(
-            variants[fam]['single_variants'])
-
+        phasedvars, phased_varids = identify_phased_variants(variants[fam])
         mnvs = identify_mnvs(phasedvars)
         variants_in_cis = identify_close_vars(phasedvars, 15)
 
@@ -67,6 +65,7 @@ def create_output(families, variants, inheritance_reports, outdir):
 
     print_output(results, header, outfile)
     print_inh_reports(inhreports, inhreportfile)
+
 
 def print_output(results, header, outfile):
     with open(outfile, 'w') as o:
@@ -92,7 +91,8 @@ def print_output(results, header, outfile):
                                     results[fam][var]['hgnc_id'],
                                     results[fam][var]['transcript'],
                                     results[fam][var]['canonical'],
-                                    results[fam][var]['MANE'],
+                                    results[fam][var]['MANE_SELECT'],
+                                    results[fam][var]['MANE_PLUS_CLINICAL'],
                                     results[fam][var]['consequence'],
                                     results[fam][var]['HGVSc'],
                                     results[fam][var]['HGVSp'],
@@ -187,21 +187,42 @@ def identify_phased_variants(variants):
     """
     phased = {}
     phased_varids = {}
-    for v in variants:
-        if variants[v]['variant'].pid == '.':
+    for v in variants['single_variants'].keys():
+        if variants['single_variants'][v]['variant'].pid == '.':
             continue
         else:
-            if not variants[v]['variant'].pid in phased.keys():
-                phased[variants[v]['variant'].pid] = {}
-            phased[variants[v]['variant'].pid][v] = {}
-            phased[variants[v]['variant'].pid][v]['position'] = variants[v][
+            if not variants['single_variants'][v][
+                       'variant'].pid in phased.keys():
+                phased[variants['single_variants'][v]['variant'].pid] = {}
+            phased[variants['single_variants'][v]['variant'].pid][v] = {}
+            phased[variants['single_variants'][v]['variant'].pid][v][
+                'position'] = variants['single_variants'][v][
                 'variant'].pos
-            phased[variants[v]['variant'].pid][v]['protein_position'] = \
-                variants[v][
+            phased[variants['single_variants'][v]['variant'].pid][v][
+                'protein_position'] = \
+                variants['single_variants'][v][
                     'variant'].protein_position
             phased_varids[v] = 1
 
-    return (phased, phased_varids)
+    for g in variants['compound_hets'].keys():
+        for v in variants['compound_hets'][g].keys():
+            if variants['compound_hets'][g][v]['variant'].pid == '.':
+                continue
+            else:
+                if not variants['compound_hets'][g][v][
+                           'variant'].pid in phased.keys():
+                    phased[variants['compound_hets'][g][v]['variant'].pid] = {}
+                phased[variants['compound_hets'][g][v]['variant'].pid][v] = {}
+                phased[variants['compound_hets'][g][v]['variant'].pid][v][
+                    'position'] = variants['compound_hets'][g][v][
+                    'variant'].pos
+                phased[variants['compound_hets'][g][v]['variant'].pid][v][
+                    'protein_position'] = \
+                    variants['compound_hets'][g][v][
+                        'variant'].protein_position
+                phased_varids[v] = 1
+
+    return phased, phased_varids
 
 
 def identify_close_vars(phasedvars, distance):
@@ -271,7 +292,8 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
             res['hgnc_id'] = ('|').join(var['variant'].reportable_hgnc_id)
     res['transcript'] = var['variant'].feature
     res['canonical'] = var['variant'].canonical
-    res['MANE'] = var['variant'].mane
+    res['MANE_SELECT'] = var['variant'].mane
+    res['MANE_PLUS_CLINICAL'] = var['variant'].mane_clinical
     res['HGVSc'] = var['variant'].hgvsc
     res['HGVSp'] = var['variant'].hgvsp
     res['consequence'] = var['variant'].consequence
@@ -287,11 +309,6 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res['cn'] = var['variant'].cn
     res['triogenotype'] = var['variant'].triogenotype
     res['DNM'] = str(var['variant'].dnm)
-
-#    if var['variant'].dnm == "DNM":
-#        res['DNM'] = "True"
-#    else:
-#        res['DNM'] = "False"
 
     if varid in mnvs.keys():
         res['mnv'] = "True"
