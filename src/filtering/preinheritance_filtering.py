@@ -43,6 +43,7 @@ class PreInheritanceFiltering(object):
         variants_per_gene = self.create_variants_per_gene()
         self.revel_filter(variants_per_gene)
         self.dnms_filter(variants_per_gene)
+        self.X_maf_filter(variants_per_gene)
         return variants_per_gene
 
     def create_variants_per_gene(self):
@@ -133,3 +134,34 @@ class PreInheritanceFiltering(object):
                     del variants_per_gene[gn][varid]
                     if len(variants_per_gene[gn].keys()) < 1:
                         del variants_per_gene[gn]
+
+    def X_maf_filter(self, variants_per_gene):
+        """
+        Variants in X have more stringent allele frequencies - fail if
+        gnomad > 0.000001 or DDD unaffected father > 0
+        This is in a separate function for clarity and ease of modification
+        """
+        for gn in list(variants_per_gene.keys()):
+            for varid in list(variants_per_gene[gn].keys()):
+                childvar = variants_per_gene[gn][varid]['child']
+                if childvar.chrom == 'X':
+                    max_af = childvar.max_af
+                    if max_af == '.':
+                        max_af = '0'
+                    ddd_father_af = childvar.ddd_father_af
+                    if ddd_father_af == '.':
+                        ddd_father_af = '0'
+                    if max_af > 0.000001:
+                        logging.info(varid + " failed X chromosome allele "
+                                             "frequency: gnomad AF = " + str(
+                            max_af))
+                        del variants_per_gene[gn][varid]
+                        if len(variants_per_gene[gn].keys()) < 1:
+                            del variants_per_gene[gn]
+                    elif ddd_father_af > 0:
+                        logging.info(varid + " failed X chromosome allele "
+                                             "frequency: DDD unaffected father "
+                                             "AF = " + str(ddd_father_af))
+                        del variants_per_gene[gn][varid]
+                        if len(variants_per_gene[gn].keys()) < 1:
+                            del variants_per_gene[gn]
