@@ -151,14 +151,14 @@ class PreInheritanceFiltering(object):
                     ddd_father_af = childvar.ddd_father_af
                     if ddd_father_af == '.':
                         ddd_father_af = '0'
-                    if max_af > 0.000001:
+                    if float(max_af) > 0.000001:
                         logging.info(varid + " failed X chromosome allele "
                                              "frequency: gnomad AF = " + str(
                             max_af))
                         del variants_per_gene[gn][varid]
                         if len(variants_per_gene[gn].keys()) < 1:
                             del variants_per_gene[gn]
-                    elif ddd_father_af > 0:
+                    elif float(ddd_father_af) > 0:
                         logging.info(varid + " failed X chromosome allele "
                                              "frequency: DDD unaffected father "
                                              "AF = " + str(ddd_father_af))
