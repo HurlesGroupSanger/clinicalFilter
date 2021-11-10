@@ -23,6 +23,7 @@ THE SOFTWARE.
 
 import logging
 from itertools import combinations
+from utils.utils import common_elements
 
 
 class CompoundHetScreen(object):
@@ -82,12 +83,20 @@ class CompoundHetScreen(object):
 
         if self.family.has_no_parents():
             # If there are no parents and the variants are not both missense
-            # then pass
-            if var1.consequence == 'missense_variant' and \
-                    var2.consequence == 'missense_variant':
+            # or in frame del/ins then pass
+            missense_equiv = ['missense_variant', 'inframe_deletion',
+                              'inframe_insertion']
+            var1cqs = var1.consequence.split('&')
+            var2cqs = var2.consequence.split('&')
+            var1_missense_equiv = common_elements(missense_equiv, var1cqs)
+            var2_missense_equiv = common_elements(missense_equiv, var2cqs)
+            if len(var1_missense_equiv) > 0 and len(var2_missense_equiv) > 0:
+            # if var1.consequence.find(
+            #         "missense_variant") and var2.consequence.find(
+            #     "missense_variant"):
                 logging.info(varid1 + " " + varid2
                              + " failed compound het screen, no parents and "
-                               "both missense")
+                               "both missense or equivalent")
                 return False
             elif (var1.pid != '.' and var2.pid != '.') and (
                     var1.pid == var2.pid):
