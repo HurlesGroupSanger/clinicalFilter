@@ -147,6 +147,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
     def test_biallelic_heterozygous_parents_filter(self):
 
         # parents both aff and 0/0 pass (will fail later stage as 2xDNM not allowed in compound het)
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                           self.family_both_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -169,6 +170,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_compound_het_100)
 
         # parents both aff and 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                           self.family_both_aff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -190,6 +192,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_compound_het_111)
         # parents both aff, mum 0/1, dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                           self.family_both_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -211,6 +214,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_compound_het_110)
         # parents both aff, mum 0/1, dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                           self.family_both_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -232,6 +236,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_compound_het_112)
         # parents both aff, mum 0/0, dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                           self.family_both_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -253,6 +258,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_compound_het_102)
         # parents both aff, mum 0/0, dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                           self.family_both_aff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -274,6 +280,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_compound_het_101)
         # parents both aff, mum 1/1, dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                           self.family_both_aff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -295,6 +302,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_compound_het_121)
         # parents both aff, mum 1/1, dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                           self.family_both_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -316,6 +324,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_compound_het_120)
         # parents both aff and 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                           self.family_both_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -330,6 +339,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_compound_het_122)
 
         # mum aff and both 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                           self.family_mum_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -351,6 +361,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_compound_het_100)
         # mum aff and both 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                           self.family_mum_aff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -372,6 +383,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_compound_het_111)
         # mum aff, mum 0/1, dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                           self.family_mum_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -393,6 +405,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_compound_het_110)
         # mum aff, mum 0/1, dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                           self.family_mum_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -406,6 +419,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_compound_het_112)
         # mum aff, mum 0/0, dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                           self.family_mum_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -419,6 +433,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_compound_het_102)
         # mum aff, mum 0/0, dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                           self.family_mum_aff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -440,6 +455,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_compound_het_101)
         # mum aff, mum 1/1, dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                           self.family_mum_aff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -461,6 +477,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_compound_het_121)
         # mum aff, mum 1/1, dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                           self.family_mum_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -482,6 +499,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_compound_het_120)
         # mum aff and both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                           self.family_mum_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -496,6 +514,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_compound_het_122)
 
         # dad aff and both 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                           self.family_dad_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -517,6 +536,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_compound_het_100)
         # dad aff and both 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                           self.family_dad_aff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -538,6 +558,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_compound_het_111)
         # dad aff, mum 0/1, dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                           self.family_dad_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -559,6 +580,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_compound_het_110)
         # dad aff, mum 0/1, dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                           self.family_dad_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -580,6 +602,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_compound_het_112)
         # dad aff, mum 0/0, dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                           self.family_dad_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -601,6 +624,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_compound_het_102)
         # dad aff, mum 0/0, dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                           self.family_dad_aff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -622,6 +646,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_compound_het_101)
         # dad aff, mum 1/1, dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                           self.family_dad_aff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -635,6 +660,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_compound_het_121)
         # dad aff, mum 1/1, dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                           self.family_dad_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -648,6 +674,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_compound_het_120)
         # dad aff and both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                           self.family_dad_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -662,6 +689,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_compound_het_122)
 
         # both unaff and 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                           self.family_both_unaff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -683,6 +711,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_compound_het_100)
         # both unaff and 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                           self.family_both_unaff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -704,6 +733,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_compound_het_111)
         # both unaff, mum 0/1, dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                           self.family_both_unaff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -725,6 +755,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_compound_het_110)
         # both unaff, mum 0/1, dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                           self.family_both_unaff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -738,6 +769,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_compound_het_112)
         # both unaff, mum 0/0, dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                           self.family_both_unaff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -751,6 +783,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_compound_het_102)
         # both unaff, mum 0/0, dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                           self.family_both_unaff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -772,6 +805,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_compound_het_101)
         # both unaff, mum 1/1, dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                           self.family_both_unaff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -785,6 +819,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_compound_het_121)
         # both unaff, mum 1/1, dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                           self.family_both_unaff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -798,6 +833,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_compound_het_120)
         # both unaff and 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                           self.family_both_unaff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -814,6 +850,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
     def test_biallelic_homozygous_parents_filter(self):
 
         # parents both aff and 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_200 = create_test_variants_per_gene(self.variants_200,
                                                           self.family_both_aff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
@@ -827,6 +864,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_200.candidate_variants,
                          test_candidate_variants_200)
         # parents both aff and 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_211 = create_test_variants_per_gene(self.variants_211,
                                                           self.family_both_aff)
         inheritancefilter_211 = InheritanceFiltering(variants_per_gene_211,
@@ -847,6 +885,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_211.candidate_variants,
                          test_candidate_variants_211)
         # parents both aff, mum 0/1, dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_210 = create_test_variants_per_gene(self.variants_210,
                                                           self.family_both_aff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
@@ -859,6 +898,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_210.candidate_variants,
                          test_candidate_variants_210)
         # parents both aff, mum 0/1, dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_212 = create_test_variants_per_gene(self.variants_212,
                                                           self.family_both_aff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
@@ -879,6 +919,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_212.candidate_variants,
                          test_candidate_variants_212)
         # parents both aff, mum 0/0, dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_202 = create_test_variants_per_gene(self.variants_202,
                                                           self.family_both_aff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
@@ -891,6 +932,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_202.candidate_variants,
                          test_candidate_variants_202)
         # parents both aff, mum 0/0, dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_201 = create_test_variants_per_gene(self.variants_201,
                                                           self.family_both_aff)
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
@@ -903,6 +945,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_201.candidate_variants,
                          test_candidate_variants_201)
         # parents both aff, mum 1/1, dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_221 = create_test_variants_per_gene(self.variants_221,
                                                           self.family_both_aff)
         inheritancefilter_221 = InheritanceFiltering(variants_per_gene_221,
@@ -923,6 +966,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_221.candidate_variants,
                          test_candidate_variants_221)
         # parents both aff, mum 1/1, dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_220 = create_test_variants_per_gene(self.variants_220,
                                                           self.family_both_aff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
@@ -935,6 +979,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_220.candidate_variants,
                          test_candidate_variants_220)
         # parents both aff and 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_222 = create_test_variants_per_gene(self.variants_222,
                                                           self.family_both_aff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
@@ -956,6 +1001,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_222)
 
         # mum aff and both 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_200 = create_test_variants_per_gene(self.variants_200,
                                                           self.family_mum_aff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
@@ -968,6 +1014,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_200.candidate_variants,
                          test_candidate_variants_200)
         # mum aff and both 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_211 = create_test_variants_per_gene(self.variants_211,
                                                           self.family_mum_aff)
         inheritancefilter_211 = InheritanceFiltering(variants_per_gene_211,
@@ -988,6 +1035,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_211.candidate_variants,
                          test_candidate_variants_211)
         # mum aff, mum 0/1, dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_210 = create_test_variants_per_gene(self.variants_210,
                                                           self.family_mum_aff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
@@ -1000,6 +1048,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_210.candidate_variants,
                          test_candidate_variants_210)
         # mum aff, mum 0/1, dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_212 = create_test_variants_per_gene(self.variants_212,
                                                           self.family_mum_aff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
@@ -1012,6 +1061,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_212.candidate_variants,
                          test_candidate_variants_212)
         # mum aff, mum 0/0, dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_202 = create_test_variants_per_gene(self.variants_202,
                                                           self.family_mum_aff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
@@ -1024,6 +1074,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_202.candidate_variants,
                          test_candidate_variants_202)
         # mum aff, mum 0/0, dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_201 = create_test_variants_per_gene(self.variants_201,
                                                           self.family_mum_aff)
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
@@ -1036,6 +1087,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_201.candidate_variants,
                          test_candidate_variants_201)
         # mum aff, mum 1/1, dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_221 = create_test_variants_per_gene(self.variants_221,
                                                           self.family_mum_aff)
         inheritancefilter_221 = InheritanceFiltering(variants_per_gene_221,
@@ -1056,6 +1108,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_221.candidate_variants,
                          test_candidate_variants_221)
         # mum aff, mum 1/1, dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_220 = create_test_variants_per_gene(self.variants_220,
                                                           self.family_mum_aff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
@@ -1068,6 +1121,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_220.candidate_variants,
                          test_candidate_variants_220)
         # mum aff and both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_222 = create_test_variants_per_gene(self.variants_222,
                                                           self.family_mum_aff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
@@ -1081,6 +1135,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_222)
 
         # dad aff and both 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_200 = create_test_variants_per_gene(self.variants_200,
                                                           self.family_dad_aff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
@@ -1093,6 +1148,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_200.candidate_variants,
                          test_candidate_variants_200)
         # dad aff and both 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_211 = create_test_variants_per_gene(self.variants_211,
                                                           self.family_dad_aff)
         inheritancefilter_211 = InheritanceFiltering(variants_per_gene_211,
@@ -1113,6 +1169,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_211.candidate_variants,
                          test_candidate_variants_211)
         # dad aff, mum 0/1, dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_210 = create_test_variants_per_gene(self.variants_210,
                                                           self.family_dad_aff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
@@ -1125,6 +1182,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_210.candidate_variants,
                          test_candidate_variants_210)
         # dad aff, mum 0/1, dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_212 = create_test_variants_per_gene(self.variants_212,
                                                           self.family_dad_aff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
@@ -1145,6 +1203,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_212.candidate_variants,
                          test_candidate_variants_212)
         # dad aff, mum 0/0, dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_202 = create_test_variants_per_gene(self.variants_202,
                                                           self.family_dad_aff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
@@ -1157,6 +1216,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_202.candidate_variants,
                          test_candidate_variants_202)
         # dad aff, mum 0/0, dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_201 = create_test_variants_per_gene(self.variants_201,
                                                           self.family_dad_aff)
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
@@ -1169,6 +1229,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_201.candidate_variants,
                          test_candidate_variants_201)
         # dad aff, mum 1/1, dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_221 = create_test_variants_per_gene(self.variants_221,
                                                           self.family_dad_aff)
         inheritancefilter_221 = InheritanceFiltering(variants_per_gene_221,
@@ -1181,6 +1242,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_221.candidate_variants,
                          test_candidate_variants_221)
         # dad aff, mum 1/1, dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_220 = create_test_variants_per_gene(self.variants_220,
                                                           self.family_dad_aff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
@@ -1193,6 +1255,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_220.candidate_variants,
                          test_candidate_variants_220)
         # dad aff and both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_222 = create_test_variants_per_gene(self.variants_222,
                                                           self.family_dad_aff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
@@ -1206,6 +1269,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_222)
 
         # both unaff and 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_200 = create_test_variants_per_gene(self.variants_200,
                                                           self.family_both_unaff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
@@ -1219,6 +1283,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_200.candidate_variants,
                          test_candidate_variants_200)
         # both unaff and 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_211 = create_test_variants_per_gene(self.variants_211,
                                                           self.family_both_unaff)
         inheritancefilter_211 = InheritanceFiltering(variants_per_gene_211,
@@ -1239,6 +1304,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_211.candidate_variants,
                          test_candidate_variants_211)
         # both unaff, mum 0/1, dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_210 = create_test_variants_per_gene(self.variants_210,
                                                           self.family_both_unaff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
@@ -1247,10 +1313,19 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                  None, self.candidate_variants,
                                                       self.inhreport)
         inheritancefilter_210.inheritance_filter_genes()
-        test_candidate_variants_210 = {'single_variants': {}, 'compound_hets': {}}
+        test_candidate_variants_210 = {'single_variants': {}, 'compound_hets': {'1234': {
+                                                    '5_10971838_A_GG': {
+                                                        'mode': {'biallelic'},
+                                                        'variant':
+                                                            variants_per_gene_210[
+                                                                '1234'][
+                                                                '5_10971838_A_GG'][
+                                                                'child'],
+                                                        'hgncid': '1234'}}}}
         self.assertEqual(inheritancefilter_210.candidate_variants,
                          test_candidate_variants_210)
         # both unaff, mum 0/1, dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_212 = create_test_variants_per_gene(self.variants_212,
                                                           self.family_both_unaff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
@@ -1263,6 +1338,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_212.candidate_variants,
                          test_candidate_variants_212)
         # both unaff, mum 0/0, dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_202 = create_test_variants_per_gene(self.variants_202,
                                                           self.family_both_unaff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
@@ -1274,7 +1350,8 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         test_candidate_variants_202 = {'single_variants': {}, 'compound_hets': {}}
         self.assertEqual(inheritancefilter_202.candidate_variants,
                          test_candidate_variants_202)
-        # both unaff, mum 0/0, dad 0/1 fail
+        # both unaff, mum 0/0, dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_201 = create_test_variants_per_gene(self.variants_201,
                                                           self.family_both_unaff)
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
@@ -1283,10 +1360,19 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                                                  None, self.candidate_variants,
                                                       self.inhreport)
         inheritancefilter_201.inheritance_filter_genes()
-        test_candidate_variants_201 = {'single_variants': {}, 'compound_hets': {}}
+        test_candidate_variants_201 = {'single_variants': {}, 'compound_hets': {'1234': {
+                                                    '5_10971838_A_GG': {
+                                                        'mode': {'biallelic'},
+                                                        'variant':
+                                                            variants_per_gene_201[
+                                                                '1234'][
+                                                                '5_10971838_A_GG'][
+                                                                'child'],
+                                                        'hgncid': '1234'}}}}
         self.assertEqual(inheritancefilter_201.candidate_variants,
                          test_candidate_variants_201)
         # both unaff, mum 1/1, dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_221 = create_test_variants_per_gene(self.variants_221,
                                                           self.family_both_unaff)
         inheritancefilter_221 = InheritanceFiltering(variants_per_gene_221,
@@ -1299,6 +1385,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_221.candidate_variants,
                          test_candidate_variants_221)
         # both unaff, mum 1/1, dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_220 = create_test_variants_per_gene(self.variants_220,
                                                           self.family_both_unaff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
@@ -1311,6 +1398,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_220.candidate_variants,
                          test_candidate_variants_220)
         # both unaff and 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_222 = create_test_variants_per_gene(self.variants_222,
                                                           self.family_both_unaff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
@@ -1325,6 +1413,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
 
     def test_monoallelic_heterozygous_parents_filter(self):
         # parents both aff and 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                           self.family_both_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -1346,6 +1435,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_100)
         # parents both aff, mum 0/1 dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                           self.family_both_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -1367,6 +1457,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_110)
         # parents both aff, mum 0/0 dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                           self.family_both_aff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -1388,6 +1479,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_101)
         # parents both aff, and 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                           self.family_both_aff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -1409,6 +1501,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_111)
         # parents both aff, mum 0/0 dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                           self.family_both_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -1430,6 +1523,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_102)
         # parents both aff, mum 1/1 dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                           self.family_both_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -1451,6 +1545,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_120)
         # parents both aff, mum 0/1 dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                           self.family_both_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -1472,6 +1567,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_112)
         # parents both aff, mum 1/1 dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                           self.family_both_aff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -1493,6 +1589,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_121)
         # parents both aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                           self.family_both_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -1507,6 +1604,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_122)
 
         # mum aff, both 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                           self.family_mum_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -1528,6 +1626,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_100)
         # mum aff, mum 0/1 dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                           self.family_mum_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -1549,6 +1648,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_110)
         # mum aff, mum 0/0 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                           self.family_mum_aff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -1562,6 +1662,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_101)
         # mum aff, both 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                           self.family_mum_aff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -1575,6 +1676,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_111)
         # mum aff, mum 0/0 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                           self.family_mum_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -1588,6 +1690,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_102)
         # mum aff, mum 1/1 dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                           self.family_mum_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -1609,6 +1712,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_120)
         # mum aff, mum 0/1 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                           self.family_mum_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -1622,6 +1726,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_112)
         # mum aff, mum 1/1 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                           self.family_mum_aff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -1635,6 +1740,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_121)
         # mum aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                           self.family_mum_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -1649,6 +1755,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_122)
 
         # dad aff, both 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                               self.family_dad_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -1671,6 +1778,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_100)
         # dad aff, mum 0/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                           self.family_dad_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -1684,6 +1792,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_110)
         # dad aff, mum 0/0 dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                               self.family_dad_aff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -1706,6 +1815,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_101)
         # dad aff, both 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                           self.family_dad_aff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -1719,6 +1829,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_111)
         # dad aff, mum 0/0 dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                               self.family_dad_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -1741,6 +1852,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_102)
         # dad aff, mum 1/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                           self.family_dad_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -1754,6 +1866,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_120)
         # dad aff, mum 0/1 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                           self.family_dad_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -1767,6 +1880,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_112)
         # dad aff, mum 1/1 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                           self.family_dad_aff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -1780,6 +1894,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_121)
         # dad aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                           self.family_dad_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -1794,6 +1909,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_122)
 
         # neither aff, both 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                               self.family_both_unaff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -1816,6 +1932,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_100)
         # neither aff, mum 0/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                           self.family_both_unaff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -1829,6 +1946,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_110)
         # neither aff, mum 0/0 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                           self.family_both_unaff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -1842,6 +1960,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_101)
         # neither aff, both 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                           self.family_both_unaff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -1855,6 +1974,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_111)
         # neither aff, mum 0/0 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                           self.family_both_unaff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -1868,6 +1988,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_102)
         # neither aff, mum 1/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                           self.family_both_unaff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -1881,6 +2002,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_120)
         # neither aff, mum 0/1 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                           self.family_both_unaff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -1894,6 +2016,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_112)
         # neither aff, mum 1/1 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                           self.family_both_unaff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -1907,6 +2030,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_121)
         # neither aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                           self.family_both_unaff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -1922,6 +2046,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
 
     def test_monoallelic_homozygous_parents_filter(self):
         # parents both aff, both 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_200 = create_test_variants_per_gene(self.variants_200,
                                                           self.family_both_aff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
@@ -1935,6 +2060,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_200.candidate_variants,
                          test_candidate_variants_200)
         # parents both aff, mum 0/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_210 = create_test_variants_per_gene(self.variants_210,
                                                           self.family_both_aff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
@@ -1948,6 +2074,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_210.candidate_variants,
                          test_candidate_variants_210)
         # parents both aff, mum 0/0 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_201 = create_test_variants_per_gene(self.variants_201,
                                                           self.family_both_aff)
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
@@ -1961,6 +2088,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_201.candidate_variants,
                          test_candidate_variants_201)
         # parents both aff, both 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_211 = create_test_variants_per_gene(self.variants_211,
                                                               self.family_both_aff)
         inheritancefilter_211 = InheritanceFiltering(variants_per_gene_211,
@@ -1983,6 +2111,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_211.candidate_variants,
                          test_candidate_variants_211)
         # parents both aff, mum 0/0 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_202 = create_test_variants_per_gene(self.variants_202,
                                                           self.family_both_aff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
@@ -1996,6 +2125,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_202.candidate_variants,
                          test_candidate_variants_202)
         # parents both aff, mum 1/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_220 = create_test_variants_per_gene(self.variants_220,
                                                           self.family_both_aff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
@@ -2009,6 +2139,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_220.candidate_variants,
                          test_candidate_variants_220)
         # parents both aff, mum 0/1 dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_212 = create_test_variants_per_gene(self.variants_212,
                                                               self.family_both_aff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
@@ -2031,6 +2162,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_212.candidate_variants,
                          test_candidate_variants_212)
         # parents both aff, mum 1/1 dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_221 = create_test_variants_per_gene(self.variants_221,
                                                               self.family_both_aff)
         inheritancefilter_221 = InheritanceFiltering(variants_per_gene_221,
@@ -2053,6 +2185,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_221.candidate_variants,
                          test_candidate_variants_221)
         # parents both aff, both 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_222 = create_test_variants_per_gene(self.variants_222,
                                                               self.family_both_aff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
@@ -2076,6 +2209,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_222)
 
         # mum aff, both 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_200 = create_test_variants_per_gene(self.variants_200,
                                                           self.family_mum_aff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
@@ -2089,6 +2223,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_200.candidate_variants,
                          test_candidate_variants_200)
         # mum aff, mum 0/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_210 = create_test_variants_per_gene(self.variants_210,
                                                           self.family_mum_aff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
@@ -2102,6 +2237,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_210.candidate_variants,
                          test_candidate_variants_210)
         # mum aff, mum 0/0 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_201 = create_test_variants_per_gene(self.variants_201,
                                                           self.family_mum_aff)
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
@@ -2115,6 +2251,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_201.candidate_variants,
                          test_candidate_variants_201)
         # mum aff, both 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_211 = create_test_variants_per_gene(self.variants_211,
                                                               self.family_mum_aff)
         inheritancefilter_211 = InheritanceFiltering(variants_per_gene_211,
@@ -2129,6 +2266,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_211.candidate_variants,
                          test_candidate_variants_211)
         # mum aff, mum 0/0 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_202 = create_test_variants_per_gene(self.variants_202,
                                                           self.family_mum_aff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
@@ -2142,6 +2280,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_202.candidate_variants,
                          test_candidate_variants_202)
         # mum aff, mum 1/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_220 = create_test_variants_per_gene(self.variants_220,
                                                           self.family_mum_aff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
@@ -2155,6 +2294,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_220.candidate_variants,
                          test_candidate_variants_220)
         # mum aff, mum 0/1 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_212 = create_test_variants_per_gene(self.variants_212,
                                                           self.family_mum_aff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
@@ -2168,6 +2308,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_212.candidate_variants,
                          test_candidate_variants_212)
         # mum aff, mum 1/1 dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_221 = create_test_variants_per_gene(self.variants_221,
                                                               self.family_mum_aff)
         inheritancefilter_221 = InheritanceFiltering(variants_per_gene_221,
@@ -2182,6 +2323,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_221.candidate_variants,
                          test_candidate_variants_221)
         # mum aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_222 = create_test_variants_per_gene(self.variants_222,
                                                           self.family_mum_aff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
@@ -2196,6 +2338,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_222)
 
         # dad aff, both 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_200 = create_test_variants_per_gene(self.variants_200,
                                                           self.family_dad_aff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
@@ -2209,6 +2352,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_200.candidate_variants,
                          test_candidate_variants_200)
         # dad aff, mum 0/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_210 = create_test_variants_per_gene(self.variants_210,
                                                           self.family_dad_aff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
@@ -2222,6 +2366,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_210.candidate_variants,
                          test_candidate_variants_210)
         # dad aff, mum 0/0 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_201 = create_test_variants_per_gene(self.variants_201,
                                                           self.family_dad_aff)
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
@@ -2235,6 +2380,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_201.candidate_variants,
                          test_candidate_variants_201)
         # dad aff, both 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_211 = create_test_variants_per_gene(self.variants_211,
                                                               self.family_dad_aff)
         inheritancefilter_211 = InheritanceFiltering(variants_per_gene_211,
@@ -2249,6 +2395,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_211.candidate_variants,
                          test_candidate_variants_211)
         # dad aff, mum 0/0 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_202 = create_test_variants_per_gene(self.variants_202,
                                                               self.family_dad_aff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
@@ -2264,6 +2411,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_202.candidate_variants,
                          test_candidate_variants_202)
         # dad aff, mum 1/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_220 = create_test_variants_per_gene(self.variants_220,
                                                               self.family_dad_aff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
@@ -2279,6 +2427,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_220.candidate_variants,
                          test_candidate_variants_220)
         # dad aff, mum 0/1 dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_212 = create_test_variants_per_gene(self.variants_212,
                                                               self.family_dad_aff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
@@ -2293,6 +2442,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_212.candidate_variants,
                          test_candidate_variants_212)
         # dad aff, mum 1/1 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_221 = create_test_variants_per_gene(self.variants_221,
                                                               self.family_dad_aff)
         inheritancefilter_221 = InheritanceFiltering(variants_per_gene_221,
@@ -2308,6 +2458,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_221.candidate_variants,
                          test_candidate_variants_221)
         # dad aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_222 = create_test_variants_per_gene(self.variants_222,
                                                               self.family_dad_aff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
@@ -2324,6 +2475,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_222)
 
         # neither aff, both 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_200 = create_test_variants_per_gene(self.variants_200,
                                                               self.family_both_unaff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
@@ -2339,6 +2491,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_200.candidate_variants,
                          test_candidate_variants_200)
         # neither aff, mum 0/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_210 = create_test_variants_per_gene(self.variants_210,
                                                               self.family_both_unaff)
         inheritancefilter_210 = InheritanceFiltering(variants_per_gene_210,
@@ -2354,6 +2507,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_210.candidate_variants,
                          test_candidate_variants_210)
         # neither aff, mum 0/0 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_201 = create_test_variants_per_gene(self.variants_201,
                                                               self.family_both_unaff)
         inheritancefilter_201 = InheritanceFiltering(variants_per_gene_201,
@@ -2369,6 +2523,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_201.candidate_variants,
                          test_candidate_variants_201)
         # neither aff, both 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_211 = create_test_variants_per_gene(self.variants_211,
                                                               self.family_both_unaff)
         inheritancefilter_211 = InheritanceFiltering(variants_per_gene_211,
@@ -2384,6 +2539,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_211.candidate_variants,
                          test_candidate_variants_211)
         # neither aff, mum 0/0 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_202 = create_test_variants_per_gene(self.variants_202,
                                                               self.family_both_unaff)
         inheritancefilter_202 = InheritanceFiltering(variants_per_gene_202,
@@ -2399,6 +2555,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_202.candidate_variants,
                          test_candidate_variants_202)
         # neither aff, mum 1/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_220 = create_test_variants_per_gene(self.variants_220,
                                                               self.family_both_unaff)
         inheritancefilter_220 = InheritanceFiltering(variants_per_gene_220,
@@ -2414,6 +2571,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_220.candidate_variants,
                          test_candidate_variants_220)
         # neither aff, mum 0/1 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_212 = create_test_variants_per_gene(self.variants_212,
                                                               self.family_both_unaff)
         inheritancefilter_212 = InheritanceFiltering(variants_per_gene_212,
@@ -2429,6 +2587,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_212.candidate_variants,
                          test_candidate_variants_212)
         # neither aff, mum 1/1 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_221 = create_test_variants_per_gene(self.variants_221,
                                                               self.family_both_unaff)
         inheritancefilter_221 = InheritanceFiltering(variants_per_gene_221,
@@ -2444,6 +2603,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_221.candidate_variants,
                          test_candidate_variants_221)
         # neither aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_222 = create_test_variants_per_gene(self.variants_222,
                                                               self.family_both_unaff)
         inheritancefilter_222 = InheritanceFiltering(variants_per_gene_222,
@@ -2462,6 +2622,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
     def test_mosaic_heterozygous_parents_filter(self):
         # same as monoallelic
         # parents both aff and 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                               self.family_both_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -2484,6 +2645,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_100)
         # parents both aff, mum 0/1 dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                               self.family_both_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -2506,6 +2668,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_110)
         # parents both aff, mum 0/0 dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                               self.family_both_aff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -2528,6 +2691,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_101)
         # parents both aff, and 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                               self.family_both_aff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -2550,6 +2714,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_111)
         # parents both aff, mum 0/0 dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                               self.family_both_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -2572,6 +2737,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_102)
         # parents both aff, mum 1/1 dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                               self.family_both_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -2594,6 +2760,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_120)
         # parents both aff, mum 0/1 dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                               self.family_both_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -2616,6 +2783,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_112)
         # parents both aff, mum 1/1 dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                               self.family_both_aff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -2638,6 +2806,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_121)
         # parents both aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                               self.family_both_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -2654,6 +2823,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_122)
 
         # mum aff, both 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                               self.family_mum_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -2676,6 +2846,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_100)
         # mum aff, mum 0/1 dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                               self.family_mum_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -2698,6 +2869,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_110)
         # mum aff, mum 0/0 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                               self.family_mum_aff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -2713,6 +2885,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_101)
         # mum aff, both 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                               self.family_mum_aff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -2728,6 +2901,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_111)
         # mum aff, mum 0/0 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                               self.family_mum_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -2743,6 +2917,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_102)
         # mum aff, mum 1/1 dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                               self.family_mum_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -2765,6 +2940,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_120)
         # mum aff, mum 0/1 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                               self.family_mum_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -2780,6 +2956,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_112)
         # mum aff, mum 1/1 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                               self.family_mum_aff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -2795,6 +2972,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_121)
         # mum aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                               self.family_mum_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -2811,6 +2989,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_122)
 
         # dad aff, both 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                               self.family_dad_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -2833,6 +3012,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_100)
         # dad aff, mum 0/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                               self.family_dad_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -2848,6 +3028,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_110)
         # dad aff, mum 0/0 dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                               self.family_dad_aff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -2870,6 +3051,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_101)
         # dad aff, both 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                               self.family_dad_aff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -2885,6 +3067,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_111)
         # dad aff, mum 0/0 dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                               self.family_dad_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -2907,6 +3090,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_102)
         # dad aff, mum 1/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                               self.family_dad_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -2922,6 +3106,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_120)
         # dad aff, mum 0/1 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                               self.family_dad_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -2937,6 +3122,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_112)
         # dad aff, mum 1/1 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                               self.family_dad_aff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -2952,6 +3138,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_121)
         # dad aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                               self.family_dad_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -2968,6 +3155,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_122)
 
         # neither aff, both 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                               self.family_both_unaff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -2990,6 +3178,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_100)
         # neither aff, mum 0/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                               self.family_both_unaff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -3005,6 +3194,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_110)
         # neither aff, mum 0/0 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                               self.family_both_unaff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -3020,6 +3210,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_101)
         # neither aff, both 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                               self.family_both_unaff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -3035,6 +3226,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_111)
         # neither aff, mum 0/0 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                               self.family_both_unaff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -3050,6 +3242,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_102)
         # neither aff, mum 1/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                               self.family_both_unaff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -3065,6 +3258,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_120)
         # neither aff, mum 0/1 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                               self.family_both_unaff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -3080,6 +3274,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_112)
         # neither aff, mum 1/1 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                               self.family_both_unaff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -3095,6 +3290,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_121)
         # neither aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                               self.family_both_unaff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -3109,701 +3305,10 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
 
         self.assertEqual(inheritancefilter_122.candidate_variants,
                          test_candidate_variants_122)
-
-    def test_mosaic_heterozygous_parents_filter(self):
-        # same as monoallelic
-        # parents both aff and 0/0 pass
-        variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
-                                                              self.family_both_aff)
-        inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
-                                                     self.family_both_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_100.inheritance_filter_genes()
-        test_candidate_variants_100 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_100[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_100.candidate_variants,
-                         test_candidate_variants_100)
-        # parents both aff, mum 0/1 dad 0/0 pass
-        variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
-                                                              self.family_both_aff)
-        inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
-                                                     self.family_both_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_110.inheritance_filter_genes()
-        test_candidate_variants_110 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_110[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_110.candidate_variants,
-                         test_candidate_variants_110)
-        # parents both aff, mum 0/0 dad 0/1 pass
-        variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
-                                                              self.family_both_aff)
-        inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
-                                                     self.family_both_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_101.inheritance_filter_genes()
-        test_candidate_variants_101 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_101[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_101.candidate_variants,
-                         test_candidate_variants_101)
-        # parents both aff, and 0/1 pass
-        variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
-                                                              self.family_both_aff)
-        inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
-                                                     self.family_both_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_111.inheritance_filter_genes()
-        test_candidate_variants_111 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_111[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_111.candidate_variants,
-                         test_candidate_variants_111)
-        # parents both aff, mum 0/0 dad 1/1 pass
-        variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
-                                                              self.family_both_aff)
-        inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
-                                                     self.family_both_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_102.inheritance_filter_genes()
-        test_candidate_variants_102 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_102[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_102.candidate_variants,
-                         test_candidate_variants_102)
-        # parents both aff, mum 1/1 dad 0/0 pass
-        variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
-                                                              self.family_both_aff)
-        inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
-                                                     self.family_both_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_120.inheritance_filter_genes()
-        test_candidate_variants_120 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_120[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_120.candidate_variants,
-                         test_candidate_variants_120)
-        # parents both aff, mum 0/1 dad 1/1 pass
-        variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
-                                                              self.family_both_aff)
-        inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
-                                                     self.family_both_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_112.inheritance_filter_genes()
-        test_candidate_variants_112 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_112[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_112.candidate_variants,
-                         test_candidate_variants_112)
-        # parents both aff, mum 1/1 dad 0/1 pass
-        variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
-                                                              self.family_both_aff)
-        inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
-                                                     self.family_both_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_121.inheritance_filter_genes()
-        test_candidate_variants_121 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_121[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_121.candidate_variants,
-                         test_candidate_variants_121)
-        # parents both aff, both 1/1 fail
-        variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
-                                                              self.family_both_aff)
-        inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
-                                                     self.family_both_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_122.inheritance_filter_genes()
-        test_candidate_variants_122 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_122.candidate_variants,
-                         test_candidate_variants_122)
-
-        # mum aff, both 0/0 pass
-        variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
-                                                              self.family_mum_aff)
-        inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
-                                                     self.family_mum_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_100.inheritance_filter_genes()
-        test_candidate_variants_100 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_100[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_100.candidate_variants,
-                         test_candidate_variants_100)
-        # mum aff, mum 0/1 dad 0/0 pass
-        variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
-                                                              self.family_mum_aff)
-        inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
-                                                     self.family_mum_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_110.inheritance_filter_genes()
-        test_candidate_variants_110 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_110[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_110.candidate_variants,
-                         test_candidate_variants_110)
-        # mum aff, mum 0/0 dad 0/1 fail
-        variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
-                                                              self.family_mum_aff)
-        inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
-                                                     self.family_mum_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_101.inheritance_filter_genes()
-        test_candidate_variants_101 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_101.candidate_variants,
-                         test_candidate_variants_101)
-        # mum aff, both 0/1 fail
-        variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
-                                                              self.family_mum_aff)
-        inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
-                                                     self.family_mum_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_111.inheritance_filter_genes()
-        test_candidate_variants_111 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_111.candidate_variants,
-                         test_candidate_variants_111)
-        # mum aff, mum 0/0 dad 1/1 fail
-        variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
-                                                              self.family_mum_aff)
-        inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
-                                                     self.family_mum_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_102.inheritance_filter_genes()
-        test_candidate_variants_102 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_102.candidate_variants,
-                         test_candidate_variants_102)
-        # mum aff, mum 1/1 dad 0/0 pass
-        variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
-                                                              self.family_mum_aff)
-        inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
-                                                     self.family_mum_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_120.inheritance_filter_genes()
-        test_candidate_variants_120 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_110[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_120.candidate_variants,
-                         test_candidate_variants_120)
-        # mum aff, mum 0/1 dad 1/1 fail
-        variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
-                                                              self.family_mum_aff)
-        inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
-                                                     self.family_mum_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_112.inheritance_filter_genes()
-        test_candidate_variants_112 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_112.candidate_variants,
-                         test_candidate_variants_112)
-        # mum aff, mum 1/1 dad 0/1 fail
-        variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
-                                                              self.family_mum_aff)
-        inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
-                                                     self.family_mum_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_121.inheritance_filter_genes()
-        test_candidate_variants_121 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_121.candidate_variants,
-                         test_candidate_variants_121)
-        # mum aff, both 1/1 fail
-        variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
-                                                              self.family_mum_aff)
-        inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
-                                                     self.family_mum_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_122.inheritance_filter_genes()
-        test_candidate_variants_122 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_122.candidate_variants,
-                         test_candidate_variants_122)
-
-        # dad aff, both 0/0 pass
-        variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
-                                                              self.family_dad_aff)
-        inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
-                                                     self.family_dad_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_100.inheritance_filter_genes()
-        test_candidate_variants_100 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_100[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_100.candidate_variants,
-                         test_candidate_variants_100)
-        # dad aff, mum 0/1 dad 0/0 fail
-        variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
-                                                              self.family_dad_aff)
-        inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
-                                                     self.family_dad_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_110.inheritance_filter_genes()
-        test_candidate_variants_110 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_110.candidate_variants,
-                         test_candidate_variants_110)
-        # dad aff, mum 0/0 dad 0/1 pass
-        variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
-                                                              self.family_dad_aff)
-        inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
-                                                     self.family_dad_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_101.inheritance_filter_genes()
-        test_candidate_variants_101 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_101[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_101.candidate_variants,
-                         test_candidate_variants_101)
-        # dad aff, both 0/1 fail
-        variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
-                                                              self.family_dad_aff)
-        inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
-                                                     self.family_dad_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_111.inheritance_filter_genes()
-        test_candidate_variants_111 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_111.candidate_variants,
-                         test_candidate_variants_111)
-        # dad aff, mum 0/0 dad 1/1 pass
-        variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
-                                                              self.family_dad_aff)
-        inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
-                                                     self.family_dad_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_102.inheritance_filter_genes()
-        test_candidate_variants_102 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_102[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_102.candidate_variants,
-                         test_candidate_variants_102)
-        # dad aff, mum 1/1 dad 0/0 fail
-        variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
-                                                              self.family_dad_aff)
-        inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
-                                                     self.family_dad_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_120.inheritance_filter_genes()
-        test_candidate_variants_120 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_120.candidate_variants,
-                         test_candidate_variants_120)
-        # dad aff, mum 0/1 dad 1/1 fail
-        variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
-                                                              self.family_dad_aff)
-        inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
-                                                     self.family_dad_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_112.inheritance_filter_genes()
-        test_candidate_variants_112 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_112.candidate_variants,
-                         test_candidate_variants_112)
-        # dad aff, mum 1/1 dad 0/1 fail
-        variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
-                                                              self.family_dad_aff)
-        inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
-                                                     self.family_dad_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_121.inheritance_filter_genes()
-        test_candidate_variants_121 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_121.candidate_variants,
-                         test_candidate_variants_121)
-        # dad aff, both 1/1 fail
-        variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
-                                                              self.family_dad_aff)
-        inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
-                                                     self.family_dad_aff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_122.inheritance_filter_genes()
-        test_candidate_variants_122 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_122.candidate_variants,
-                         test_candidate_variants_122)
-
-        # neither aff, both 0/0 pass
-        variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
-                                                              self.family_both_unaff)
-        inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
-                                                     self.family_both_unaff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_100.inheritance_filter_genes()
-        test_candidate_variants_100 = {'single_variants': {
-            '5_10971838_A_GG': {
-                'mode': {'mosaic'},
-                'variant':
-                    variants_per_gene_100[
-                        '1234'][
-                        '5_10971838_A_GG'][
-                        'child'],
-                'hgncid': '1234'}}, 'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_100.candidate_variants,
-                         test_candidate_variants_100)
-        # neither aff, mum 0/1 dad 0/0 fail
-        variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
-                                                              self.family_both_unaff)
-        inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
-                                                     self.family_both_unaff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_110.inheritance_filter_genes()
-        test_candidate_variants_110 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_110.candidate_variants,
-                         test_candidate_variants_110)
-        # neither aff, mum 0/0 dad 0/1 fail
-        variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
-                                                              self.family_both_unaff)
-        inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
-                                                     self.family_both_unaff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_101.inheritance_filter_genes()
-        test_candidate_variants_101 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_101.candidate_variants,
-                         test_candidate_variants_101)
-        # neither aff, both 0/1 fail
-        variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
-                                                              self.family_both_unaff)
-        inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
-                                                     self.family_both_unaff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_111.inheritance_filter_genes()
-        test_candidate_variants_111 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_111.candidate_variants,
-                         test_candidate_variants_111)
-        # neither aff, mum 0/0 dad 1/1 fail
-        variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
-                                                              self.family_both_unaff)
-        inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
-                                                     self.family_both_unaff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None)
-        inheritancefilter_102.inheritance_filter_genes()
-        test_candidate_variants_102 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_102.candidate_variants,
-                         test_candidate_variants_102)
-        # neither aff, mum 1/1 dad 0/0 fail
-        variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
-                                                              self.family_both_unaff)
-        inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
-                                                     self.family_both_unaff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_120.inheritance_filter_genes()
-        test_candidate_variants_120 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_120.candidate_variants,
-                         test_candidate_variants_120)
-        # neither aff, mum 0/1 dad 1/1 fail
-        variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
-                                                              self.family_both_unaff)
-        inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
-                                                     self.family_both_unaff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_112.inheritance_filter_genes()
-        test_candidate_variants_112 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_112.candidate_variants,
-                         test_candidate_variants_112)
-        # neither aff, mum 1/1 dad 0/1 fail
-        variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
-                                                              self.family_both_unaff)
-        inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
-                                                     self.family_both_unaff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_121.inheritance_filter_genes()
-        test_candidate_variants_121 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_121.candidate_variants,
-                         test_candidate_variants_121)
-        # neither aff, both 1/1 fail
-        variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
-                                                              self.family_both_unaff)
-        inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
-                                                     self.family_both_unaff,
-                                                     self.genes_mosaic,
-                                                     None,
-                                                     None, self.candidate_variants,
-                                                      self.inhreport)
-        inheritancefilter_122.inheritance_filter_genes()
-        test_candidate_variants_122 = {'single_variants': {},
-                                       'compound_hets': {}}
-
-        self.assertEqual(inheritancefilter_122.candidate_variants,
-                         test_candidate_variants_122)
-
-    def test_mosaic_homozygous_parents_filter(self):
-        # parents both aff, both 0/0
-        # parents both aff, mum 0/1 dad 0/0
-        # parents both aff, mum 0/0 dad 0/1
-        # parents both aff, both 0/1
-        # parents both aff, mum 0/0 dad 1/1
-        # parents both aff, mum 1/1 dad 0/0
-        # parents both aff, mum 0/1 dad 1/1
-        # parents both aff, mum 1/1 dad 0/1
-        # parents both aff, both 1/1
-
-        # mum aff, both 0/0
-        # mum aff, mum 0/1 dad 0/0
-        # mum aff, mum 0/0 dad 0/1
-        # mum aff, both 0/1
-        # mum aff, mum 0/0 dad 1/1
-        # mum aff, mum 1/1 dad 0/0
-        # mum aff, mum 0/1 dad 1/1
-        # mum aff, mum 1/1 dad 0/1
-        # mum aff, both 1/1
-
-        # dad aff, both 0/0
-        # dad aff, mum 0/1 dad 0/0
-        # dad aff, mum 0/0 dad 0/1
-        # dad aff, both 0/1
-        # dad aff, mum 0/0 dad 1/1
-        # dad aff, mum 1/1 dad 0/0
-        # dad aff, mum 0/1 dad 1/1
-        # dad aff, mum 1/1 dad 0/1
-        # dad aff, both 1/1
-
-        # neither aff, both 0/0
-        # neither aff, mum 0/1 dad 0/0
-        # neither aff, mum 0/0 dad 0/1
-        # neither aff, both 0/1
-        # neither aff, mum 0/0 dad 1/1
-        # neither aff, mum 1/1 dad 0/0
-        # neither aff, mum 0/1 dad 1/1
-        # neither aff, mum 1/1 dad 0/1
-        # neither aff, both 1/1
-        pass
 
     def test_imprinted_heterozygous_parents_filter(self):
         # parents both aff and 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                               self.family_both_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -3826,6 +3331,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_100)
         # parents both aff, mum 0/1 dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                               self.family_both_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -3848,6 +3354,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_110)
         # parents both aff, mum 0/0 dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                               self.family_both_aff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -3870,6 +3377,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_101)
         # parents both aff, and 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                               self.family_both_aff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -3892,6 +3400,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_111)
         # parents both aff, mum 0/0 dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                               self.family_both_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -3914,6 +3423,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_102)
         # parents both aff, mum 1/1 dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                               self.family_both_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -3936,6 +3446,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_120)
         # parents both aff, mum 0/1 dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                               self.family_both_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -3958,6 +3469,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_112)
         # parents both aff, mum 1/1 dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                               self.family_both_aff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -3980,6 +3492,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_121)
         # parents both aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                               self.family_both_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -3996,6 +3509,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_122)
 
         # mum aff, both 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                               self.family_mum_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -4018,6 +3532,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_100)
         # mum aff, mum 0/1 dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                               self.family_mum_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -4040,6 +3555,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_110)
         # mum aff, mum 0/0 dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                               self.family_mum_aff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -4063,6 +3579,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_101)
         # mum aff, both 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                               self.family_mum_aff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -4086,6 +3603,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_111)
         # mum aff, mum 0/0 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                               self.family_mum_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -4101,6 +3619,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_102)
         # mum aff, mum 1/1 dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                               self.family_mum_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -4123,6 +3642,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_120)
         # mum aff, mum 0/1 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                               self.family_mum_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -4138,6 +3658,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_112)
         # mum aff, mum 1/1 dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                               self.family_mum_aff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -4161,6 +3682,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_121)
         # mum aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                               self.family_mum_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -4177,6 +3699,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_122)
 
         # dad aff, both 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                               self.family_dad_aff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -4199,6 +3722,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_100)
         # dad aff, mum 0/1 dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                               self.family_dad_aff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -4222,6 +3746,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_110)
         # dad aff, mum 0/0 dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                               self.family_dad_aff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -4244,6 +3769,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_101)
         # dad aff, both 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                               self.family_dad_aff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -4267,6 +3793,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_111)
         # dad aff, mum 0/0 dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                               self.family_dad_aff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -4289,6 +3816,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_102)
         # dad aff, mum 1/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                               self.family_dad_aff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -4304,6 +3832,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_120)
         # dad aff, mum 0/1 dad 1/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                               self.family_dad_aff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -4327,6 +3856,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_112)
         # dad aff, mum 1/1 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                               self.family_dad_aff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -4342,6 +3872,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_121)
         # dad aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                               self.family_dad_aff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -4358,6 +3889,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
                          test_candidate_variants_122)
 
         # neither aff, both 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_100 = create_test_variants_per_gene(self.variants_100,
                                                               self.family_both_unaff)
         inheritancefilter_100 = InheritanceFiltering(variants_per_gene_100,
@@ -4380,6 +3912,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_100.candidate_variants,
                          test_candidate_variants_100)
         # neither aff, mum 0/1 dad 0/0 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_110 = create_test_variants_per_gene(self.variants_110,
                                                               self.family_both_unaff)
         inheritancefilter_110 = InheritanceFiltering(variants_per_gene_110,
@@ -4403,6 +3936,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_110.candidate_variants,
                          test_candidate_variants_110)
         # neither aff, mum 0/0 dad 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_101 = create_test_variants_per_gene(self.variants_101,
                                                               self.family_both_unaff)
         inheritancefilter_101 = InheritanceFiltering(variants_per_gene_101,
@@ -4426,6 +3960,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_101.candidate_variants,
                          test_candidate_variants_101)
         # neither aff, both 0/1 pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_111 = create_test_variants_per_gene(self.variants_111,
                                                               self.family_both_unaff)
         inheritancefilter_111 = InheritanceFiltering(variants_per_gene_111,
@@ -4449,6 +3984,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_111.candidate_variants,
                          test_candidate_variants_111)
         # neither aff, mum 0/0 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_102 = create_test_variants_per_gene(self.variants_102,
                                                               self.family_both_unaff)
         inheritancefilter_102 = InheritanceFiltering(variants_per_gene_102,
@@ -4464,6 +4000,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_102.candidate_variants,
                          test_candidate_variants_102)
         # neither aff, mum 1/1 dad 0/0 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_120 = create_test_variants_per_gene(self.variants_120,
                                                               self.family_both_unaff)
         inheritancefilter_120 = InheritanceFiltering(variants_per_gene_120,
@@ -4479,6 +4016,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_120.candidate_variants,
                          test_candidate_variants_120)
         # neither aff, mum 0/1 dad 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_112 = create_test_variants_per_gene(self.variants_112,
                                                               self.family_both_unaff)
         inheritancefilter_112 = InheritanceFiltering(variants_per_gene_112,
@@ -4494,6 +4032,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_112.candidate_variants,
                          test_candidate_variants_112)
         # neither aff, mum 1/1 dad 0/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_121 = create_test_variants_per_gene(self.variants_121,
                                                               self.family_both_unaff)
         inheritancefilter_121 = InheritanceFiltering(variants_per_gene_121,
@@ -4509,6 +4048,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_121.candidate_variants,
                          test_candidate_variants_121)
         # neither aff, both 1/1 fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_122 = create_test_variants_per_gene(self.variants_122,
                                                               self.family_both_unaff)
         inheritancefilter_122 = InheritanceFiltering(variants_per_gene_122,
@@ -4526,6 +4066,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
 
     def test_imprinted_homozygous_parents_filter(self):
         # all fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_200 = create_test_variants_per_gene(self.variants_200,
                                                               self.family_both_aff)
         inheritancefilter_200 = InheritanceFiltering(variants_per_gene_200,
@@ -4542,6 +4083,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
 
     def test_biallelic_no_parents_filter(self):
         #child heterozygous pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_1 = create_test_variants_per_gene(self.variants_1,
                                                               self.family_no_parents)
         inheritancefilter_1 = InheritanceFiltering(variants_per_gene_1,
@@ -4565,6 +4107,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_1.candidate_variants,
                          test_candidate_variants_1)
         #child homozygous pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_2 = create_test_variants_per_gene(self.variants_2,
                                                             self.family_no_parents)
         inheritancefilter_2 = InheritanceFiltering(variants_per_gene_2,
@@ -4589,6 +4132,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
 
     def test_monoallelic_no_parents_filter(self):
         #child heterozygous pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_1 = create_test_variants_per_gene(self.variants_1,
                                                               self.family_no_parents)
         inheritancefilter_1 = InheritanceFiltering(variants_per_gene_1,
@@ -4611,6 +4155,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_1.candidate_variants,
                          test_candidate_variants_1)
         #child homozygous pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_2 = create_test_variants_per_gene(self.variants_2,
                                                             self.family_no_parents)
         inheritancefilter_2 = InheritanceFiltering(variants_per_gene_2,
@@ -4635,6 +4180,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
 
     def test_mosaic_no_parents_filter(self):
         # child heterozygous pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_1 = create_test_variants_per_gene(self.variants_1,
                                                             self.family_no_parents)
         inheritancefilter_1 = InheritanceFiltering(variants_per_gene_1,
@@ -4657,6 +4203,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_1.candidate_variants,
                          test_candidate_variants_1)
         # child homozygous pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_2 = create_test_variants_per_gene(self.variants_2,
                                                             self.family_no_parents)
         inheritancefilter_2 = InheritanceFiltering(variants_per_gene_2,
@@ -4681,6 +4228,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
 
     def test_imprinted_no_parents_filter(self):
         # child heterozygous pass
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_1 = create_test_variants_per_gene(self.variants_1,
                                                             self.family_no_parents)
         inheritancefilter_1 = InheritanceFiltering(variants_per_gene_1,
@@ -4703,6 +4251,7 @@ class TestAutosomalInheritanceFilter(unittest.TestCase):
         self.assertEqual(inheritancefilter_1.candidate_variants,
                          test_candidate_variants_1)
         # child homozygous fail
+        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
         variants_per_gene_2 = create_test_variants_per_gene(self.variants_2,
                                                             self.family_no_parents)
         inheritancefilter_2 = InheritanceFiltering(variants_per_gene_2,
