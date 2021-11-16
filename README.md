@@ -88,7 +88,7 @@ fam1	dad_id	0	0	XY	1	PATH_TO_DAD_VCF
 
 A tab-separated gene list in the following format:
 
-```sh
+```
 chr	start	stop	gene	hgnc_id	type	mode	mech	syndrome
 12	88049016	88142099	CEP290	29021	Confirmed DD gene	Biallelic	Loss of function	JOUBERT SYNDROME TYPE 5
 15	74179466	74212267	STRA6	30650	Confirmed DD gene	Biallelic	Loss of function	MICROPHTHALMIA SYNDROMIC TYPE 9
