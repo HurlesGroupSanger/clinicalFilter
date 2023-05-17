@@ -27,8 +27,7 @@ class Person(object):
     Person object: ID, VCF, sex, affected status
     """
 
-    def __init__(self, family_id, person_id, dad_id, mum_id, sex, affected,
-                 path):
+    def __init__(self, family_id, person_id, dad_id, mum_id, sex, affected, path):
         # note that a person may be in >1 family if it is a parent
         self.family_id = family_id
         self.person_id = person_id
@@ -38,24 +37,26 @@ class Person(object):
         self.sex = sex
         self.X_count = self.get_X_count()
         # convert affected to true/false
-        if affected == '2':
+        if affected == "2":
             self.affected = True
-        elif affected == '1':
+        elif affected == "1":
             self.affected = False
         else:
-            raise ValueError(
-                "Unknown affected status: " + affected +
-                " should be '1' or '2'")
+            raise ValueError("Unknown affected status: " + affected + " should be '1' or '2'")
 
     def __repr__(self):
-        return 'Person(person_id="{}", dad_id="{}", mum_id="{}", sex="{}", ' \
-               'X_count="{}", affected="{}", path="{}")'.format(self.get_id(),
-                                                                self.get_dad_id(),
-                                                                self.get_mum_id(),
-                                                                self.get_sex(),
-                                                                self.get_X_count(),
-                                                                self.get_affected_status(),
-                                                                self.get_vcf_path())
+        return (
+            'Person(person_id="{}", dad_id="{}", mum_id="{}", sex="{}", '
+            'X_count="{}", affected="{}", path="{}")'.format(
+                self.get_id(),
+                self.get_dad_id(),
+                self.get_mum_id(),
+                self.get_sex(),
+                self.get_X_count(),
+                self.get_affected_status(),
+                self.get_vcf_path(),
+            )
+        )
 
     def get_X_count(self):
         """
@@ -118,13 +119,15 @@ class Person(object):
         return parent_ids
 
     def __eq__(self, other):
-        return self.family_id == other.family_id and \
-               self.person_id == other.person_id and \
-               self.mum_id == other.mum_id and \
-               self.dad_id == other.dad_id and \
-               self.affected == other.affected and \
-               self.vcf_path == other.vcf_path and \
-               self.sex == other.sex
+        return (
+            self.family_id == other.family_id
+            and self.person_id == other.person_id
+            and self.mum_id == other.mum_id
+            and self.dad_id == other.dad_id
+            and self.affected == other.affected
+            and self.vcf_path == other.vcf_path
+            and self.sex == other.sex
+        )
 
 
 class Family(object):
@@ -139,9 +142,7 @@ class Family(object):
         self.dad = dad
 
     def __repr__(self):
-        return 'Family(proband={}, dad={}, mum={})'.format(self.proband,
-                                                           self.dad,
-                                                           self.mum)
+        return "Family(proband={}, dad={}, mum={})".format(self.proband, self.dad, self.mum)
 
     def has_mum(self):
         """
@@ -180,6 +181,4 @@ class Family(object):
             return False
 
     def __eq__(self, other):
-        return self.proband == other.proband and \
-               self.mum == other.mum and \
-               self.dad == other.dad
+        return self.proband == other.proband and self.mum == other.mum and self.dad == other.dad

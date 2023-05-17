@@ -32,8 +32,7 @@ class InheritanceFiltering(object):
     Inheritance filtering of SNVs/Indels
     """
 
-    def __init__(self, variants_per_gene, family, genes, regions,
-                 trusted_variants, candidate_variants, inhreport):
+    def __init__(self, variants_per_gene, family, genes, regions, trusted_variants, candidate_variants, inhreport):
         self.variants_per_gene = variants_per_gene
         self.family = family
         self.genes = genes
@@ -43,16 +42,15 @@ class InheritanceFiltering(object):
         self.inhreport = inhreport
         self.parents = None
         if self.family.has_both_parents():
-            self.parents = 'both'
+            self.parents = "both"
         elif self.family.has_no_parents():
-            self.parents = 'none'
+            self.parents = "none"
         elif self.family.has_dad():
-            self.parents = 'dad_only'
+            self.parents = "dad_only"
         elif self.family.has_mum():
-            self.parents = 'mum_only'
+            self.parents = "mum_only"
 
     def inheritance_filter(self):
-
         if self.genes:
             self.inheritance_filter_genes()
         if self.regions:
@@ -68,9 +66,8 @@ class InheritanceFiltering(object):
         Inheritance filters for use with a gene list
         """
         for hgncid in self.variants_per_gene.keys():
-
             if hgncid in self.genes.keys():
-                if self.genes[hgncid]['chr'] in ['X', 'Y']:
+                if self.genes[hgncid]["chr"] in ["X", "Y"]:
                     allosomalfiltering = AllosomalFilter(self, hgncid)
                     allosomalfiltering.allosomal_filter()
                 else:
@@ -78,6 +75,4 @@ class InheritanceFiltering(object):
                     autosomalfiltering.autosomal_filter()
             else:
                 for v in self.variants_per_gene[hgncid].keys():
-                    logging.info(
-                        v + " gene not in DDG2P: " +
-                        self.variants_per_gene[hgncid][v]['child'].symbol)
+                    logging.info(v + " gene not in DDG2P: " + self.variants_per_gene[hgncid][v]["child"].symbol)

@@ -37,15 +37,14 @@ class Filter(object):
     Class for filtering variants
     """
 
-    def __init__(self, family, known_genes, known_regions,
-                 trusted_variants, outdir):
+    def __init__(self, family, known_genes, known_regions, trusted_variants, outdir):
         self.family = family
         self.known_genes = known_genes
         self.known_regions = known_regions
         self.trusted_variants = trusted_variants
         self.outdir = outdir
         self.candidate_variants = None
-        self.candidate_variants = {'single_variants': {}, 'compound_hets': {}}
+        self.candidate_variants = {"single_variants": {}, "compound_hets": {}}
         self.inhreport = None
         self.inhreport = InheritanceReport()
         self.screened_candidate_variants = {}
@@ -86,17 +85,14 @@ class Filter(object):
         variants_per_gene = preinheritancefilter.preinheritance_filter()
 
         # inheritance filters for SNVs
-        inheritancefilter = InheritanceFiltering(variants_per_gene, self.family,
-                                                 genes, regions,
-                                                 trusted_variants,
-                                                 self.candidate_variants,
-                                                 self.inhreport)
+        inheritancefilter = InheritanceFiltering(
+            variants_per_gene, self.family, genes, regions, trusted_variants, self.candidate_variants, self.inhreport
+        )
         # candidate_variants, inheritance_report = inheritancefilter.inheritance_filter()
         inheritancefilter.inheritance_filter()
 
         # inheritance filters for CNVs
-        cnvfilter = CNVFiltering(variants, self.family, genes, regions,
-                                 trusted_variants, self.candidate_variants)
+        cnvfilter = CNVFiltering(variants, self.family, genes, regions, trusted_variants, self.candidate_variants)
         cnvfilter.cnv_filter()
 
         # compound het screen
@@ -104,8 +100,7 @@ class Filter(object):
         compoundhets.screen_compound_hets()
 
         # post inheritance filters
-        postinheritancefilter = PostInheritanceFiltering(
-            self.candidate_variants, self.family)
+        postinheritancefilter = PostInheritanceFiltering(self.candidate_variants, self.family)
         filtered_candidate_variants = postinheritancefilter.postinheritance_filter()
 
         return filtered_candidate_variants, self.inhreport

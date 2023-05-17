@@ -26,7 +26,7 @@ class Variant(object):
     """
     Generic variant class, inherited by more specific classes such as CNV
      and SNV
-     """
+    """
 
     def __init__(self, vardata):
         for key in vardata:
@@ -39,26 +39,18 @@ class Variant(object):
         self.parse_hgnc_id()
 
     def __eq__(self, other):
-        return self.chrom == other.chrom and \
-               self.pos == other.pos and \
-               self.ref == other.ref and \
-               self.alt == other.alt
+        return self.chrom == other.chrom and self.pos == other.pos and self.ref == other.ref and self.alt == other.alt
 
     def standardise_chromosome(self):
         """
         Ensure chromosome is 1-22,X,Y
         """
-        if self.chrom.startswith('Chr') or self.chrom.startswith('chr'):
+        if self.chrom.startswith("Chr") or self.chrom.startswith("chr"):
             self.chrom = self.chrom[3:]
 
     def parse_hgnc_id(self):
         """
         Strip HGNC: from hgnc_id
         """
-        if self.hgnc_id.startswith('HGNC:'):
+        if self.hgnc_id.startswith("HGNC:"):
             self.hgnc_id = self.hgnc_id[5:]
-
-
-
-
-

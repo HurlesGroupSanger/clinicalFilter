@@ -33,7 +33,7 @@ def openped(filename, proband_list):
     people = {}
     parents = {}
     probands = {}
-    with open(filename, 'r') as p:
+    with open(filename, "r") as p:
         lines = p.readlines()
         for l in lines:
             # create a person object for each individual
@@ -49,7 +49,7 @@ def openped(filename, proband_list):
     # get a list of probands to analyse and create family objects
     if proband_list:
         # parse probands from a list
-        with open(proband_list, 'r') as p:
+        with open(proband_list, "r") as p:
             lines = p.readlines()
             for l in lines:
                 person = l.strip()
@@ -73,40 +73,36 @@ def openped(filename, proband_list):
             mumid = people[probandid].get_mum_id()
             dadid = people[probandid].get_dad_id()
 
-            if mumid == '0':
+            if mumid == "0":
                 mum = None
             elif mumid in people.keys():
                 mum = people[mumid]
             else:
                 mum = None
-                logging.debug("Proband " + probandid
-                              + ": mother not found in ped "
-                                "file - skipping mother " + mumid)
-            if dadid == '0':
+                logging.debug("Proband " + probandid + ": mother not found in ped " "file - skipping mother " + mumid)
+            if dadid == "0":
                 dad = None
             elif dadid in people.keys():
                 dad = people[dadid]
             else:
                 dad = None
-                logging.debug("Proband " + probandid
-                              + ": father not found in ped "
-                                "file - skipping father " + dadid)
+                logging.debug("Proband " + probandid + ": father not found in ped " "file - skipping father " + dadid)
 
             family = Family(people[probandid], mum, dad)
             families[famid] = family
         else:
-            logging.debug("Proband " + probandid
-                          + " not found in ped file - skipping")
+            logging.debug("Proband " + probandid + " not found in ped file - skipping")
 
     return families
+
 
 def create_ped(pedfile, child, mother, father, sex, mum_aff, dad_aff):
     """
     create ped file where there isn't one inputted
     """
-    with open(pedfile, 'w') as p:
-        mum = ''
-        dad = ''
+    with open(pedfile, "w") as p:
+        mum = ""
+        dad = ""
         if mother is None:
             mum = "0"
         else:

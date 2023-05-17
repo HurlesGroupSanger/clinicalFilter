@@ -31,31 +31,19 @@ def get_options():
     """
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--ped",
-                       help="Path to ped file containing cohort details for "
-                            "multiple trios.")
+    group.add_argument("--ped", help="Path to ped file containing cohort details for " "multiple trios.")
     group.add_argument("--child", help="Path to child's VCF file.")
-    parser.add_argument("--sex",
-                        help="The child's chromosomal sex (eg XY, XX, XXY).")
+    parser.add_argument("--sex", help="The child's chromosomal sex (eg XY, XX, XXY).")
     parser.add_argument("--mother", help="Path to mother's VCF file.")
     parser.add_argument("--father", help="Path to father's VCF file.")
-    parser.add_argument("--mum-aff",
-                        help="Mother's affected status (1=unaffected, or "
-                             "2=affected).")
-    parser.add_argument("--dad-aff",
-                        help="Father's affected status (1=unaffected, or "
-                             "2=affected).")
-    parser.add_argument("--proband-list",
-                        help="List of probands to be analysed.")
-    parser.add_argument("--known-genes",
-                        help="Path to file of known disease causative genes.")
+    parser.add_argument("--mum-aff", help="Mother's affected status (1=unaffected, or " "2=affected).")
+    parser.add_argument("--dad-aff", help="Father's affected status (1=unaffected, or " "2=affected).")
+    parser.add_argument("--proband-list", help="List of probands to be analysed.")
+    parser.add_argument("--known-genes", help="Path to file of known disease causative genes.")
 
-    parser.add_argument("--known-regions",
-                        help="Path to file of known disease causative regions.")
+    parser.add_argument("--known-regions", help="Path to file of known disease causative regions.")
 
-    parser.add_argument("--trusted-variants",
-                        help="Path to file of known disease causative "
-                             "variants.")
+    parser.add_argument("--trusted-variants", help="Path to file of known disease causative " "variants.")
 
     parser.add_argument("--outdir", help="Output directory.")
 

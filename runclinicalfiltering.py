@@ -46,24 +46,20 @@ def main():
     if args.ped is None:
         # create ped file from family members on command line
         args.ped = args.outdir + "/ped." + timestamp + ".ped"
-        create_ped(args.ped, args.child, args.mother, args.father, args.sex,
-                   args.mum_aff, args.dad_aff)
+        create_ped(args.ped, args.child, args.mother, args.father, args.sex, args.mum_aff, args.dad_aff)
 
     families = openped(args.ped, args.proband_list)
 
     variants_per_family = {}
     inheritance_reports_per_family = {}
     for family in families.keys():
-        varfilter = Filter(families[family], args.known_genes,
-                           args.known_regions, args.trusted_variants,
-                           args.outdir)
+        varfilter = Filter(families[family], args.known_genes, args.known_regions, args.trusted_variants, args.outdir)
         filtered_variants, inheritance_report = varfilter.filter_trio()
 
         variants_per_family[family] = filtered_variants
         inheritance_reports_per_family[family] = inheritance_report
 
-    create_output(families, variants_per_family, inheritance_reports_per_family,
-                  args.outdir)
+    create_output(families, variants_per_family, inheritance_reports_per_family, args.outdir)
 
 
 if __name__ == "__main__":

@@ -35,15 +35,31 @@ class CNV(Variant):
 
     def __repr__(self):
         # return str(self.__dict__)
-        return 'CNV(chrom="{}", pos="{}", cnv_end="{}", ref="{}", alt="{}", ' \
-               'cnv_type="{}", cnv_length="{}", cnv_filter="{}", ' \
-               'consequence="{}", hgnc_id_all="{}", symbol_all="{}", ' \
-               'gt="{}", cn="{}", cnv_inh="{}", sex="{}", genotype="{}", ' \
-               'triogenotype="{}")'.format(
-            self.chrom, self.pos, self.cnv_end, self.ref, self.alt,
-            self.cnv_type, self.cnv_length, self.cnv_filter, self.consequence,
-            self.hgnc_id_all, self.symbol_all, self.gt, self.cn, self.cnv_inh,
-            self.sex, self.get_genotype(), self.triogenotype)
+        return (
+            'CNV(chrom="{}", pos="{}", cnv_end="{}", ref="{}", alt="{}", '
+            'cnv_type="{}", cnv_length="{}", cnv_filter="{}", '
+            'consequence="{}", hgnc_id_all="{}", symbol_all="{}", '
+            'gt="{}", cn="{}", cnv_inh="{}", sex="{}", genotype="{}", '
+            'triogenotype="{}")'.format(
+                self.chrom,
+                self.pos,
+                self.cnv_end,
+                self.ref,
+                self.alt,
+                self.cnv_type,
+                self.cnv_length,
+                self.cnv_filter,
+                self.consequence,
+                self.hgnc_id_all,
+                self.symbol_all,
+                self.gt,
+                self.cn,
+                self.cnv_inh,
+                self.sex,
+                self.get_genotype(),
+                self.triogenotype,
+            )
+        )
 
     def set_genotype(self):
         """
@@ -70,17 +86,17 @@ class CNV(Variant):
         return True
 
     def get_mum_genotype(self):
-        if self.triogenotype[3:6] == 'REF':
-            mum_genotype = '0'
+        if self.triogenotype[3:6] == "REF":
+            mum_genotype = "0"
         else:
-            mum_genotype = '1'
+            mum_genotype = "1"
         return mum_genotype
 
     def get_dad_genotype(self):
-        if self.triogenotype[6:9] == 'REF':
-            dad_genotype = '0'
+        if self.triogenotype[6:9] == "REF":
+            dad_genotype = "0"
         else:
-            dad_genotype = '1'
+            dad_genotype = "1"
         return dad_genotype
 
     def is_het(self):

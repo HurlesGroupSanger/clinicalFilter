@@ -35,20 +35,44 @@ class SNV(Variant):
         self.calculate_ac_het_hemi()
 
     def __repr__(self):
-        return 'SNV(chrom="{}", pos="{}", ref="{}", alt="{}", ' \
-               'consequence="{}", protein_position="{}", ensg="{}", ' \
-               'symbol="{}", feature="{}", canonical="{}", mane="{}", ' \
-               'hgnc_id="{}", max_af="{}", max_af_pops="{}", ddd_af="{}", ' \
-               'ddd_father_af="{}", revel="{}", polyphen="{}", hgvsc="{}", ' \
-               'hgvsp="{}", dnm="{}", gt="{}", gq="{}", pid="{}", ad={}, ' \
-               'sex="{}", genotype="{}", triogenotype="{}")'.format(
-            self.chrom, self.pos, self.ref, self.alt, self.consequence,
-            self.protein_position, self.ensg, self.symbol, self.feature,
-            self.canonical, self.mane, self.hgnc_id, self.max_af,
-            self.max_af_pops, self.ddd_af, self.ddd_father_af, self.revel,
-            self.polyphen, self.hgvsc, self.hgvsp, self.dnm,
-            self.gt, self.gq, self.pid, self.ad, self.sex, self.get_genotype(),
-            self.triogenotype)
+        return (
+            'SNV(chrom="{}", pos="{}", ref="{}", alt="{}", '
+            'consequence="{}", protein_position="{}", ensg="{}", '
+            'symbol="{}", feature="{}", canonical="{}", mane="{}", '
+            'hgnc_id="{}", max_af="{}", max_af_pops="{}", ddd_af="{}", '
+            'ddd_father_af="{}", revel="{}", polyphen="{}", hgvsc="{}", '
+            'hgvsp="{}", dnm="{}", gt="{}", gq="{}", pid="{}", ad={}, '
+            'sex="{}", genotype="{}", triogenotype="{}")'.format(
+                self.chrom,
+                self.pos,
+                self.ref,
+                self.alt,
+                self.consequence,
+                self.protein_position,
+                self.ensg,
+                self.symbol,
+                self.feature,
+                self.canonical,
+                self.mane,
+                self.hgnc_id,
+                self.max_af,
+                self.max_af_pops,
+                self.ddd_af,
+                self.ddd_father_af,
+                self.revel,
+                self.polyphen,
+                self.hgvsc,
+                self.hgvsp,
+                self.dnm,
+                self.gt,
+                self.gq,
+                self.pid,
+                self.ad,
+                self.sex,
+                self.get_genotype(),
+                self.triogenotype,
+            )
+        )
 
     def calculate_ac_het_hemi(self):
         """
@@ -56,17 +80,17 @@ class SNV(Variant):
         """
         AC_hemi = 0
         AC_het = 0
-        #change all '.' to '0'
-        if self.ac_XX == '.':
-            self.ac_XX = '0'
-        if self.ac_XY == '.':
-            self.ac_XY = '0'
-        if self.nhomalt_XX == '.':
-            self.nhomalt_XX = '0'
-        if self.nhomalt_XY == '.':
-            self.nhomalt_XY = '0'
+        # change all '.' to '0'
+        if self.ac_XX == ".":
+            self.ac_XX = "0"
+        if self.ac_XY == ".":
+            self.ac_XY = "0"
+        if self.nhomalt_XX == ".":
+            self.nhomalt_XX = "0"
+        if self.nhomalt_XY == ".":
+            self.nhomalt_XY = "0"
 
-        if self.chrom == 'X' or self.chrom == 'Y':
+        if self.chrom == "X" or self.chrom == "Y":
             AC_hemi = int(self.nhomalt_XY)
         else:
             total_AC = int(self.ac_XX) + int(self.ac_XY)
@@ -74,9 +98,16 @@ class SNV(Variant):
             AC_het = total_AC - (2 * total_nhom)
 
         if AC_het < 0 or AC_hemi < 0:
-            logging.info("Warning - negative AC_het or AC_hemi for "
-                         + self.chrom + " " + self.pos + " AC_het="
-                         + str(AC_het) + " AC_hemi=" + str(AC_hemi))
+            logging.info(
+                "Warning - negative AC_het or AC_hemi for "
+                + self.chrom
+                + " "
+                + self.pos
+                + " AC_het="
+                + str(AC_het)
+                + " AC_hemi="
+                + str(AC_hemi)
+            )
 
         self.AC_het = str(AC_het)
         self.AC_hemi = str(AC_hemi)
@@ -87,7 +118,7 @@ class SNV(Variant):
         the separator is /
         """
         newgt = self.gt
-        newgt = newgt.replace('|', '/')
+        newgt = newgt.replace("|", "/")
         gtsplit = list(newgt)
         if int(gtsplit[0]) > int(gtsplit[2]):
             newgt = gtsplit[2] + "/" + gtsplit[0]
@@ -124,46 +155,45 @@ class SNV(Variant):
 
     def is_mum_hom_ref(self):
         genotype = self.get_mum_genotype()
-        if genotype == '0':
+        if genotype == "0":
             return True
         else:
             return False
 
     def is_dad_hom_ref(self):
         genotype = self.get_dad_genotype()
-        if genotype == '0':
+        if genotype == "0":
             return True
         else:
             return False
 
     def is_mum_hom_alt(self):
         genotype = self.get_mum_genotype()
-        if genotype == '2':
+        if genotype == "2":
             return True
         else:
             return False
 
     def is_dad_hom_alt(self):
         genotype = self.get_dad_genotype()
-        if genotype == '2':
+        if genotype == "2":
             return True
         else:
             return False
 
     def is_mum_het(self):
         genotype = self.get_mum_genotype()
-        if genotype == '1':
+        if genotype == "1":
             return True
         else:
             return False
 
     def is_dad_het(self):
         genotype = self.get_dad_genotype()
-        if genotype == '1':
+        if genotype == "1":
             return True
         else:
             return False
-
 
     def is_cnv(self):
         """
@@ -177,7 +207,6 @@ class SNV(Variant):
         """
         return True
 
-
     def is_het(self):
         """
         Is the variant a het?
@@ -187,7 +216,6 @@ class SNV(Variant):
         else:
             return False
 
-
     def is_hom_alt(self):
         """
         Is the variant hom alt?
@@ -196,7 +224,6 @@ class SNV(Variant):
             return True
         else:
             return False
-
 
     def is_hom_ref(self):
         """
