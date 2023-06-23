@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Copyright (c) 2021 Genome Research Limited
 Author: Ruth Eberhardt <re3@sanger.ac.uk>
@@ -38,9 +39,9 @@ def main():
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     if args.ped is None:
-        logfile = args.outdir + "/clinical_filter." + timestamp + ".log"
+        logfile = args.outdir + "/clinical_filter" + ".log"
     else:
-        logfile = args.ped + "." + timestamp + ".log"
+        logfile = args.ped.replace(".ped", "") + "_clinical_filter.log"
     logging.basicConfig(filename=logfile, level=logging.DEBUG)
 
     if args.ped is None:
