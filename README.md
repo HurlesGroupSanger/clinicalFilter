@@ -54,7 +54,7 @@ Allele count annotation from gnomAD is required:
 AC_XX, AN_XX, nhomalt_XX AC_XY AN_XY, nhomalt_XY
 
 For trios, DNM annotation from the bcftools trio-dnm2 plugin, http://samtools.github.io/bcftools/howtos/plugin.trio-dnm2.html, is required. The following fields are used:
-pp_trio_DNM2, pp_DNG
+DNM, DNG
 
 CNVs can be added from any caller if desired. If CNVs are present the following annotation should be present:
 INFO: CNVFILTER (Pass or Fail)

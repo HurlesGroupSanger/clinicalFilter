@@ -109,8 +109,8 @@ def readvcf(filename, regions, sex):
         "Protein_position",
         "HGVSc",
         "HGVSp",
-        "pp_trio_DNM2",
-        "pp_DNG",
+        "DNM",
+        "DNG",
         "VAF",
         "END",
         "SVTYPE",
@@ -194,8 +194,8 @@ def readvcf(filename, regions, sex):
         vdata["hgvsc"] = oldata[19]
         vdata["hgvsp"] = oldata[20]
         vdata["sex"] = sex
-        vdata["pp_trio_dnm2"] = oldata[21]
-        vdata["pp_dng"] = oldata[22]
+        vdata["DNM"] = oldata[21]
+        vdata["DNG"] = oldata[22]
         vdata["vaf"] = oldata[23]
         vdata["cnv_end"] = oldata[24]
         vdata["cnv_type"] = oldata[25]
@@ -216,7 +216,7 @@ def readvcf(filename, regions, sex):
         vdata["cnv_inh"] = oldata[40]
         vdata["cn"] = oldata[41]
 
-        if not vdata["pp_trio_dnm2"] == "." or not vdata["pp_dng"] == ".":
+        if not vdata["DNM"] == "." or not vdata["DNG"] == ".":
             vdata["dnm"] = True
         else:
             vdata["dnm"] = False
