@@ -1,7 +1,7 @@
 nextflow.enable.dsl=2
 include {CREATE_PED} from './modules/clinicalFilter.nf' 
-include {CREATE_PED_LIST} from './modules/clinicalFilter.nf' 
 include {CF} from './modules/clinicalFilter.nf' 
+include {CONCAT_RESULTS} from './modules/clinicalFilter.nf'
 
 workflow {
 
@@ -40,4 +40,6 @@ else
 }
 
 	ch_cf = CF(ch_ped, params.known_genes)
+
+	ch_concat = CONCAT_RESULTS(ch_cf.map { tuple -> tuple[1] }.collect())
 }

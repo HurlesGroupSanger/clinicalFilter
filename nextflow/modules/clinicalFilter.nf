@@ -50,3 +50,23 @@ process CF {
 	"""
 }
 
+
+process CONCAT_RESULTS {
+
+	tag "CONCAT_RESULTS"
+
+	publishDir "${params.publish_dir}/", mode: "copy", pattern: "clinical_filter_results.tsv"
+
+	input:
+	path clinical_filter_individual_results
+
+	output:
+	path "clinical_filter_results.tsv"
+
+
+	script:
+	"""
+	awk 'FNR==1 && NR!=1{next;}{print}' $clinical_filter_individual_results > clinical_filter_results.tsv
+	"""
+
+}
