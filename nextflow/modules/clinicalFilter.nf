@@ -4,7 +4,7 @@ process CREATE_PED {
 	
     tag "CREATE_PED_$stable_id"
 
-	publishDir "${params.publish_dir}/DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}.ped"
+	publishDir "${params.publish_dir}/${params.date}DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}.ped"
 
 
 	input:
@@ -31,9 +31,9 @@ process CF {
 	
     tag "CF_$stable_id"
 
-	publishDir "${params.publish_dir}/DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}_clinical_filter_inheritance_report.txt"
-	publishDir "${params.publish_dir}/DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}_clinical_filter.txt"
-	publishDir "${params.publish_dir}/DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}_clinical_filter.log"
+	publishDir "${params.publish_dir}/${params.date}/DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}_clinical_filter_inheritance_report.txt"
+	publishDir "${params.publish_dir}/${params.date}/DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}_clinical_filter.txt"
+	publishDir "${params.publish_dir}/${params.date}/DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}_clinical_filter.log"
 
 	beforeScript "export PYTHONPATH=${baseDir}/../src/:\$PYTHONPATH"
 
@@ -55,7 +55,7 @@ process CONCAT_RESULTS {
 
 	tag "CONCAT_RESULTS"
 
-	publishDir "${params.publish_dir}/", mode: "copy", pattern: "clinical_filter_results.tsv"
+	publishDir "${params.publish_dir}/${params.date}/", mode: "copy", pattern: "clinical_filter_results.tsv"
 
 	input:
 	path clinical_filter_individual_results
