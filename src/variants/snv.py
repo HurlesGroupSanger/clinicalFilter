@@ -111,6 +111,7 @@ class SNV(Variant):
 
         self.AC_het = str(AC_het)
         self.AC_hemi = str(AC_hemi)
+        self.AC_gnomad = str(int(self.nhomalt_XX) + int(self.nhomalt_XY))
 
     def standardise_gt(self):
         """

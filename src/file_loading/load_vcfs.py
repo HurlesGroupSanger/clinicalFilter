@@ -20,6 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
+
 import subprocess
 import logging
 import os
@@ -124,6 +125,34 @@ def readvcf(filename, regions, sex):
         "AC_XY",
         "AN_XY",
         "nhomalt_XY",
+        "AlphaMissense_pred",
+        "AlphaMissense_rankscore",
+        "AlphaMissense_score",
+        "MPC_rankscore",
+        "MPC_score",
+        "PrimateAI_pred",
+        "PrimateAI_rankscore",
+        "PrimateAI_score",
+        "EVE_CLASS",
+        "EVE_SCORE",
+        "pLI_gene_value",
+        "SpliceAI_pred_DP_AG",
+        "SpliceAI_pred_DP_AL",
+        "SpliceAI_pred_DP_DG",
+        "SpliceAI_pred_DP_DL",
+        "SpliceAI_pred_DS_AG",
+        "SpliceAI_pred_DS_AL",
+        "SpliceAI_pred_DS_DG",
+        "SpliceAI_pred_DS_DL",
+        "SpliceAI_pred_SYMBOL",
+        "LoF",
+        "LoF_filter",
+        "LoF_flags",
+        "LoF_info",
+        "CADD_PHRED",
+        "CLIN_SIG",
+        "CALLSOURCE",
+        "MEANLR2",
     ]
     formatfields = ["GT", "GQ", "PID", "AD", "CIFER_INHERITANCE", "CN"]
 
@@ -209,12 +238,46 @@ def readvcf(filename, regions, sex):
         vdata["ac_XY"] = oldata[33]
         vdata["an_XY"] = oldata[34]
         vdata["nhomalt_XY"] = oldata[35]
-        vdata["gt"] = oldata[36]
-        vdata["gq"] = oldata[37]
-        vdata["pid"] = oldata[38]
-        vdata["ad"] = oldata[39]
-        vdata["cnv_inh"] = oldata[40]
-        vdata["cn"] = oldata[41]
+
+        # Added for b38v3
+        vdata["AlphaMissense_pred"] = oldata[36]
+        vdata["AlphaMissense_rankscore"] = oldata[37]
+        vdata["AlphaMissense_score"] = oldata[38]
+        vdata["MPC_rankscore"] = oldata[39]
+        vdata["MPC_score"] = oldata[40]
+        vdata["PrimateAI_pred"] = oldata[41]
+        vdata["PrimateAI_rankscore"] = oldata[42]
+        vdata["PrimateAI_score"] = oldata[43]
+        vdata["EVE_CLASS"] = oldata[44]
+        vdata["EVE_SCORE"] = oldata[45]
+        vdata["pLI_gene_value"] = oldata[46]
+        vdata["SpliceAI_pred_DP_AG"] = oldata[47]
+        vdata["SpliceAI_pred_DP_AL"] = oldata[48]
+        vdata["SpliceAI_pred_DP_DG"] = oldata[49]
+        vdata["SpliceAI_pred_DP_DL"] = oldata[50]
+        vdata["SpliceAI_pred_DS_AG"] = oldata[51]
+        vdata["SpliceAI_pred_DS_AL"] = oldata[52]
+        vdata["SpliceAI_pred_DS_DG"] = oldata[53]
+        vdata["SpliceAI_pred_DS_DL"] = oldata[54]
+        vdata["SpliceAI_pred_SYMBOL"] = oldata[55]
+        vdata["LoF"] = oldata[56]
+        vdata["LoF_filter"] = oldata[57]
+        vdata["LoF_flags"] = oldata[58]
+        vdata["LoF_info"] = oldata[59]
+        vdata["CADD_PHRED"] = oldata[60]
+        vdata["CLIN_SIG"] = oldata[61]
+
+        # Extra informations on CNVs
+        vdata["CALLSOURCE"] = oldata[62]
+        vdata["MEANLR2"] = oldata[63]
+
+        # Format information
+        vdata["gt"] = oldata[64]
+        vdata["gq"] = oldata[65]
+        vdata["pid"] = oldata[66]
+        vdata["ad"] = oldata[67]
+        vdata["cnv_inh"] = oldata[68]
+        vdata["cn"] = oldata[69]
 
         if not vdata["DNM"] == "." or not vdata["DNG"] == ".":
             vdata["dnm"] = True
@@ -239,6 +302,6 @@ def runcommand(cmd):
     try:
         byteoutput = subprocess.check_output(cmd, shell=True)
         return byteoutput.decode("UTF-8").rstrip()
-    except subprocess.CalledProcessError as e:
-        print(e.output)
+    except subprocess.CalledProcessError:
+        logging.debug(cmd)
         return "Error in command"

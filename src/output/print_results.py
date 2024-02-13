@@ -66,8 +66,37 @@ def create_output(families, variants, inheritance_reports, outdir):
         "protein_position",
         "polyphen",
         "REVEL",
+        "AlphaMissense_pred",
+        "AlphaMissense_rankscore",
+        "AlphaMissense_score",
+        "MPC_rankscore",
+        "MPC_score",
+        "PrimateAI_pred",
+        "PrimateAI_rankscore",
+        "PrimateAI_score",
+        "EVE_CLASS",
+        "EVE_SCORE",
+        "pLI_gene_value",
+        "SpliceAI_pred_DP_AG",
+        "SpliceAI_pred_DP_AL",
+        "SpliceAI_pred_DP_DG",
+        "SpliceAI_pred_DP_DL",
+        "SpliceAI_pred_DS_AG",
+        "SpliceAI_pred_DS_AL",
+        "SpliceAI_pred_DS_DG",
+        "SpliceAI_pred_DS_DL",
+        "SpliceAI_pred_SYMBOL",
+        "LoF",
+        "LoF_filter",
+        "LoF_flags",
+        "LoF_info",
+        "CADD_PHRED",
+        "CLIN_SIG",
+        "CALLSOURCE",
+        "MEANLR2",
         "max_af",
         "ddd_af",
+        "AC_gnomad",
         "GT",
         "GQ",
         "AD",
@@ -130,8 +159,37 @@ def print_output(results, header, outfile):
                         results[fam][var]["protein_position"],
                         results[fam][var]["polyphen"],
                         results[fam][var]["REVEL"],
+                        results[fam][var]["AlphaMissense_pred"],
+                        results[fam][var]["AlphaMissense_rankscore"],
+                        results[fam][var]["AlphaMissense_score"],
+                        results[fam][var]["MPC_rankscore"],
+                        results[fam][var]["MPC_score"],
+                        results[fam][var]["PrimateAI_pred"],
+                        results[fam][var]["PrimateAI_rankscore"],
+                        results[fam][var]["PrimateAI_score"],
+                        results[fam][var]["EVE_CLASS"],
+                        results[fam][var]["EVE_SCORE"],
+                        results[fam][var]["pLI_gene_value"],
+                        results[fam][var]["SpliceAI_pred_DP_AG"],
+                        results[fam][var]["SpliceAI_pred_DP_AL"],
+                        results[fam][var]["SpliceAI_pred_DP_DG"],
+                        results[fam][var]["SpliceAI_pred_DP_DL"],
+                        results[fam][var]["SpliceAI_pred_DS_AG"],
+                        results[fam][var]["SpliceAI_pred_DS_AL"],
+                        results[fam][var]["SpliceAI_pred_DS_DG"],
+                        results[fam][var]["SpliceAI_pred_DS_DL"],
+                        results[fam][var]["SpliceAI_pred_SYMBOL"],
+                        results[fam][var]["LoF"],
+                        results[fam][var]["LoF_filter"],
+                        results[fam][var]["LoF_flags"],
+                        results[fam][var]["LoF_info"],
+                        results[fam][var]["CADD_PHRED"],
+                        results[fam][var]["CLIN_SIG"],
+                        results[fam][var]["CALLSOURCE"],
+                        results[fam][var]["MEANLR2"],
                         results[fam][var]["max_af"],
                         results[fam][var]["ddd_af"],
+                        results[fam][var]["AC_gnomad"],
                         results[fam][var]["GT"],
                         results[fam][var]["GQ"],
                         results[fam][var]["AD"],
@@ -327,6 +385,7 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res["REVEL"] = var["variant"].revel
     res["max_af"] = var["variant"].max_af
     res["ddd_af"] = var["variant"].ddd_af
+    res["AC_gnomad"] = var["variant"].AC_gnomad
     res["GT"] = var["variant"].gt
     res["GQ"] = var["variant"].gq
     res["AD"] = var["variant"].ad
@@ -334,6 +393,35 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res["cn"] = var["variant"].cn
     res["triogenotype"] = var["variant"].triogenotype
     res["DNM"] = str(var["variant"].dnm)
+
+    res["AlphaMissense_pred"] = var["variant"].AlphaMissense_pred
+    res["AlphaMissense_rankscore"] = var["variant"].AlphaMissense_rankscore
+    res["AlphaMissense_score"] = var["variant"].AlphaMissense_score
+    res["MPC_rankscore"] = var["variant"].MPC_rankscore
+    res["MPC_score"] = var["variant"].MPC_score
+    res["PrimateAI_pred"] = var["variant"].PrimateAI_pred
+    res["PrimateAI_score"] = var["variant"].PrimateAI_score
+    res["PrimateAI_rankscore"] = var["variant"].PrimateAI_rankscore
+    res["EVE_CLASS"] = var["variant"].EVE_CLASS
+    res["EVE_SCORE"] = var["variant"].EVE_SCORE
+    res["pLI_gene_value"] = var["variant"].pLI_gene_value
+    res["SpliceAI_pred_DP_AG"] = var["variant"].SpliceAI_pred_DP_AG
+    res["SpliceAI_pred_DP_AL"] = var["variant"].SpliceAI_pred_DP_AL
+    res["SpliceAI_pred_DP_DG"] = var["variant"].SpliceAI_pred_DP_DG
+    res["SpliceAI_pred_DP_DL"] = var["variant"].SpliceAI_pred_DP_DL
+    res["SpliceAI_pred_DS_AG"] = var["variant"].SpliceAI_pred_DS_AG
+    res["SpliceAI_pred_DS_AL"] = var["variant"].SpliceAI_pred_DS_AL
+    res["SpliceAI_pred_DS_DG"] = var["variant"].SpliceAI_pred_DS_DG
+    res["SpliceAI_pred_DS_DL"] = var["variant"].SpliceAI_pred_DS_DL
+    res["SpliceAI_pred_SYMBOL"] = var["variant"].SpliceAI_pred_SYMBOL
+    res["LoF"] = var["variant"].LoF
+    res["LoF_filter"] = var["variant"].LoF_filter
+    res["LoF_flags"] = var["variant"].LoF_flags
+    res["LoF_info"] = var["variant"].LoF_info
+    res["CADD_PHRED"] = var["variant"].CADD_PHRED
+    res["CLIN_SIG"] = var["variant"].CLIN_SIG
+    res["CALLSOURCE"] = var["variant"].CALLSOURCE
+    res["MEANLR2"] = var["variant"].MEANLR2
 
     if varid in mnvs.keys():
         res["mnv"] = "True"
