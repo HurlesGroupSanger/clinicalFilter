@@ -78,11 +78,16 @@ class PreInheritanceFiltering(object):
                 logging.info(v + " failed high DDD AF: " + self.variants["child"][v].ddd_af)
                 continue
 
-            cqs = self.variants["child"][v].consequence.split("&")
-            coding_cqs = common_elements(cqs, consequences)
-            if len(coding_cqs) == 0:
-                logging.info(v + " failed, no functional consequences: " + self.variants["child"][v].consequence)
-                continue
+            # Check if the variant has a high spliceAI score
+            is_high_spliceAI_DNM = self.is_high_spliceAI_DNM(v)
+
+            # If the variant is not a DNM with high spliceAI score, it has to have a functional consequence to be kept
+            if not is_high_spliceAI_DNM:
+                cqs = self.variants["child"][v].consequence.split("&")
+                coding_cqs = common_elements(cqs, consequences)
+                if len(coding_cqs) == 0:
+                    logging.info(v + " failed, no functional consequences: " + self.variants["child"][v].consequence)
+                    continue
 
             hgncid = cqs = self.variants["child"][v].hgnc_id
             if not hgncid in variants_per_gene.keys():
@@ -96,6 +101,62 @@ class PreInheritanceFiltering(object):
                 variants_per_gene[hgncid][v]["dad"] = self.variants["dad"][v]
 
         return variants_per_gene
+
+    def is_high_spliceAI_DNM(self, v):
+        """
+        Keep UTR and synonymous DNM variants if they have a high spliceAI score
+
+        Args:
+            v (str): variant identifier
+
+        Returns:
+            bool: whether or not the variant is a DNM with a high spliceAI score
+        """
+
+        if not self.variants["child"][v].dnm:
+            return False
+
+        SPLICE_AI_THRESHOLD = 0.8
+
+        splice_ai_consequences = ["synonymous_variant", "3_prime_UTR_variant", "5_prime_UTR_variant"]
+        cqs = self.variants["child"][v].consequence.split("&")
+        coding_cqs = common_elements(cqs, splice_ai_consequences)
+
+        if coding_cqs:
+
+            ds_ag = (
+                float(self.variants["child"][v].SpliceAI_pred_DS_AG)
+                if self.variants["child"][v].SpliceAI_pred_DS_AG != "."
+                else 0
+            )
+
+            ds_al = (
+                float(self.variants["child"][v].SpliceAI_pred_DS_AL)
+                if self.variants["child"][v].SpliceAI_pred_DS_AL != "."
+                else 0
+            )
+
+            ds_dg = (
+                float(self.variants["child"][v].SpliceAI_pred_DS_DG)
+                if self.variants["child"][v].SpliceAI_pred_DS_DG != "."
+                else 0
+            )
+
+            ds_dl = (
+                float(self.variants["child"][v].SpliceAI_pred_DS_DL)
+                if self.variants["child"][v].SpliceAI_pred_DS_DL != "."
+                else 0
+            )
+
+            if (
+                (ds_ag >= SPLICE_AI_THRESHOLD)
+                | (ds_al >= SPLICE_AI_THRESHOLD)
+                | (ds_dg >= SPLICE_AI_THRESHOLD)
+                | (ds_dl >= SPLICE_AI_THRESHOLD)
+            ):
+                return True
+
+        return False
 
     def revel_filter(self, variants_per_gene):
         """
