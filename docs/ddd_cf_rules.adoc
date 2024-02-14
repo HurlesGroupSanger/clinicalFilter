@@ -3,8 +3,11 @@
 :source-highlighter: pygments
 v1.0 - November 2021
 
-This document describes the rules set up to select variants in the DDD clinical filtering pipeline.
+This document describes the rules implemented in our clinical filtering pipeline in order to select candidate variants in the DDD cohort. 
 
+Add here an horizontal plot with the different successive modules.
+
+CNVs are analysed in a separate module. 
 
 == 1. Pre-inheritance
 
@@ -13,11 +16,9 @@ This document describes the rules set up to select variants in the DDD clinical 
 ==== 1.1.1 Control population
 
 
-**Rule** +
-Exclude variants with an allele frequency greater than 0.5% in any of the following control populations:
 
-* gnomAD
-* 1000 genomes
+Exclude variants with an allele frequency greater than **0.5%** in _gnomAD_ or _1000 genomes_.
+
 
 .More
 [%collapsible]
@@ -57,9 +58,9 @@ Common variants are unlikely to be causative for rare developmental disorders.
 
 
 ==== 1.1.2 DDD
-**Rule** +
 
-Exclude autosomal variants with an allele frequency greater than 0.5% in the DDD cohort.
+
+Exclude autosomal variants with an allele frequency greater than **0.5%** in the DDD cohort.
 
 .More
 [%collapsible]
@@ -87,12 +88,9 @@ Common variants are unlikely to be causative for rare developmental disorders.
 
 ===== 1.1.3.1 Control population
 
-**Rule** +
 
-Exclude X-linked variants with an allele frequency greater than 0.0001% in any of the following control populations:
+Exclude X-linked variants with an allele frequency greater than **0.0001%** in _gnomAD_ or _1000 genomes_.
 
-* gnomAD
-* 1000 genomes
 
 .More
 [%collapsible]
@@ -120,7 +118,7 @@ How was the threshold determined ?
 
 ===== 1.1.3.2 DDD fathers
 
-**Rule** +
+
 
 Exclude X-linked variants found in at least one DDD father
 
@@ -155,7 +153,7 @@ Not sure why
 
 === 1.2 Low genotype quality
 
-**Rule** +
+
 
 Exclude autosomal variants with a low genotype quality (GQ < 40).
 
@@ -197,22 +195,26 @@ How was the threshold chosen?
 
 === 1.3 Functional consequence
 
-**Rule** +
+
 
 Exclude variants with no functional consequence in the following list :
 
-* frameshift_variant
-* missense_variant
-* splice_donor_variant
-* splice_acceptor_variant
-* start_lost
-* stop_gained
-* protein_altering_variant
-* transcript_ablation
-* transcript_amplification
-* inframe_insertion
-* inframe_deletion
-* stop_lost
+[small]
+----
+frameshift_variant
+missense_variant
+splice_donor_variant
+splice_acceptor_variant
+start_lost
+stop_gained
+protein_altering_variant
+transcript_ablation
+transcript_amplification
+inframe_insertion
+inframe_deletion
+stop_lost
+----
+
 
 .More
 [%collapsible]
@@ -251,7 +253,7 @@ Variants with no functional consequence are unlikely to be causative for rare de
 
 === 1.4 REVEL
 
-**Rule** +
+
 
 Exclude missense variants with a low REVEL score (< 0.4).
 
@@ -291,7 +293,7 @@ Why the 0.4 threshold? Look at article for more informations.
 
 === 1.5 Dodgy DNM
 
-**Rule** +
+
 
 Exclude variants not found in the parents but not called as DNM either.
 
@@ -326,18 +328,69 @@ Remove false positive DNMs.
 
 ====
 
+=== 1.6 DDG2P
 
 == 2. Inheritance
+
+The inheritance module combines the gene-disease association https://www.ebi.ac.uk/gene2phenotype/terminology[allelic requirement], the child's genotype and, in case of trios, the parents'genotypes and affected status, in order to reject or select candidate variants.
+
+=== 2.1 Autosomes
+
+
+==== 2.1.1 Singletons
+
+image::images/DDD_CF_Inheritance_Autosomal_Singletons.svg[]
+
+
+==== 2.1.2 Trios
+
+
+
+
+===== 2.1.2.1 Heterozygous variants
+
+
+image::images/DDD_CF_Inheritance_Autosomal_Trios_Heterozygous.svg[]
+
+===== 2.1.2.2 Homzygous variants
+
+image::images/DDD_CF_Inheritance_Autosomal_Trios_Homozygous.svg[]
+
+
+
+=== 2.2 Allosomes
+
+
+==== 2.2.1 Singletons
+
+image::images/DDD_CF_Inheritance_Allosomal_Singletons.svg[]
+
+
+==== 2.2.2 Trios
+
+===== 2.2.2.1 Heterozygous variants
+
+
+image::images/DDD_CF_Inheritance_Allosomal_Trios_Heterozygous.svg[]
+
+===== 2.1.2.2 Homzygous variants
+
+image::images/DDD_CF_Inheritance_Allosomal_Trios_Homozygous.svg[]
+
+
 
 == 3. CNV
 
 
 == 4. Compound heterozygous screening
 
+image::images/DDD_CF_Compound-heterozygosity.svg[]
+
+
 == 5. Post-inheritance
 
 
-== 6. Revision History
+== Revision History
 
 [cols="3,3,3,3"]
 |===

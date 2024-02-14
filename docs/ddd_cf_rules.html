@@ -517,7 +517,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This document describes the rules set up to select variants in the DDD clinical filtering pipeline.</p>
+<p>This document describes the rules implemented in our clinical filtering pipeline in order to select candidate variants in the DDD cohort.</p>
 </div>
 </div>
 </div>
@@ -529,18 +529,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div class="sect3">
 <h4 id="_1_1_1_control_population">1.1.1 Control population</h4>
 <div class="paragraph">
-<p><strong>Rule</strong><br>
-Exclude variants with an allele frequency greater than 0.5% in any of the following control populations:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>gnomAD</p>
-</li>
-<li>
-<p>1000 genomes</p>
-</li>
-</ul>
+<p>Exclude variants with an allele frequency greater than <strong>0.5%</strong> in <em>gnomAD</em> or <em>1000 genomes</em>.</p>
 </div>
 <details>
 <summary class="title">More</summary>
@@ -606,10 +595,7 @@ Exclude variants with an allele frequency greater than 0.5% in any of the follow
 <div class="sect3">
 <h4 id="_1_1_2_ddd">1.1.2 DDD</h4>
 <div class="paragraph">
-<p><strong>Rule</strong><br></p>
-</div>
-<div class="paragraph">
-<p>Exclude autosomal variants with an allele frequency greater than 0.5% in the DDD cohort.</p>
+<p>Exclude autosomal variants with an allele frequency greater than <strong>0.5%</strong> in the DDD cohort.</p>
 </div>
 <details>
 <summary class="title">More</summary>
@@ -651,20 +637,7 @@ Exclude variants with an allele frequency greater than 0.5% in any of the follow
 <div class="sect4">
 <h5 id="_1_1_3_1_control_population">1.1.3.1 Control population</h5>
 <div class="paragraph">
-<p><strong>Rule</strong><br></p>
-</div>
-<div class="paragraph">
-<p>Exclude X-linked variants with an allele frequency greater than 0.0001% in any of the following control populations:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>gnomAD</p>
-</li>
-<li>
-<p>1000 genomes</p>
-</li>
-</ul>
+<p>Exclude X-linked variants with an allele frequency greater than <strong>0.0001%</strong> in <em>gnomAD</em> or <em>1000 genomes</em>.</p>
 </div>
 <details>
 <summary class="title">More</summary>
@@ -703,9 +676,6 @@ Exclude variants with an allele frequency greater than 0.5% in any of the follow
 </div>
 <div class="sect4">
 <h5 id="_1_1_3_2_ddd_fathers">1.1.3.2 DDD fathers</h5>
-<div class="paragraph">
-<p><strong>Rule</strong><br></p>
-</div>
 <div class="paragraph">
 <p>Exclude X-linked variants found in at least one DDD father</p>
 </div>
@@ -752,9 +722,6 @@ Exclude variants with an allele frequency greater than 0.5% in any of the follow
 </div>
 <div class="sect2">
 <h3 id="_1_2_low_genotype_quality">1.2 Low genotype quality</h3>
-<div class="paragraph">
-<p><strong>Rule</strong><br></p>
-</div>
 <div class="paragraph">
 <p>Exclude autosomal variants with a low genotype quality (GQ &lt; 40).</p>
 </div>
@@ -816,50 +783,23 @@ Exclude variants with an allele frequency greater than 0.5% in any of the follow
 <div class="sect2">
 <h3 id="_1_3_functional_consequence">1.3 Functional consequence</h3>
 <div class="paragraph">
-<p><strong>Rule</strong><br></p>
-</div>
-<div class="paragraph">
 <p>Exclude variants with no functional consequence in the following list :</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>frameshift_variant</p>
-</li>
-<li>
-<p>missense_variant</p>
-</li>
-<li>
-<p>splice_donor_variant</p>
-</li>
-<li>
-<p>splice_acceptor_variant</p>
-</li>
-<li>
-<p>start_lost</p>
-</li>
-<li>
-<p>stop_gained</p>
-</li>
-<li>
-<p>protein_altering_variant</p>
-</li>
-<li>
-<p>transcript_ablation</p>
-</li>
-<li>
-<p>transcript_amplification</p>
-</li>
-<li>
-<p>inframe_insertion</p>
-</li>
-<li>
-<p>inframe_deletion</p>
-</li>
-<li>
-<p>stop_lost</p>
-</li>
-</ul>
+<div class="listingblock">
+<div class="content">
+<pre>frameshift_variant
+missense_variant
+splice_donor_variant
+splice_acceptor_variant
+start_lost
+stop_gained
+protein_altering_variant
+transcript_ablation
+transcript_amplification
+inframe_insertion
+inframe_deletion
+stop_lost</pre>
+</div>
 </div>
 <details>
 <summary class="title">More</summary>
@@ -913,9 +853,6 @@ Exclude variants with an allele frequency greater than 0.5% in any of the follow
 </div>
 <div class="sect2">
 <h3 id="_1_4_revel">1.4 REVEL</h3>
-<div class="paragraph">
-<p><strong>Rule</strong><br></p>
-</div>
 <div class="paragraph">
 <p>Exclude missense variants with a low REVEL score (&lt; 0.4).</p>
 </div>
@@ -974,9 +911,6 @@ Exclude variants with an allele frequency greater than 0.5% in any of the follow
 <div class="sect2">
 <h3 id="_1_5_dodgy_dnm">1.5 Dodgy DNM</h3>
 <div class="paragraph">
-<p><strong>Rule</strong><br></p>
-</div>
-<div class="paragraph">
 <p>Exclude variants not found in the parents but not called as DNM either.</p>
 </div>
 <details>
@@ -1028,12 +962,78 @@ Exclude variants with an allele frequency greater than 0.5% in any of the follow
 </div>
 </details>
 </div>
+<div class="sect2">
+<h3 id="_1_6_ddg2p">1.6 DDG2P</h3>
+
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_2_inheritance">2. Inheritance</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>The inheritance module combines the gene-disease association <a href="https://www.ebi.ac.uk/gene2phenotype/terminology">allelic requirement</a>, the child&#8217;s genotype and, in case of trios, the parents&#8217;genotypes and affected status, in order to reject or select candidate variants.</p>
+</div>
+<div class="sect2">
+<h3 id="_2_1_autosomes">2.1 Autosomes</h3>
+<div class="sect3">
+<h4 id="_2_1_1_singletons">2.1.1 Singletons</h4>
+<div class="imageblock">
+<div class="content">
+<img src="images/DDD_CF_Inheritance_Autosomal_Singletons.svg" alt="DDD CF Inheritance Autosomal Singletons">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_2_1_2_trios">2.1.2 Trios</h4>
+<div class="sect4">
+<h5 id="_2_1_2_1_heterozygous_variants">2.1.2.1 Heterozygous variants</h5>
+<div class="imageblock">
+<div class="content">
+<img src="images/DDD_CF_Inheritance_Autosomal_Trios_Heterozygous.svg" alt="DDD CF Inheritance Autosomal Trios Heterozygous">
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_2_1_2_2_homzygous_variants">2.1.2.2 Homzygous variants</h5>
+<div class="imageblock">
+<div class="content">
+<img src="images/DDD_CF_Inheritance_Autosomal_Trios_Homozygous.svg" alt="DDD CF Inheritance Autosomal Trios Homozygous">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_2_allosomes">2.2 Allosomes</h3>
+<div class="sect3">
+<h4 id="_2_2_1_singletons">2.2.1 Singletons</h4>
+<div class="imageblock">
+<div class="content">
+<img src="images/DDD_CF_Inheritance_Allosomal_Singletons.svg" alt="DDD CF Inheritance Allosomal Singletons">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_2_2_2_trios">2.2.2 Trios</h4>
+<div class="sect4">
+<h5 id="_2_2_2_1_heterozygous_variants">2.2.2.1 Heterozygous variants</h5>
+<div class="imageblock">
+<div class="content">
+<img src="images/DDD_CF_Inheritance_Allosomal_Trios_Heterozygous.svg" alt="DDD CF Inheritance Allosomal Trios Heterozygous">
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_2_1_2_2_homzygous_variants_2">2.1.2.2 Homzygous variants</h5>
+<div class="imageblock">
+<div class="content">
+<img src="images/DDD_CF_Inheritance_Allosomal_Trios_Homozygous.svg" alt="DDD CF Inheritance Allosomal Trios Homozygous">
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1045,7 +1045,11 @@ Exclude variants with an allele frequency greater than 0.5% in any of the follow
 <div class="sect1">
 <h2 id="_4_compound_heterozygous_screening">4. Compound heterozygous screening</h2>
 <div class="sectionbody">
-
+<div class="imageblock">
+<div class="content">
+<img src="images/DDD_CF_Compound-heterozygosity.svg" alt="DDD CF Compound heterozygosity">
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1055,7 +1059,7 @@ Exclude variants with an allele frequency greater than 0.5% in any of the follow
 </div>
 </div>
 <div class="sect1">
-<h2 id="_6_revision_history">6. Revision History</h2>
+<h2 id="_revision_history">Revision History</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1084,7 +1088,7 @@ Exclude variants with an allele frequency greater than 0.5% in any of the follow
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-02-08 12:00:53 UTC
+Last updated 2024-02-08 18:52:12 UTC
 </div>
 </div>
 </body>
