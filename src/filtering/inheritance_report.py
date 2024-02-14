@@ -53,8 +53,14 @@ class InheritanceReport(object):
         }
 
         aff_matrix = {
-            "dad_unaffected": {"mum_unaffected": copy.deepcopy(gt_matrix), "mum_affected": copy.deepcopy(gt_matrix)},
-            "dad_affected": {"mum_unaffected": copy.deepcopy(gt_matrix), "mum_affected": copy.deepcopy(gt_matrix)},
+            "dad_unaffected": {
+                "mum_unaffected": copy.deepcopy(gt_matrix),
+                "mum_affected": copy.deepcopy(gt_matrix),
+            },
+            "dad_affected": {
+                "mum_unaffected": copy.deepcopy(gt_matrix),
+                "mum_affected": copy.deepcopy(gt_matrix),
+            },
         }
 
         inheritance_report["autosomal"] = {}

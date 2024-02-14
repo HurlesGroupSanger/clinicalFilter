@@ -77,7 +77,11 @@ class CompoundHetScreen(object):
         if self.family.has_no_parents():
             # If there are no parents and the variants are not both missense
             # or in frame del/ins then pass
-            missense_equiv = ["missense_variant", "inframe_deletion", "inframe_insertion"]
+            missense_equiv = [
+                "missense_variant",
+                "inframe_deletion",
+                "inframe_insertion",
+            ]
             var1cqs = var1.consequence.split("&")
             var2cqs = var2.consequence.split("&")
             var1_missense_equiv = common_elements(missense_equiv, var1cqs)
@@ -107,7 +111,10 @@ class CompoundHetScreen(object):
                     "unaffected and hom ref for 1 variant"
                 )
                 return False
-            elif var1.triogenotype in ["201", "210"] or var1.triogenotype in ["201", "210"]:
+            elif var1.triogenotype in ["201", "210"] or var1.triogenotype in [
+                "201",
+                "210",
+            ]:
                 # triogenotype of 201 or 210 only passes is one variant is a
                 # deletion with copy number 1
                 if var1.is_cnv() and not var2.is_cnv():

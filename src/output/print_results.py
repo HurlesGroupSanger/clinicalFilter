@@ -33,11 +33,11 @@ def create_output(families, variants, inheritance_reports, outdir):
     """
 
     if len(families.keys()) > 1:
-        outfile = outdir + "/" + "clinical_filter.txt"
+        outfile = outdir + "/" + "clinical_filter.tsv"
         inhreportfile = outdir + "/" + "clinical_filter_inheritance_report.txt"
     else:
         proband = families[list(families.keys())[0]].proband.person_id
-        outfile = outdir + "/" + proband + "_clinical_filter.txt"
+        outfile = outdir + "/" + proband + "_clinical_filter.tsv"
         inhreportfile = outdir + "/" + proband + "_clinical_filter_inheritance_report.txt"
 
     header = [
@@ -233,7 +233,11 @@ def create_output_data(fam, families, variants, mnvs, variants_in_cis, phased_va
             results[varid]["mode"] = variants[fam]["single_variants"][varid]["mode"] | results[varid]["mode"]
         else:
             results[varid] = get_variant_info(
-                variants[fam]["single_variants"][varid], varid, mnvs, variants_in_cis, phased_varids
+                variants[fam]["single_variants"][varid],
+                varid,
+                mnvs,
+                variants_in_cis,
+                phased_varids,
             )
             results[varid]["result"] = set(["single_variant"])
             fsplit = fam.split("_")
@@ -252,7 +256,11 @@ def create_output_data(fam, families, variants, mnvs, variants_in_cis, phased_va
                 results[varid]["mode"] = variants[fam]["compound_hets"][gn][varid]["mode"] | results[varid]["mode"]
             else:
                 results[varid] = get_variant_info(
-                    variants[fam]["compound_hets"][gn][varid], varid, mnvs, variants_in_cis, phased_varids
+                    variants[fam]["compound_hets"][gn][varid],
+                    varid,
+                    mnvs,
+                    variants_in_cis,
+                    phased_varids,
                 )
                 results[varid]["result"] = set(["compound_het"])
                 fsplit = fam.split("_")

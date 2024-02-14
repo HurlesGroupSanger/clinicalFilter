@@ -138,7 +138,11 @@ class CNVFiltering(object):
         male (XY) proband X chromosome, maternal inh and mum unaffected
         no variants are added to candidates at this stage
         """
-        if not self.variants["child"][varid].cnv_inh in ["paternal_inh", "maternal_inh", "biparental_inh"]:
+        if not self.variants["child"][varid].cnv_inh in [
+            "paternal_inh",
+            "maternal_inh",
+            "biparental_inh",
+        ]:
             return True
         if self.variants["child"][varid].cnv_inh == "paternal_inh" and self.dad_aff:
             return True
@@ -176,7 +180,11 @@ class CNVFiltering(object):
                     self.variants["child"][varid].reportable_symbol.append(self.genes[hgncid]["symbol"])
                     self.variants["child"][varid].reportable_hgnc_id.append(hgncid)
                     add_compound_het_to_candidates(
-                        varid, self.variants["child"][varid], hgncid, "Biallelic", self.candidate_variants
+                        varid,
+                        self.variants["child"][varid],
+                        hgncid,
+                        "Biallelic",
+                        self.candidate_variants,
                     )
                 return True
             elif (
@@ -188,7 +196,11 @@ class CNVFiltering(object):
                     self.variants["child"][varid].reportable_symbol.append(self.genes[hgncid]["symbol"])
                     self.variants["child"][varid].reportable_hgnc_id.append(hgncid)
                     add_compound_het_to_candidates(
-                        varid, self.variants["child"][varid], hgncid, "Hemizygous", self.candidate_variants
+                        varid,
+                        self.variants["child"][varid],
+                        hgncid,
+                        "Hemizygous",
+                        self.candidate_variants,
                     )
                 return True
             else:
@@ -249,7 +261,11 @@ class CNVFiltering(object):
                     self.variants["child"][varid].reportable_symbol.append(self.genes[hgncid]["symbol"])
                     self.variants["child"][varid].reportable_hgnc_id.append(hgncid)
                     add_single_var_to_candidates(
-                        varid, self.variants["child"][varid], hgncid, "biallelic", self.candidate_variants
+                        varid,
+                        self.variants["child"][varid],
+                        hgncid,
+                        "biallelic",
+                        self.candidate_variants,
                     )
                     return cnvpass
             # Monoallelic, X-linked dominant or Hemizygous in male pass if
@@ -293,7 +309,11 @@ class CNVFiltering(object):
                     self.variants["child"][varid].reportable_symbol.append(self.genes[hgncid]["symbol"])
                     self.variants["child"][varid].reportable_hgnc_id.append(hgncid)
                     add_single_var_to_candidates(
-                        varid, self.variants["child"][varid], hgncid, "Hemizygous", self.candidate_variants
+                        varid,
+                        self.variants["child"][varid],
+                        hgncid,
+                        "Hemizygous",
+                        self.candidate_variants,
                     )
                     return cnvpass
             # Pass intragenic DUP in monoallelic or X-linked dominant gene with

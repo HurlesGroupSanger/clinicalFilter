@@ -118,7 +118,11 @@ class PreInheritanceFiltering(object):
 
         SPLICE_AI_THRESHOLD = 0.8
 
-        splice_ai_consequences = ["synonymous_variant", "3_prime_UTR_variant", "5_prime_UTR_variant"]
+        splice_ai_consequences = [
+            "synonymous_variant",
+            "3_prime_UTR_variant",
+            "5_prime_UTR_variant",
+        ]
         cqs = self.variants["child"][v].consequence.split("&")
         coding_cqs = common_elements(cqs, splice_ai_consequences)
 

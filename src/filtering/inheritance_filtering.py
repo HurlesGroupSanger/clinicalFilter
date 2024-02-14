@@ -32,7 +32,16 @@ class InheritanceFiltering(object):
     Inheritance filtering of SNVs/Indels
     """
 
-    def __init__(self, variants_per_gene, family, genes, regions, trusted_variants, candidate_variants, inhreport):
+    def __init__(
+        self,
+        variants_per_gene,
+        family,
+        genes,
+        regions,
+        trusted_variants,
+        candidate_variants,
+        inhreport,
+    ):
         self.variants_per_gene = variants_per_gene
         self.family = family
         self.genes = genes

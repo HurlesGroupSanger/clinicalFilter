@@ -86,13 +86,26 @@ class Filter(object):
 
         # inheritance filters for SNVs
         inheritancefilter = InheritanceFiltering(
-            variants_per_gene, self.family, genes, regions, trusted_variants, self.candidate_variants, self.inhreport
+            variants_per_gene,
+            self.family,
+            genes,
+            regions,
+            trusted_variants,
+            self.candidate_variants,
+            self.inhreport,
         )
         # candidate_variants, inheritance_report = inheritancefilter.inheritance_filter()
         inheritancefilter.inheritance_filter()
 
         # inheritance filters for CNVs
-        cnvfilter = CNVFiltering(variants, self.family, genes, regions, trusted_variants, self.candidate_variants)
+        cnvfilter = CNVFiltering(
+            variants,
+            self.family,
+            genes,
+            regions,
+            trusted_variants,
+            self.candidate_variants,
+        )
         cnvfilter.cnv_filter()
 
         # compound het screen
