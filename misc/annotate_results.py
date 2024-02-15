@@ -57,7 +57,12 @@ def annotate_cf(config_file):
 
 
 def annotate(
-    cf_results, b37_cf_results, decipher_variants_info, previous_gene_list, id_mapping_df, b38_cf_previous_results
+    cf_results,
+    b37_cf_results,
+    decipher_variants_info,
+    previous_gene_list,
+    id_mapping_df,
+    b38_cf_previous_results,
 ):
     """
 
@@ -82,7 +87,9 @@ def annotate(
 
     # Add DECIPHER ids
     cf_results = cf_results.merge(
-        id_mapping_df[["decipher_id", "person_stable_id"]], left_on="proband", right_on="person_stable_id"
+        id_mapping_df[["decipher_id", "person_stable_id"]],
+        left_on="proband",
+        right_on="person_stable_id",
     )
     cf_results.drop("person_stable_id", axis=1, inplace=True)
 
@@ -142,7 +149,7 @@ def annotate(
 
     # Check if variants was already in B37 results
     cf_results["in_build_37"] = cf_results.apply(
-        lambda row, b37_cf_results: "y" if row.varid in list(b37_cf_results.varid) else "n",
+        lambda row, b37_cf_results: ("y" if row.varid in list(b37_cf_results.varid) else "n"),
         axis=1,
         args=(b37_cf_results,),
     )
@@ -150,24 +157,28 @@ def annotate(
     # Check if variants was already in previous b38 results
     if not b38_cf_previous_results.empty:
         cf_results["in_previous_build_38"] = cf_results.apply(
-            lambda row, b38_cf_previous_results: "y" if row.varid in list(b38_cf_previous_results.varid) else "n",
+            lambda row, b38_cf_previous_results: ("y" if row.varid in list(b38_cf_previous_results.varid) else "n"),
             axis=1,
             args=(b38_cf_previous_results,),
         )
 
     # Check if variants has been reported in DECIPHER
     cf_results["in_decipher"] = cf_results.apply(
-        lambda row, decipher_variants_info: "y" if row.varid in list(decipher_variants_info.varid) else "n",
+        lambda row, decipher_variants_info: ("y" if row.varid in list(decipher_variants_info.varid) else "n"),
         axis=1,
         args=(decipher_variants_info,),
     )
 
     # Check if the variant's gene was already in the previous DDG2P list
     cf_results["gene_in_prev_run"] = cf_results.apply(
-        lambda row, previous_gene_list: "y" if row.symbol in list(previous_gene_list) else "n",
+        lambda row, previous_gene_list: ("y" if row.symbol in list(previous_gene_list) else "n"),
         axis=1,
         args=(previous_gene_list,),
     )
+
+    cf_results = cnv_fuzzy_matching(cf_results, b37_cf_results, "in_build_37")
+    cf_results = cnv_fuzzy_matching(cf_results, decipher_variants_info, "in_decipher")
+    cf_results = cnv_fuzzy_matching(cf_results, b38_cf_previous_results, "in_previous_build_38")
 
     cf_results.drop(["family_id", "cnv", "varid"], inplace=True, axis=1)
 
@@ -313,7 +324,15 @@ def build_decipher_variant_id(df):
     for idx, row in df.iterrows():
         variant_class = row.variant_class
         if variant_class == "sequence_variant":
-            varid = ("_").join([row.person_stable_id, row.chr, str(row.start), row.ref_allele, row.alt_allele])
+            varid = ("_").join(
+                [
+                    row.person_stable_id,
+                    str(row.chr),
+                    str(row.start),
+                    row.ref_allele,
+                    row.alt_allele,
+                ]
+            )
         elif variant_class == "deletion":
             varid = ("_").join([row.person_stable_id, row.chr, str(row.start), "DEL"])
         elif variant_class == "duplication":
@@ -444,6 +463,61 @@ def build_b38_variant_id(df):
     df["cnv"] = list_cnv
 
     return df
+
+
+def cnv_fuzzy_matching(cf_df, other_df, column_name):
+    """
+    Check whether the CNV was previously reported with slightly different positions (using an offset of 1000bp)
+    NOTE : Right now we are using CNV lifted over from b37 so no difference should be observed between
+    last b38 and previous b38/b37 results, which won't be the case if we call CNVs on b38 directly
+
+    Args:
+        cf_results (pd.DataFrame): current run CF results
+        other_df (pd.DataFrame): previous run CF results or variants reported in DECIPHER
+        column_name (str) : column to use to flag CNVs already found/reported according to the fuzzy matching
+    """
+
+    OFFSET_CNV = 1000
+
+    cnv_cf_df = cf_df.loc[cf_df.alt.isin(["<DEL>", "<DUP>"])]
+    if column_name == "in_decipher":
+        cnv_other_df = other_df.loc[other_df.variant_class.isin(["deletion", "duplication"])]
+        proband_column = "person_stable_id"
+        chrom_column = "chr"
+    elif column_name == "in_build_37":
+        cnv_other_df = other_df.loc[other_df.varid.str.contains("DEL") | other_df.varid.str.contains("DUP")]
+        proband_column = "#proband"
+        chrom_column = "chrom"
+    else:
+        cnv_other_df = other_df.loc[other_df.alt.isin(["<DEL>", "<DUP>"])]
+        proband_column = "proband"
+        chrom_column = "chrom"
+
+    idx_cnv_match = list()
+    for idx, row in cnv_cf_df.iterrows():
+        proband_id = row["proband"]
+        for idx2, row2 in cnv_other_df.loc[cnv_other_df[proband_column] == proband_id].iterrows():
+            if row2[chrom_column] != row.chrom:
+                continue
+            if column_name == "in_decipher":
+                if (abs(row["pos"] - row2["start"]) < OFFSET_CNV) | (
+                    abs(row["pos"] + int(row["cnv_length"]) - row2["end"]) < OFFSET_CNV
+                ):
+                    idx_cnv_match.append(idx)
+            elif column_name == "in_build_37":
+                if (abs(row["pos"] - row2["position"]) < OFFSET_CNV) | (
+                    abs(row["pos"] + int(row["cnv_length"]) - (row2["position"] + row2["cnv_length"])) < OFFSET_CNV
+                ):
+                    idx_cnv_match.append(idx)
+            else:
+                if (abs(row["pos"] - row2["pos"]) < OFFSET_CNV) | (
+                    abs(row["pos"] + int(row["cnv_length"]) - (row2["pos"] + int(row2["cnv_length"]))) < OFFSET_CNV
+                ):
+                    idx_cnv_match.append(idx)
+
+    cf_df.loc[idx_cnv_match, column_name] = "y"
+
+    return cf_df
 
 
 if __name__ == "__main__":
