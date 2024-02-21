@@ -2,28 +2,23 @@
 
 process CREATE_PED {
 	
-    tag "CREATE_PED_$stable_id"
 
-	publishDir "${params.publish_dir}/${params.date}DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}.ped"
+	publishDir "${params.publish_dir}/${params.date}/", mode: 'copy', pattern : "list_ped.tsv"
 
 
 	input:
-    tuple val(stable_id),val(ab),val(cd),val(ef)
-    path(all_ped)
+    path(list_vcfs)
+    path(list_probands)
+	path(families_ped)
+	path(publish_dir)
+	val(date)
 
 	output:
-	tuple val(stable_id),val(ab),val(cd),val(ef), path("${stable_id}.ped")
-
+	path("list_ped.tsv")
+	
 	script :
 	"""
-	#!/usr/bin/env python
-	import pandas as pd
-
-	all_ped_df = pd.read_csv("${all_ped}", sep="\\t")
-	family_id = all_ped_df.loc[all_ped_df.individual_id == "${stable_id}", "family_id"]
-	assert(len(family_id) == 1)
-
-	all_ped_df.loc[all_ped_df.family_id == family_id.iloc[0]].to_csv("${stable_id}.ped", sep="\\t", header=False, index=False)
+	create_ped.py $list_vcfs $list_probands $families_ped $publish_dir/$date 
 	"""
 }
 
@@ -32,7 +27,7 @@ process CF {
     tag "CF_$stable_id"
 
 	publishDir "${params.publish_dir}/${params.date}/DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}_clinical_filter_inheritance_report.txt"
-	publishDir "${params.publish_dir}/${params.date}/DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}_clinical_filter.txt"
+	publishDir "${params.publish_dir}/${params.date}/DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}_clinical_filter.tsv"
 	publishDir "${params.publish_dir}/${params.date}/DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}_clinical_filter.log"
 
 	beforeScript "export PYTHONPATH=${baseDir}/../src/:\$PYTHONPATH"
@@ -42,7 +37,7 @@ process CF {
 	path(known_genes)
 
 	output :
-	tuple path("${stable_id}_clinical_filter_inheritance_report.txt"), path("${stable_id}_clinical_filter.txt"), path("${stable_id}_clinical_filter.log")
+	tuple path("${stable_id}_clinical_filter_inheritance_report.txt"), path("${stable_id}_clinical_filter.tsv"), path("${stable_id}_clinical_filter.log")
 
 	script :
 	"""
