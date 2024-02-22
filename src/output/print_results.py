@@ -22,6 +22,7 @@ THE SOFTWARE.
 """
 
 import json
+from utils import params
 
 
 def create_output(families, variants, inheritance_reports, outdir):
@@ -49,6 +50,8 @@ def create_output(families, variants, inheritance_reports, outdir):
         "mum_aff",
         "dad_aff",
         "triogenotype",
+        "decipher_genotype",
+        "decipher_inheritance",
         "chrom",
         "pos",
         "ref",
@@ -142,6 +145,8 @@ def print_output(results, header, outfile):
                         results[fam][var]["mum_aff"],
                         results[fam][var]["dad_aff"],
                         results[fam][var]["triogenotype"],
+                        results[fam][var]["decipher_genotype"],
+                        results[fam][var]["decipher_inheritance"],
                         results[fam][var]["chrom"],
                         results[fam][var]["pos"],
                         results[fam][var]["ref"],
@@ -393,13 +398,15 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res["REVEL"] = var["variant"].revel
     res["max_af"] = var["variant"].max_af
     res["ddd_af"] = var["variant"].ddd_af
-    res["AC_gnomad"] = var["variant"].AC_gnomad
+    res["AC_gnomad"] = "toto"
     res["GT"] = var["variant"].gt
     res["GQ"] = var["variant"].gq
     res["AD"] = var["variant"].ad
     res["cnv_length"] = var["variant"].cnv_length
     res["cn"] = var["variant"].cn
     res["triogenotype"] = var["variant"].triogenotype
+    res["decipher_genotype"] = decipher_ready_genotype(var)
+    res["decipher_inheritance"] = decipher_ready_inheritance(var)
     res["DNM"] = str(var["variant"].dnm)
 
     res["AlphaMissense_pred"] = var["variant"].AlphaMissense_pred
@@ -447,3 +454,118 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res["mode"] = var["mode"]
 
     return res
+
+
+def decipher_ready_genotype(var):
+    """
+    Returns decipher ready genotype information for a given variant
+
+    TODO :
+    - CNV annotation
+    - PAR regions annotation
+
+    Args:
+        var (dict): stores variant information
+
+    Returns:
+        str: decipher ready genotype information
+    """
+
+    triogenotype = var["variant"].triogenotype
+    chrom = var["variant"].chrom
+    sex = var["variant"].sex
+
+    # CNVs are not handled
+    decipher_genotype = params.DECIPHER_GENOTYPE_NA
+
+    # Homozygous variants
+    if triogenotype.startswith("2"):
+        # For male with X chromosome variant, we might need to check on PAR region. See with Caroline.
+        if (chrom == "X") and (sex == "XY"):
+            decipher_genotype = params.DECIPHER_GENOTYPE_NA
+        else:
+            decipher_genotype = params.DECIPHER_GENOTYPE_HOMOZYGOUS
+
+    # Heterozygous variants
+    if triogenotype.startswith("1"):
+        # For male with X chromosome variant, we might need to check on PAR region. See with Caroline.
+        if (chrom == "X") and (sex == "XY"):
+            decipher_genotype = params.DECIPHER_GENOTYPE_NA
+        else:
+            decipher_genotype = params.DECIPHER_GENOTYPE_HETEROZYGOUS
+
+    return decipher_genotype
+
+
+def decipher_ready_inheritance(var):
+    """
+    Returns decipher ready inheritance information for a given variant
+
+    TODO :
+    - CNV annotation
+
+    Args:
+        var (dict): stores variant information
+
+    Returns:
+        str: decipher ready inheritance information
+    """
+
+    triogenotype = var["variant"].triogenotype
+    allelic_depths = var["variant"].ad
+
+    # If the patient is a singleton, we do not have any clue about its inheritance
+    if triogenotype.endswith("NANA"):
+        return params.DECIPHER_INHERITANCE_UNKNOWN
+
+    # CNVS are not handled at the moment
+    if ("DUP" in triogenotype) or ("DEL" in triogenotype):
+        return params.DECIPHER_INHERITANCE_NA
+
+    # Denovo variants
+    if triogenotype in ["100", "200"]:
+        decipher_inheritance = params.DECIPHER_INHERITANCE_DENOVO
+
+        if is_mosaic(allelic_depths):
+            decipher_inheritance = params.DECIPHER_INHERITANCE_DENOVO_MOSAIC
+
+    # Inherited variants
+    else:
+
+        # Biparental
+        if triogenotype.endswith("11"):
+            decipher_inheritance = params.DECIPHER_INHERITANCE_BIPARENTAL
+        # Maternal
+        elif triogenotype[1] != "0":
+            decipher_inheritance = params.DECIPHER_INHERITANCE_MATERNAL
+
+            if is_mosaic(allelic_depths):
+                decipher_inheritance = params.DECIPHER_INHERITANCE_MATERNAL_MOSAIC
+        # Paternal
+        elif triogenotype[2] != "0":
+
+            decipher_inheritance = params.DECIPHER_INHERITANCE_PATERNAL
+
+            if is_mosaic(allelic_depths):
+                decipher_inheritance = params.DECIPHER_INHERITANCE_PATERNAL_MOSAIC
+
+    return decipher_inheritance
+
+
+def is_mosaic(allelic_depths):
+    """
+    Given allelic depths for reference and alternalte allele,
+    determine whether the variant could be mosaic
+
+    Args:
+        allelic_depths (tuple): reference and alternate alleles counts
+
+    Returns:
+        bool: mosaic or not
+    """
+
+    ref_allele_count = int(allelic_depths[0])
+    alt_allele_count = int(allelic_depths[1])
+    tot_allele_count = ref_allele_count + alt_allele_count
+
+    return (alt_allele_count / tot_allele_count) < params.THRESHOLD_AD_MOSAICITY
