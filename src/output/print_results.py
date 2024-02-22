@@ -58,6 +58,8 @@ def create_output(families, variants, inheritance_reports, outdir):
         "alt",
         "DNM",
         "symbol",
+        "result",
+        "mode",
         "hgnc_id",
         "transcript",
         "canonical",
@@ -67,6 +69,20 @@ def create_output(families, variants, inheritance_reports, outdir):
         "HGVSc",
         "HGVSp",
         "protein_position",
+        "CLIN_SIG",
+        "CALLSOURCE",
+        "MEANLR2",
+        "max_af",
+        "ddd_af",
+        "AC_gnomad",
+        "GT",
+        "GQ",
+        "AD",
+        "cnv_length",
+        "cnv_copy_number",
+        "mnv",
+        "phased_15bp",
+        "phased_any",
         "polyphen",
         "REVEL",
         "AlphaMissense_pred",
@@ -86,22 +102,6 @@ def create_output(families, variants, inheritance_reports, outdir):
         "LoF_flags",
         "LoF_info",
         "CADD_PHRED",
-        "CLIN_SIG",
-        "CALLSOURCE",
-        "MEANLR2",
-        "max_af",
-        "ddd_af",
-        "AC_gnomad",
-        "GT",
-        "GQ",
-        "AD",
-        "cnv_length",
-        "cnv_copy_number",
-        "result",
-        "mode",
-        "mnv",
-        "phased_15bp",
-        "phased_any",
     ]
 
     results = {}
@@ -145,6 +145,8 @@ def print_output(results, header, outfile):
                         results[fam][var]["alt"],
                         results[fam][var]["DNM"],
                         results[fam][var]["symbol"],
+                        (",").join(results[fam][var]["result"]),
+                        (",").join(results[fam][var]["mode"]),
                         results[fam][var]["hgnc_id"],
                         results[fam][var]["transcript"],
                         results[fam][var]["canonical"],
@@ -154,6 +156,20 @@ def print_output(results, header, outfile):
                         results[fam][var]["HGVSc"],
                         results[fam][var]["HGVSp"],
                         results[fam][var]["protein_position"],
+                        results[fam][var]["CLIN_SIG"],
+                        results[fam][var]["CALLSOURCE"],
+                        results[fam][var]["MEANLR2"],
+                        results[fam][var]["max_af"],
+                        results[fam][var]["ddd_af"],
+                        results[fam][var]["AC_gnomad"],
+                        results[fam][var]["GT"],
+                        results[fam][var]["GQ"],
+                        results[fam][var]["AD"],
+                        results[fam][var]["cnv_length"],
+                        results[fam][var]["cn"],
+                        results[fam][var]["mnv"],
+                        str(results[fam][var]["phased_15bp"]),
+                        str(results[fam][var]["phased_any"]),
                         results[fam][var]["polyphen"],
                         results[fam][var]["REVEL"],
                         results[fam][var]["AlphaMissense_pred"],
@@ -173,22 +189,6 @@ def print_output(results, header, outfile):
                         results[fam][var]["LoF_flags"],
                         results[fam][var]["LoF_info"],
                         results[fam][var]["CADD_PHRED"],
-                        results[fam][var]["CLIN_SIG"],
-                        results[fam][var]["CALLSOURCE"],
-                        results[fam][var]["MEANLR2"],
-                        results[fam][var]["max_af"],
-                        results[fam][var]["ddd_af"],
-                        results[fam][var]["AC_gnomad"],
-                        results[fam][var]["GT"],
-                        results[fam][var]["GQ"],
-                        results[fam][var]["AD"],
-                        results[fam][var]["cnv_length"],
-                        results[fam][var]["cn"],
-                        (",").join(results[fam][var]["result"]),
-                        (",").join(results[fam][var]["mode"]),
-                        results[fam][var]["mnv"],
-                        str(results[fam][var]["phased_15bp"]),
-                        str(results[fam][var]["phased_any"]),
                     ]
                 )
                 o.write(line)
@@ -378,8 +378,7 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res["HGVSp"] = var["variant"].hgvsp
     res["consequence"] = var["variant"].consequence
     res["protein_position"] = var["variant"].protein_position
-    res["polyphen"] = var["variant"].polyphen
-    res["REVEL"] = var["variant"].revel
+
     res["max_af"] = var["variant"].max_af
     res["ddd_af"] = var["variant"].ddd_af
     res["AC_gnomad"] = "toto"
@@ -392,24 +391,6 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res["decipher_genotype"] = decipher_ready_genotype(var)
     res["decipher_inheritance"] = decipher_ready_inheritance(var)
     res["DNM"] = str(var["variant"].dnm)
-
-    res["AlphaMissense_pred"] = var["variant"].AlphaMissense_pred
-    res["AlphaMissense_rankscore"] = var["variant"].AlphaMissense_rankscore
-    res["AlphaMissense_score"] = var["variant"].AlphaMissense_score
-    res["MPC_rankscore"] = var["variant"].MPC_rankscore
-    res["MPC_score"] = var["variant"].MPC_score
-    res["PrimateAI_pred"] = var["variant"].PrimateAI_pred
-    res["PrimateAI_score"] = var["variant"].PrimateAI_score
-    res["PrimateAI_rankscore"] = var["variant"].PrimateAI_rankscore
-    res["EVE_CLASS"] = var["variant"].EVE_CLASS
-    res["EVE_SCORE"] = var["variant"].EVE_SCORE
-    res["pLI_gene_value"] = var["variant"].pLI_gene_value
-    res["SpliceAI_pred"] = max_spliceAI(var)
-    res["LoF"] = var["variant"].LoF
-    res["LoF_filter"] = var["variant"].LoF_filter
-    res["LoF_flags"] = var["variant"].LoF_flags
-    res["LoF_info"] = var["variant"].LoF_info
-    res["CADD_PHRED"] = var["variant"].CADD_PHRED
     res["CLIN_SIG"] = var["variant"].CLIN_SIG
     res["CALLSOURCE"] = var["variant"].CALLSOURCE
     res["MEANLR2"] = var["variant"].MEANLR2
@@ -428,6 +409,27 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
         res["phased_any"] = "False"
 
     res["mode"] = var["mode"]
+
+    # CEPs
+    res["polyphen"] = var["variant"].polyphen
+    res["REVEL"] = var["variant"].revel
+    res["AlphaMissense_pred"] = var["variant"].AlphaMissense_pred
+    res["AlphaMissense_rankscore"] = var["variant"].AlphaMissense_rankscore
+    res["AlphaMissense_score"] = var["variant"].AlphaMissense_score
+    res["MPC_rankscore"] = var["variant"].MPC_rankscore
+    res["MPC_score"] = var["variant"].MPC_score
+    res["PrimateAI_pred"] = var["variant"].PrimateAI_pred
+    res["PrimateAI_score"] = var["variant"].PrimateAI_score
+    res["PrimateAI_rankscore"] = var["variant"].PrimateAI_rankscore
+    res["EVE_CLASS"] = var["variant"].EVE_CLASS
+    res["EVE_SCORE"] = var["variant"].EVE_SCORE
+    res["pLI_gene_value"] = var["variant"].pLI_gene_value
+    res["SpliceAI_pred"] = max_spliceAI(var)
+    res["LoF"] = var["variant"].LoF
+    res["LoF_filter"] = var["variant"].LoF_filter
+    res["LoF_flags"] = var["variant"].LoF_flags
+    res["LoF_info"] = var["variant"].LoF_info
+    res["CADD_PHRED"] = var["variant"].CADD_PHRED
 
     return res
 
