@@ -80,15 +80,7 @@ def create_output(families, variants, inheritance_reports, outdir):
         "EVE_CLASS",
         "EVE_SCORE",
         "pLI_gene_value",
-        "SpliceAI_pred_DP_AG",
-        "SpliceAI_pred_DP_AL",
-        "SpliceAI_pred_DP_DG",
-        "SpliceAI_pred_DP_DL",
-        "SpliceAI_pred_DS_AG",
-        "SpliceAI_pred_DS_AL",
-        "SpliceAI_pred_DS_DG",
-        "SpliceAI_pred_DS_DL",
-        "SpliceAI_pred_SYMBOL",
+        "SpliceAI_pred",
         "LoF",
         "LoF_filter",
         "LoF_flags",
@@ -175,15 +167,7 @@ def print_output(results, header, outfile):
                         results[fam][var]["EVE_CLASS"],
                         results[fam][var]["EVE_SCORE"],
                         results[fam][var]["pLI_gene_value"],
-                        results[fam][var]["SpliceAI_pred_DP_AG"],
-                        results[fam][var]["SpliceAI_pred_DP_AL"],
-                        results[fam][var]["SpliceAI_pred_DP_DG"],
-                        results[fam][var]["SpliceAI_pred_DP_DL"],
-                        results[fam][var]["SpliceAI_pred_DS_AG"],
-                        results[fam][var]["SpliceAI_pred_DS_AL"],
-                        results[fam][var]["SpliceAI_pred_DS_DG"],
-                        results[fam][var]["SpliceAI_pred_DS_DL"],
-                        results[fam][var]["SpliceAI_pred_SYMBOL"],
+                        results[fam][var]["SpliceAI_pred"],
                         results[fam][var]["LoF"],
                         results[fam][var]["LoF_filter"],
                         results[fam][var]["LoF_flags"],
@@ -420,15 +404,7 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res["EVE_CLASS"] = var["variant"].EVE_CLASS
     res["EVE_SCORE"] = var["variant"].EVE_SCORE
     res["pLI_gene_value"] = var["variant"].pLI_gene_value
-    res["SpliceAI_pred_DP_AG"] = var["variant"].SpliceAI_pred_DP_AG
-    res["SpliceAI_pred_DP_AL"] = var["variant"].SpliceAI_pred_DP_AL
-    res["SpliceAI_pred_DP_DG"] = var["variant"].SpliceAI_pred_DP_DG
-    res["SpliceAI_pred_DP_DL"] = var["variant"].SpliceAI_pred_DP_DL
-    res["SpliceAI_pred_DS_AG"] = var["variant"].SpliceAI_pred_DS_AG
-    res["SpliceAI_pred_DS_AL"] = var["variant"].SpliceAI_pred_DS_AL
-    res["SpliceAI_pred_DS_DG"] = var["variant"].SpliceAI_pred_DS_DG
-    res["SpliceAI_pred_DS_DL"] = var["variant"].SpliceAI_pred_DS_DL
-    res["SpliceAI_pred_SYMBOL"] = var["variant"].SpliceAI_pred_SYMBOL
+    res["SpliceAI_pred"] = max_spliceAI(var)
     res["LoF"] = var["variant"].LoF
     res["LoF_filter"] = var["variant"].LoF_filter
     res["LoF_flags"] = var["variant"].LoF_flags
@@ -569,3 +545,44 @@ def is_mosaic(allelic_depths):
     tot_allele_count = ref_allele_count + alt_allele_count
 
     return (alt_allele_count / tot_allele_count) < params.THRESHOLD_AD_MOSAICITY
+
+
+def max_spliceAI(var):
+    """
+    SpliceAI output is quite lengthy (9 columns).
+    This function retrieves the maximum spliceAI score across all evaluated splicing types
+    and combine the results into a string (one column only)
+
+    Args:
+        var (dict): stores variant information
+
+    Returns:
+        str: splice_type:splice_score:splice_delta_position:splice_gene
+    """
+
+    splice_type = ["AG", "AL", "DG", "DL"]
+    splice_delta_pos = [
+        var["variant"].SpliceAI_pred_DP_AG,
+        var["variant"].SpliceAI_pred_DP_AL,
+        var["variant"].SpliceAI_pred_DP_DG,
+        var["variant"].SpliceAI_pred_DP_DL,
+    ]
+
+    splice_scores = [
+        var["variant"].SpliceAI_pred_DS_AG,
+        var["variant"].SpliceAI_pred_DS_AL,
+        var["variant"].SpliceAI_pred_DS_DG,
+        var["variant"].SpliceAI_pred_DS_DL,
+    ]
+    splice_scores = [float(x) if x != "." else -1 for x in splice_scores]
+
+    max_score, max_index = max((score, idx) for idx, score in enumerate(splice_scores))
+
+    if max_score == -1:
+        spliceAI_pred = "."
+    else:
+        spliceAI_pred = (
+            f"{splice_type[max_index]}:{max_score}:{splice_delta_pos[max_index]}:{var['variant'].SpliceAI_pred_SYMBOL}"
+        )
+
+    return spliceAI_pred
