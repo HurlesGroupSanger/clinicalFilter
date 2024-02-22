@@ -74,7 +74,9 @@ def create_output(families, variants, inheritance_reports, outdir):
         "MEANLR2",
         "max_af",
         "ddd_af",
-        "AC_gnomad",
+        "AC_het",
+        "AC_hemi",
+        "AC_tot",
         "GT",
         "GQ",
         "AD",
@@ -161,7 +163,9 @@ def print_output(results, header, outfile):
                         results[fam][var]["MEANLR2"],
                         results[fam][var]["max_af"],
                         results[fam][var]["ddd_af"],
-                        results[fam][var]["AC_gnomad"],
+                        results[fam][var]["AC_het"],
+                        results[fam][var]["AC_hemi"],
+                        results[fam][var]["AC_tot"],
                         results[fam][var]["GT"],
                         results[fam][var]["GQ"],
                         results[fam][var]["AD"],
@@ -381,7 +385,14 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
 
     res["max_af"] = var["variant"].max_af
     res["ddd_af"] = var["variant"].ddd_af
-    res["AC_gnomad"] = "toto"
+    if var["variant"].is_snv():
+        res["AC_het"] = var["variant"].AC_het
+        res["AC_hemi"] = var["variant"].AC_hemi
+        res["AC_tot"] = var["variant"].AC_tot
+    else:
+        res["AC_het"] = "."
+        res["AC_hemi"] = "."
+        res["AC_tot"] = "."
     res["GT"] = var["variant"].gt
     res["GQ"] = var["variant"].gq
     res["AD"] = var["variant"].ad

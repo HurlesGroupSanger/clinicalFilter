@@ -91,10 +91,11 @@ class SNV(Variant):
         if self.nhomalt_XY == ".":
             self.nhomalt_XY = "0"
 
+        total_AC = int(self.ac_XX) + int(self.ac_XY)
+
         if self.chrom == "X" or self.chrom == "Y":
             AC_hemi = int(self.nhomalt_XY)
         else:
-            total_AC = int(self.ac_XX) + int(self.ac_XY)
             total_nhom = int(self.nhomalt_XX) + int(self.nhomalt_XY)
             AC_het = total_AC - (2 * total_nhom)
 
@@ -112,7 +113,7 @@ class SNV(Variant):
 
         self.AC_het = str(AC_het)
         self.AC_hemi = str(AC_hemi)
-        self.AC_gnomad = str(int(self.nhomalt_XX) + int(self.nhomalt_XY))
+        self.AC_tot = str(total_AC)
 
     def standardise_gt(self):
         """
