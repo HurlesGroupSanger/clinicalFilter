@@ -54,6 +54,7 @@ def create_output(families, variants, inheritance_reports, outdir):
         "decipher_inheritance",
         "chrom",
         "pos",
+        "stop",
         "ref",
         "alt",
         "DNM",
@@ -143,6 +144,7 @@ def print_output(results, header, outfile):
                         results[fam][var]["decipher_inheritance"],
                         results[fam][var]["chrom"],
                         results[fam][var]["pos"],
+                        results[fam][var]["stop"],
                         results[fam][var]["ref"],
                         results[fam][var]["alt"],
                         results[fam][var]["DNM"],
@@ -362,6 +364,7 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res = {}
     res["chrom"] = var["variant"].chrom
     res["pos"] = var["variant"].pos
+    res["stop"] = stop_position(var)
     res["ref"] = var["variant"].ref
     res["alt"] = var["variant"].alt
     if var["variant"].is_snv():
@@ -599,3 +602,25 @@ def max_spliceAI(var):
         )
 
     return spliceAI_pred
+
+
+def stop_position(var):
+    """
+    Determines stop position for CNVs and short deletions
+
+    Args:
+        var (dict): stores variant information
+
+    Returns:
+        str: stop position for CNVs and short deletions, "." otherwise
+    """
+
+    stop_pos = "."
+    if var["variant"].is_cnv():
+        stop_pos = int(var["variant"].pos) + int(var["variant"].cnv_length)
+    else:
+        length_ref = len(var["variant"].ref)
+        if length_ref > 1:
+            stop_pos = int(var["variant"].pos) + length_ref
+
+    return str(stop_pos)
