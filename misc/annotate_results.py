@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import click
 import pandas as pd
 import json
@@ -37,8 +39,8 @@ def annotate_cf(config_file):
         b38_cf_previous_results,
     )
 
-    # Sort results
-    annotated_df.sort_values(["decipher_id", "chrom", "pos"], inplace=True)
+    # Order columns, sort rows
+    annotated_df = format_results(annotated_df)
 
     # Export results
     annotated_df.to_csv(
@@ -77,6 +79,7 @@ def annotate(
     cf_results["ref_reads"] = "."
     cf_results["alt_reads"] = "."
     cf_results["indel_length"] = "."
+    cf_results["in_previous_build_38"] = "."
     cf_results["in_build_37"] = "n"
     cf_results["in_decipher"] = "n"
     cf_results["vars_per_gene"] = 0
@@ -518,6 +521,36 @@ def cnv_fuzzy_matching(cf_df, other_df, column_name):
     cf_df.loc[idx_cnv_match, column_name] = "y"
 
     return cf_df
+
+
+def format_results(df):
+    """
+    Format CF results
+
+    Args:
+        df (pd.DataFrame): CF results
+    """
+
+    # Sort results
+    df.sort_values(["decipher_id", "chrom", "pos"], inplace=True)
+
+    # Order columns
+    after_column = "LoF_info"
+    insert_after_column = "phased_any"
+
+    after_column_idx = df.columns.get_loc(after_column)
+    insert_after_column_idx = df.columns.get_loc(insert_after_column)
+
+    main_columns = list(df.columns[: insert_after_column_idx + 1])
+    ceps_columns = list(df.columns[insert_after_column_idx + 1 : after_column_idx + 1])
+    postcf_columns = list(df.columns[after_column_idx + 1 :])
+
+    df = df[main_columns + postcf_columns + ceps_columns]
+
+    # Put decipher identifier in front
+    df = df[["decipher_id"] + [x for x in df.columns if x != "decipher_id"]]
+
+    return df
 
 
 if __name__ == "__main__":

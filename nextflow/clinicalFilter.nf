@@ -2,6 +2,8 @@ nextflow.enable.dsl=2
 include {CREATE_PED} from './modules/clinicalFilter.nf' 
 include {CF} from './modules/clinicalFilter.nf' 
 include {CONCAT_RESULTS} from './modules/clinicalFilter.nf'
+include {ANNOTATE_RESULTS} from './modules/post_cf.nf'
+
 
 workflow {
 
@@ -23,5 +25,12 @@ ch_pedlist
 
 ch_cf = CF(ch_ped, params.known_genes)
 ch_concat = CONCAT_RESULTS(ch_cf.map { tuple -> tuple[1] }.collect())
+
+ch_postcf_conf = ANNOTATE_RESULTS(ch_concat,
+	params.post_cf.id_mapping,
+	params.post_cf.previous_gene_list,
+	params.post_cf.decipher_variants_info,
+	params.post_cf.b37_cf_results,
+	params.post_cf.b38_cf_previous_results)
 
 }

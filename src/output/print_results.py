@@ -88,6 +88,7 @@ def create_output(families, variants, inheritance_reports, outdir):
         "phased_any",
         "polyphen",
         "REVEL",
+        "CADD_PHRED",
         "AlphaMissense_pred",
         "AlphaMissense_rankscore",
         "AlphaMissense_score",
@@ -104,7 +105,6 @@ def create_output(families, variants, inheritance_reports, outdir):
         "LoF_filter",
         "LoF_flags",
         "LoF_info",
-        "CADD_PHRED",
     ]
 
     results = {}
@@ -178,6 +178,7 @@ def print_output(results, header, outfile):
                         str(results[fam][var]["phased_any"]),
                         results[fam][var]["polyphen"],
                         results[fam][var]["REVEL"],
+                        results[fam][var]["CADD_PHRED"],
                         results[fam][var]["AlphaMissense_pred"],
                         results[fam][var]["AlphaMissense_rankscore"],
                         results[fam][var]["AlphaMissense_score"],
@@ -194,7 +195,6 @@ def print_output(results, header, outfile):
                         results[fam][var]["LoF_filter"],
                         results[fam][var]["LoF_flags"],
                         results[fam][var]["LoF_info"],
-                        results[fam][var]["CADD_PHRED"],
                     ]
                 )
                 o.write(line)
@@ -427,6 +427,7 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     # CEPs
     res["polyphen"] = var["variant"].polyphen
     res["REVEL"] = var["variant"].revel
+    res["CADD_PHRED"] = var["variant"].CADD_PHRED
     res["AlphaMissense_pred"] = var["variant"].AlphaMissense_pred
     res["AlphaMissense_rankscore"] = var["variant"].AlphaMissense_rankscore
     res["AlphaMissense_score"] = var["variant"].AlphaMissense_score
@@ -443,7 +444,6 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res["LoF_filter"] = var["variant"].LoF_filter
     res["LoF_flags"] = var["variant"].LoF_flags
     res["LoF_info"] = var["variant"].LoF_info
-    res["CADD_PHRED"] = var["variant"].CADD_PHRED
 
     return res
 
