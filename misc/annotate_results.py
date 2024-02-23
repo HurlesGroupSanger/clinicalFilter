@@ -534,6 +534,9 @@ def format_results(df):
     # Sort results
     df.sort_values(["decipher_id", "chrom", "pos"], inplace=True)
 
+    # Remove allelic depth column as we created a ref_reads and alt_reads columns
+    df.drop("AD", axis=1, inplace=True)
+
     # Order columns
     after_column = "LoF_info"
     insert_after_column = "phased_any"
