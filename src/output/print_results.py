@@ -555,9 +555,11 @@ def is_mosaic(allelic_depths):
     Returns:
         bool: mosaic or not
     """
+      
+    allelic_depths_split = allelic_depths.split(",")
 
-    ref_allele_count = int(allelic_depths[0])
-    alt_allele_count = int(allelic_depths[1])
+    ref_allele_count = int(allelic_depths_split[0])
+    alt_allele_count = int(allelic_depths_split[1])
     tot_allele_count = ref_allele_count + alt_allele_count
 
     return (alt_allele_count / tot_allele_count) < params.THRESHOLD_AD_MOSAICITY
