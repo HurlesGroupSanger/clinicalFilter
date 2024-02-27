@@ -5,9 +5,9 @@ v1.0 - November 2021
 
 This document describes the rules implemented in our clinical filtering pipeline in order to select candidate variants in the DDD cohort. 
 
-Add here an horizontal plot with the different successive modules.
+The pipeline is organised in five modules, four dedicated to SNVs and indels, one dedicated exclusively to CNVs.
 
-CNVs are analysed in a separate module. 
+image::images/DDD_CF_highlevel.svg[]
 
 == 1. Pre-inheritance
 
@@ -330,6 +330,39 @@ Remove false positive DNMs.
 
 === 1.6 DDG2P
 
+Exclude variants not found in a DDG2P gene.
+
+.More
+[%collapsible]
+====
+
+**Code** +
+
+.inheritance_filtering.py -> inheritance_filter_genes
+[source,python]
+----
+if hgncid in self.genes.keys():
+	...
+----
+
+**Infos** +
+
+
+[NOTE]
+======
+The DDG2P gene-disease associations are taken from the https://www.ebi.ac.uk/gene2phenotype/downloads[EBI website]. Only **definitive**, **strong** and **moderate** associations are considered.
+======
+
+
+.Why?
+[TIP]
+======
+Variants are likely to be found in genes with evidence of a link with developmental disorders.
+======
+
+====
+
+
 == 2. Inheritance
 
 The inheritance module combines the gene-disease association https://www.ebi.ac.uk/gene2phenotype/terminology[allelic requirement], the child's genotype and, in case of trios, the parents'genotypes and affected status, in order to reject or select candidate variants.
@@ -381,6 +414,15 @@ image::images/DDD_CF_Inheritance_Allosomal_Trios_Homozygous.svg[]
 
 == 3. CNV
 
+CNV filtering rules are already implemented but not yet described in this document
+
+=== 3.1 Quality
+
+=== 3.2 Large CNVs
+
+=== 3.3 Inheritance
+
+
 
 == 4. Compound heterozygous screening
 
@@ -389,13 +431,141 @@ image::images/DDD_CF_Compound-heterozygosity.svg[]
 
 == 5. Post-inheritance
 
+=== 5.1 Allele frequencies
+
+The following filters are applied to single variants found in genes with an allelic requirement different from *Biallelic*
+
+==== 5.1.1 Singletons
+
+Exclude variants with an allele frequency greater than *0.05%* in either the control or DDD population 
+
+
+.More
+[%collapsible]
+====
+
+**Code** +
+
+.postinheritance_filter.py -> maf_filter
+[source,python]
+----
+if self.family.has_both_parents() and maximum_af >= 0.0005:
+    del self.candidate_variants["single_variants"][v]
+----
+====
+
+==== 5.1.2 Trios
+
+Exclude variants with an allele frequency greater than *0.01%* in either the control or DDD population 
+
+.More
+[%collapsible]
+====
+
+**Code** +
+
+.postinheritance_filter.py -> maf_filter
+[source,python]
+----
+elif not self.family.has_both_parents() and maximum_af >= 0.0001:
+    del self.candidate_variants["single_variants"][v]
+----
+====
+
+
+=== 5.2 gnomAD allele counts
+
+The following filters are applied to single variants using gnomAD allele counts
+
+==== 5.2.1 Monoallelic
+
+Exclude variants with an heterozygous allele count greater than *4* in genes with _Monoallelic_ allelic requirement. 
+
+.More
+[%collapsible]
+====
+
+**Code** +
+
+.postinheritance_filter.py -> allele_count_filter
+[source,python]
+----
+if self.candidate_variants["single_variants"][v]["mode"] == "Monoallelic":
+	if int(self.candidate_variants["single_variants"][v]["variant"].AC_het) > 4:
+		del self.candidate_variants["single_variants"][v]
+----
+
+**Infos** +
+
+
+[NOTE]
+======
+AC_het = AC_XX + AC_XY - 2*(nhomalt_XX + nhomalt_XY)
+======
+
+====
+
+==== 5.2.2 Hemizygous
+
+Exclude variants in males with an hemizygous allele count greater than *0* in genes with _Hemizygous_ allelic requirement. 
+
+.More
+[%collapsible]
+====
+
+**Code** +
+
+.postinheritance_filter.py -> allele_count_filter
+[source,python]
+----
+if (
+	self.candidate_variants["single_variants"][v]["mode"] == "Hemizygous"
+	and self.candidate_variants["single_variants"][v]["sex"] == "XY"
+):
+	if int(self.candidate_variants["single_variants"][v]["variant"].AC_hemi) > 0:
+		del self.candidate_variants["single_variants"][v]
+----
+
+**Infos** +
+
+
+[NOTE]
+======
+AC_hemi = nhomalt_XY
+======
+
+====
+
+==== 5.2.3 X-linked dominant
+
+Exclude variants with an heterozygous + hemizygous allele count greater than *4* in genes with _X-linked dominant_ allelic requirement. 
+
+.More
+[%collapsible]
+====
+
+**Code** +
+
+.postinheritance_filter.py -> allele_count_filter
+[source,python]
+----
+if self.candidate_variants["single_variants"][v]["mode"] == "X-linked dominant":
+	AC_total = int(self.candidate_variants["single_variants"][v]["variant"].AC_het) + int(
+		self.candidate_variants["single_variants"][v]["variant"].AC_hemi
+	)
+	if AC_total > 4:
+		del self.candidate_variants["single_variants"][v]
+----
+
+
+====
 
 == Revision History
 
 [cols="3,3,3,3"]
 |===
 | Version | Date       | Author         | Description
-| 0.1     | 2024-08-02 | Erwan Delage    | Initial version of the document.
+| 0.1     | 2024-02-08 | Erwan Delage    | Initial version of the document.
 |===
 
 

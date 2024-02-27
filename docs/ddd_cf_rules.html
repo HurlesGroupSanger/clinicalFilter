@@ -519,6 +519,14 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div class="paragraph">
 <p>This document describes the rules implemented in our clinical filtering pipeline in order to select candidate variants in the DDD cohort.</p>
 </div>
+<div class="paragraph">
+<p>The pipeline is organised in five modules, four dedicated to SNVs and indels, one dedicated exclusively to CNVs.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/DDD_CF_highlevel.svg" alt="DDD CF highlevel">
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -964,7 +972,56 @@ stop_lost</pre>
 </div>
 <div class="sect2">
 <h3 id="_1_6_ddg2p">1.6 DDG2P</h3>
-
+<div class="paragraph">
+<p>Exclude variants not found in a DDG2P gene.</p>
+</div>
+<details>
+<summary class="title">More</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Code</strong><br></p>
+</div>
+<div class="listingblock">
+<div class="title">inheritance_filtering.py &#8594; inheritance_filter_genes</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span></span><span class="tok-k">if</span> <span class="tok-n">hgncid</span> <span class="tok-ow">in</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">genes</span><span class="tok-o">.</span><span class="tok-n">keys</span><span class="tok-p">():</span>
+	<span class="tok-o">...</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Infos</strong><br></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The DDG2P gene-disease associations are taken from the <a href="https://www.ebi.ac.uk/gene2phenotype/downloads">EBI website</a>. Only <strong>definitive</strong>, <strong>strong</strong> and <strong>moderate</strong> associations are considered.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Why?</div>
+<div class="paragraph">
+<p>Variants are likely to be found in genes with evidence of a link with developmental disorders.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</details>
 </div>
 </div>
 </div>
@@ -1039,7 +1096,21 @@ stop_lost</pre>
 <div class="sect1">
 <h2 id="_3_cnv">3. CNV</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>CNV filtering rules are already implemented but not yet described in this document</p>
+</div>
+<div class="sect2">
+<h3 id="_3_1_quality">3.1 Quality</h3>
 
+</div>
+<div class="sect2">
+<h3 id="_3_2_large_cnvs">3.2 Large CNVs</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_3_3_inheritance">3.3 Inheritance</h3>
+
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1055,7 +1126,166 @@ stop_lost</pre>
 <div class="sect1">
 <h2 id="_5_post_inheritance">5. Post-inheritance</h2>
 <div class="sectionbody">
-
+<div class="sect2">
+<h3 id="_5_1_allele_frequencies">5.1 Allele frequencies</h3>
+<div class="paragraph">
+<p>The following filters are applied to single variants found in genes with an allelic requirement different from <strong>Biallelic</strong></p>
+</div>
+<div class="sect3">
+<h4 id="_5_1_1_singletons">5.1.1 Singletons</h4>
+<div class="paragraph">
+<p>Exclude variants with an allele frequency greater than <strong>0.05%</strong> in either the control or DDD population</p>
+</div>
+<details>
+<summary class="title">More</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Code</strong><br></p>
+</div>
+<div class="listingblock">
+<div class="title">postinheritance_filter.py &#8594; maf_filter</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span></span><span class="tok-k">if</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">family</span><span class="tok-o">.</span><span class="tok-n">has_both_parents</span><span class="tok-p">()</span> <span class="tok-ow">and</span> <span class="tok-n">maximum_af</span> <span class="tok-o">&gt;=</span> <span class="tok-mf">0.0005</span><span class="tok-p">:</span>
+    <span class="tok-k">del</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">]</span></code></pre>
+</div>
+</div>
+</div>
+</details>
+</div>
+<div class="sect3">
+<h4 id="_5_1_2_trios">5.1.2 Trios</h4>
+<div class="paragraph">
+<p>Exclude variants with an allele frequency greater than <strong>0.01%</strong> in either the control or DDD population</p>
+</div>
+<details>
+<summary class="title">More</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Code</strong><br></p>
+</div>
+<div class="listingblock">
+<div class="title">postinheritance_filter.py &#8594; maf_filter</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span></span><span class="tok-k">elif</span> <span class="tok-ow">not</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">family</span><span class="tok-o">.</span><span class="tok-n">has_both_parents</span><span class="tok-p">()</span> <span class="tok-ow">and</span> <span class="tok-n">maximum_af</span> <span class="tok-o">&gt;=</span> <span class="tok-mf">0.0001</span><span class="tok-p">:</span>
+    <span class="tok-k">del</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">]</span></code></pre>
+</div>
+</div>
+</div>
+</details>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_5_2_gnomad_allele_counts">5.2 gnomAD allele counts</h3>
+<div class="paragraph">
+<p>The following filters are applied to single variants using gnomAD allele counts</p>
+</div>
+<div class="sect3">
+<h4 id="_5_2_1_monoallelic">5.2.1 Monoallelic</h4>
+<div class="paragraph">
+<p>Exclude variants with an heterozygous allele count greater than <strong>4</strong> in genes with <em>Monoallelic</em> allelic requirement.</p>
+</div>
+<details>
+<summary class="title">More</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Code</strong><br></p>
+</div>
+<div class="listingblock">
+<div class="title">postinheritance_filter.py &#8594; allele_count_filter</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span></span><span class="tok-k">if</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;mode&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;Monoallelic&quot;</span><span class="tok-p">:</span>
+	<span class="tok-k">if</span> <span class="tok-nb">int</span><span class="tok-p">(</span><span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;variant&quot;</span><span class="tok-p">]</span><span class="tok-o">.</span><span class="tok-n">AC_het</span><span class="tok-p">)</span> <span class="tok-o">&gt;</span> <span class="tok-mi">4</span><span class="tok-p">:</span>
+		<span class="tok-k">del</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Infos</strong><br></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>AC_het = AC_XX + AC_XY - 2*(nhomalt_XX + nhomalt_XY)</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</details>
+</div>
+<div class="sect3">
+<h4 id="_5_2_2_hemizygous">5.2.2 Hemizygous</h4>
+<div class="paragraph">
+<p>Exclude variants in males with an hemizygous allele count greater than <strong>0</strong> in genes with <em>Hemizygous</em> allelic requirement.</p>
+</div>
+<details>
+<summary class="title">More</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Code</strong><br></p>
+</div>
+<div class="listingblock">
+<div class="title">postinheritance_filter.py &#8594; allele_count_filter</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span></span><span class="tok-k">if</span> <span class="tok-p">(</span>
+	<span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;mode&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;Hemizygous&quot;</span>
+	<span class="tok-ow">and</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;sex&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;XY&quot;</span>
+<span class="tok-p">):</span>
+	<span class="tok-k">if</span> <span class="tok-nb">int</span><span class="tok-p">(</span><span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;variant&quot;</span><span class="tok-p">]</span><span class="tok-o">.</span><span class="tok-n">AC_hemi</span><span class="tok-p">)</span> <span class="tok-o">&gt;</span> <span class="tok-mi">0</span><span class="tok-p">:</span>
+		<span class="tok-k">del</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Infos</strong><br></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>AC_hemi = nhomalt_XY</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</details>
+</div>
+<div class="sect3">
+<h4 id="_5_2_3_x_linked_dominant">5.2.3 X-linked dominant</h4>
+<div class="paragraph">
+<p>Exclude variants with an heterozygous + hemizygous allele count greater than <strong>4</strong> in genes with <em>X-linked dominant</em> allelic requirement.</p>
+</div>
+<details>
+<summary class="title">More</summary>
+<div class="content">
+<div class="paragraph">
+<p><strong>Code</strong><br></p>
+</div>
+<div class="listingblock">
+<div class="title">postinheritance_filter.py &#8594; allele_count_filter</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="python"><span></span><span class="tok-k">if</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;mode&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;X-linked dominant&quot;</span><span class="tok-p">:</span>
+	<span class="tok-n">AC_total</span> <span class="tok-o">=</span> <span class="tok-nb">int</span><span class="tok-p">(</span><span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;variant&quot;</span><span class="tok-p">]</span><span class="tok-o">.</span><span class="tok-n">AC_het</span><span class="tok-p">)</span> <span class="tok-o">+</span> <span class="tok-nb">int</span><span class="tok-p">(</span>
+		<span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;variant&quot;</span><span class="tok-p">]</span><span class="tok-o">.</span><span class="tok-n">AC_hemi</span>
+	<span class="tok-p">)</span>
+	<span class="tok-k">if</span> <span class="tok-n">AC_total</span> <span class="tok-o">&gt;</span> <span class="tok-mi">4</span><span class="tok-p">:</span>
+		<span class="tok-k">del</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">]</span></code></pre>
+</div>
+</div>
+</div>
+</details>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1077,7 +1307,7 @@ stop_lost</pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0.1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2024-08-02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2024-02-08</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Erwan Delage</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Initial version of the document.</p></td>
 </tr>
@@ -1088,7 +1318,7 @@ stop_lost</pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-02-08 18:52:12 UTC
+Last updated 2024-02-22 22:00:41 UTC
 </div>
 </div>
 </body>
