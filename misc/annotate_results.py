@@ -337,11 +337,11 @@ def build_decipher_variant_id(df):
                 ]
             )
         elif variant_class == "deletion":
-            varid = ("_").join([row.person_stable_id, row.chr, str(row.start), "DEL"])
+            varid = ("_").join([row.person_stable_id, str(row.chr), str(row.start), "DEL"])
         elif variant_class == "duplication":
-            varid = ("_").join([row.person_stable_id, row.chr, str(row.start), "DUP"])
+            varid = ("_").join([row.person_stable_id, str(row.chr), str(row.start), "DUP"])
         elif variant_class == "amplification":
-            varid = ("_").join([row.person_stable_id, row.chr, str(row.start), "DUP"])
+            varid = ("_").join([row.person_stable_id, str(row.chr), str(row.start), "DUP"])
         else:
             varid = ""
 
@@ -381,12 +381,12 @@ def build_b37_variant_id(df):
         ref = row["ref/alt_alleles"].split("/")[0]
         alt = row["ref/alt_alleles"].split("/")[1]
         if alt == "<DEL>":
-            varid = ("_").join([row["#proband"], row.chrom, str(row.position), "DEL"])
+            varid = ("_").join([row["#proband"], str(row.chrom), str(row.position), "DEL"])
         elif alt == "<DUP>":
-            varid = ("_").join([row["#proband"], row.chrom, str(row.position), "DUP"])
+            varid = ("_").join([row["#proband"], str(row.chrom), str(row.position), "DUP"])
         else:
             npos, nref, nalt = normalise_variant(row.position, ref, alt)
-            varid = ("_").join([row["#proband"], row.chrom, str(npos), nref, nalt])
+            varid = ("_").join([row["#proband"], str(row.chrom), str(npos), nref, nalt])
 
         list_var_id.append(varid)
 
@@ -450,14 +450,14 @@ def build_b38_variant_id(df):
     list_cnv = list()
     for idx, row in df.iterrows():
         if row.alt == "<DEL>":
-            varid = ("_").join([row["proband"], row.chrom, str(row.pos), "DEL"])
+            varid = ("_").join([row["proband"], str(row.chrom), str(row.pos), "DEL"])
             list_cnv.append("y")
         elif row.alt == "<DUP>":
-            varid = ("_").join([row["proband"], row.chrom, str(row.pos), "DUP"])
+            varid = ("_").join([row["proband"], str(row.chrom), str(row.pos), "DUP"])
             list_cnv.append("y")
         else:
             npos, nref, nalt = normalise_variant(row.pos, row.ref, row.alt)
-            varid = ("_").join([row["proband"], row.chrom, str(npos), nref, nalt])
+            varid = ("_").join([row["proband"], str(row.chrom), str(npos), nref, nalt])
             list_cnv.append("n")
 
         list_var_id.append(varid)
@@ -500,7 +500,7 @@ def cnv_fuzzy_matching(cf_df, other_df, column_name):
     for idx, row in cnv_cf_df.iterrows():
         proband_id = row["proband"]
         for idx2, row2 in cnv_other_df.loc[cnv_other_df[proband_column] == proband_id].iterrows():
-            if row2[chrom_column] != row.chrom:
+            if str(row2[chrom_column]) != str(row.chrom):
                 continue
             if column_name == "in_decipher":
                 if (abs(row["pos"] - row2["start"]) < OFFSET_CNV) | (
