@@ -72,9 +72,15 @@ class PreInheritanceFiltering(object):
                 logging.info(v + " failed low GQ: " + self.variants["child"][v].gq)
                 continue
 
+            # This is introduced in b38v3 as 22 missing patients are introduced and were not used to calculate DDD
+            # allele frequencies, resulting in variants being assigned a "." for DDD_AF. Those variants are assigned
+            # a ddd_af of 0.
+            ddd_af = self.variants["child"][v].ddd_af
+            ddd_af = 0 if ddd_af == "." else float(ddd_af)
+
             # fail if DDD_AF > 0.005 (gnomAD AF variants above this threshold
             # are not loaded)
-            if float(self.variants["child"][v].ddd_af) > 0.005:
+            if ddd_af > 0.005:
                 logging.info(v + " failed high DDD AF: " + self.variants["child"][v].ddd_af)
                 continue
 
@@ -89,7 +95,7 @@ class PreInheritanceFiltering(object):
                     logging.info(v + " failed, no functional consequences: " + self.variants["child"][v].consequence)
                     continue
 
-            hgncid = cqs = self.variants["child"][v].hgnc_id
+            hgncid = self.variants["child"][v].hgnc_id
             if not hgncid in variants_per_gene.keys():
                 variants_per_gene[hgncid] = {}
 
