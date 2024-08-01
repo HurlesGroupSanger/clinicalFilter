@@ -41,7 +41,7 @@ def main():
     if args.ped is None:
         logfile = args.outdir + "/clinical_filter" + ".log"
     else:
-        logfile = args.ped.replace(".ped", "") + "_clinical_filter.log"
+        logfile = args.outdir + "/" + args.ped.split("/")[-1].replace(".ped", "") + "_clinical_filter.log"
     logging.basicConfig(filename=logfile, level=logging.DEBUG)
 
     if args.ped is None:
