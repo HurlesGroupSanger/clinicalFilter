@@ -5,16 +5,17 @@ v1.0 - November 2021
 
 This document describes the rules implemented in our clinical filtering pipeline in order to select candidate variants in the DDD cohort. 
 
-The pipeline is organised in five modules, four dedicated to SNVs and indels, one dedicated exclusively to CNVs.
+The pipeline is organised in five modules.
 
 image::images/DDD_CF_highlevel.svg[]
+
+Probands for whom we have access to data from only one parent are treated as singletons.
 
 == 1. Pre-inheritance
 
 === 1.1 Common variants
 
 ==== 1.1.1 Control population
-
 
 
 Exclude variants with an allele frequency greater than **0.5%** in _gnomAD_ or _1000 genomes_.
@@ -49,7 +50,7 @@ The gnomAD version used by VEP changes over time.
 .Why?
 [TIP]
 ======
-Common variants are unlikely to be causative for rare developmental disorders.
+Common variants are less likely to be causative for rare developmental disorders.
 ======
 
 
@@ -80,7 +81,7 @@ if float(self.variants["child"][v].ddd_af) > 0.005:
 .Why?
 [TIP]
 ======
-Common variants are unlikely to be causative for rare developmental disorders.
+Common variants are less likely to be causative for rare developmental disorders.
 ======
 ====
 
@@ -112,7 +113,8 @@ if float(max_af) > 0.000001:
 .Why?
 [TIP]
 ======
-How was the threshold determined ?
+Common variants are less likely to be causative for rare developmental disorders.
+The threshold is adjusted to take into account male hemizygosity.
 ======
 ====
 
@@ -120,7 +122,7 @@ How was the threshold determined ?
 
 
 
-Exclude X-linked variants found in at least one DDD father
+Exclude X-linked variants found in at least one DDD unaffected father
 
 .More
 [%collapsible]
@@ -146,7 +148,7 @@ Exclude X-linked variants found in at least one DDD father
 .Why?
 [TIP]
 ======
-Not sure why
+X-linked variant found in an unaffected father is less likely to be causative for rare developmental disorders.
 ======
 ====
 
@@ -183,9 +185,7 @@ More informations about GQ https://support.illumina.com/content/dam/illumina-sup
 ======
 Setting a high GQ threshold reduces the number of false positive calls.
 
-GQ=40 means that only 1 in 10,000 calls is expected to be wrong.
-
-How was the threshold chosen? 
+A GQ score of 40 corresponds to a 1 in 10,000 chance that the genotype is incorrect, it is commonly used to discard low-confidence variants.
 ======
 
 ====
@@ -243,7 +243,7 @@ https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html[Lis
 
 [TIP]
 ======
-Variants with no functional consequence are unlikely to be causative for rare developmental disorders.
+Variants with lower consequence impact (e.g., synonymous) are less likely to be pathogenic.
 ======
 
 ====
@@ -285,7 +285,7 @@ REVEL is a method for predicting the pathogenicity of missense variants. It comb
 .Why?
 [TIP]
 ======
-Why the 0.4 threshold? Look at article for more informations.
+Missense variants with a low REVEL score (<0.4) are less likely to be pathogenic.
 ======
 
 ====
@@ -323,7 +323,7 @@ Putative DNMs are checked using a random forest classifier trained on known DNMs
 .Why?
 [TIP]
 ======
-Remove false positive DNMs.
+Avoid false positive DNM arising from sequencing artifacts, mapping errors, sequence coverage bias...
 ======
 
 ====
@@ -357,7 +357,7 @@ The DDG2P gene-disease associations are taken from the https://www.ebi.ac.uk/gen
 .Why?
 [TIP]
 ======
-Variants are likely to be found in genes with evidence of a link with developmental disorders.
+Causative variants are likely to be found in genes with evidence of a link with developmental disorders.
 ======
 
 ====
@@ -365,7 +365,7 @@ Variants are likely to be found in genes with evidence of a link with developmen
 
 == 2. Inheritance
 
-The inheritance module combines the gene-disease association https://www.ebi.ac.uk/gene2phenotype/terminology[allelic requirement], the child's genotype and, in case of trios, the parents'genotypes and affected status, in order to reject or select candidate variants.
+The inheritance module combines the gene-disease associations https://www.ebi.ac.uk/gene2phenotype/terminology[allelic requirement], the child's genotype and, in case of trios, the parents genotypes and affected status, in order to reject or select candidate variants.
 
 === 2.1 Autosomes
 
@@ -414,19 +414,69 @@ image::images/DDD_CF_Inheritance_Allosomal_Trios_Homozygous.svg[]
 
 == 3. CNV
 
-CNV filtering rules are already implemented but not yet described in this document
 
 === 3.1 Quality
 
+DDD CNV calls come from two sources: 
+
+-  whole exome sequencing, where an inhouse method called Convex was used
+-  aCGH microarrays, where another inhouse method called https://github.com/tf2/CNsolidate[CNsolidate] was used 
+
+
+Both tools use several criteria to determine if a CNV is to be considered (_Pass_) or not (_Fail_), only CNVs passing caller filters are retained 
+
+.More
+[%collapsible]
+====
+
+**Code** +
+
+.inheritance_cnv.py -> cnv_filter_parents, cnv_filter_no_parents
+[source,python]
+----
+if self.variants["child"][v].cnv_filter == "Fail":
+	logging.info(v + " CNV failed quality filters")
+	continue
+----
+====
+
 === 3.2 Large CNVs
+
+Keep large CNVS (length > 1M). 
+
+.More
+[%collapsible]
+====
+
+**Code** +
+
+.inheritance_cnv.py -> cnv_non_ddg2p_filter
+[source,python]
+----
+if int(self.variants["child"][varid].cnv_length) > 1000000:
+	add_single_var_to_candidates(varid, self.variants["child"][varid], "-", "-", self.candidate_variants)
+	return True
+----
+====
 
 === 3.3 Inheritance
 
+==== 3.3.1 Singletons
 
+Diagram needed. 
+
+==== 3.3.2 Trios
+
+Diagram needed.
 
 == 4. Compound heterozygous screening
 
 image::images/DDD_CF_Compound-heterozygosity.svg[]
+
+Some precisions for singletons:
+
+- "both missense" include any combination of _missense_ and _inframe_ variants
+- if phasing information is available, variants in *cis* are discarded
 
 
 == 5. Post-inheritance
@@ -436,6 +486,25 @@ image::images/DDD_CF_Compound-heterozygosity.svg[]
 The following filters are applied to single variants found in genes with an allelic requirement different from *Biallelic*
 
 ==== 5.1.1 Singletons
+
+
+Exclude variants with an allele frequency greater than *0.01%* in either the control or DDD population 
+
+.More
+[%collapsible]
+====
+
+**Code** +
+
+.postinheritance_filter.py -> maf_filter
+[source,python]
+----
+elif not self.family.has_both_parents() and maximum_af >= 0.0001:
+    del self.candidate_variants["single_variants"][v]
+----
+====
+
+==== 5.1.2 Trios
 
 Exclude variants with an allele frequency greater than *0.05%* in either the control or DDD population 
 
@@ -454,28 +523,16 @@ if self.family.has_both_parents() and maximum_af >= 0.0005:
 ----
 ====
 
-==== 5.1.2 Trios
-
-Exclude variants with an allele frequency greater than *0.01%* in either the control or DDD population 
-
-.More
-[%collapsible]
-====
-
-**Code** +
-
-.postinheritance_filter.py -> maf_filter
-[source,python]
-----
-elif not self.family.has_both_parents() and maximum_af >= 0.0001:
-    del self.candidate_variants["single_variants"][v]
-----
-====
 
 
 === 5.2 gnomAD allele counts
 
 The following filters are applied to single variants using gnomAD allele counts
+
+[NOTE]
+=====
+The gnomAD allele counts is not provided by VEP but comes from our own allele counts extraction from gnomADv3.1.1.
+=====
 
 ==== 5.2.1 Monoallelic
 
@@ -565,6 +622,7 @@ if self.candidate_variants["single_variants"][v]["mode"] == "X-linked dominant":
 [cols="3,3,3,3"]
 |===
 | Version | Date       | Author         | Description
+| 1.0     | 2024-09-15 | Erwan Delage    | Integration of Ruth's inheritance diagrams, version used for b38v1 and b38v2.
 | 0.1     | 2024-02-08 | Erwan Delage    | Initial version of the document.
 |===
 
