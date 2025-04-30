@@ -141,25 +141,39 @@ class AutosomalFilter(object):
 
     def biallelic_heterozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
         """
-        Heterozygous variant in biallelic gene
+        Heterozygous variant in biallelic gene.
+        Two variants (one in each copy of the gene) are required to have the disease.
+        Adding variant to compound het candidates if not discordant with parental affected status.
         """
         self.inheritance_report.populate_inheritance_report(
             "autosomal", "biallelic", var.gt, mum_gt, dad_gt, mum_aff, dad_aff
         )
 
         vpass = "n"
+        # If both parents are affected, the heterozygous variant is a plausible compound het candidate
         if mum_aff and dad_aff:
+            # TODO : As the variant is heterozygous in the child, it cannot be homozygous in both parents, unless
+            # there is a DNM that revert it to the ref (not sure how this case is handeled at the moment)
             if not (dad_gt == "1/1" and mum_gt == "1/1"):
                 add_compound_het_to_candidates(varid, var, self.hgncid, "biallelic", self.candidate_variants)
                 vpass = "y"
+
+        # If only the mother is affected, and the father does not have two copies of this variant (otherwise he would be affected),
+        # then it is a plausible compound het candidate
         elif mum_aff and not dad_aff:
             if not dad_gt == "1/1":
                 add_compound_het_to_candidates(varid, var, self.hgncid, "biallelic", self.candidate_variants)
                 vpass = "y"
+
+        # If only the father is affected, and the mother does not have two copies of this variant (otherwise she would be affected),
+        # then it is a plausible compound het candidate
         elif not mum_aff and dad_aff:
             if not mum_gt == "1/1":
                 add_compound_het_to_candidates(varid, var, self.hgncid, "biallelic", self.candidate_variants)
                 vpass = "y"
+
+        # If none of the parents are affected, and none of the parents have two copies of this variant, then it
+        # is a plausible compound het candidate
         else:
             if not dad_gt == "1/1" and not mum_gt == "1/1":
                 add_compound_het_to_candidates(varid, var, self.hgncid, "biallelic", self.candidate_variants)
@@ -171,24 +185,35 @@ class AutosomalFilter(object):
     def monoallelic_heterozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
         """
         Heterozygous variant in monoallelic gene
+        A single copy of the variant is enough to have the disease.
         """
         self.inheritance_report.populate_inheritance_report(
             "autosomal", "monoallelic", var.gt, mum_gt, dad_gt, mum_aff, dad_aff
         )
         vpass = "n"
 
+        # If both parents are affected, the heterozygous variant is a plausible candidate
         if mum_aff and dad_aff:
+            # TODO : As the variant is heterozygous in the child, it cannot be homozygous in both parents, unless
+            # there is a DNM that revert it to the ref (not sure how this case is handeled at the moment)
             if not (dad_gt == "1/1" and mum_gt == "1/1"):
                 add_single_var_to_candidates(varid, var, self.hgncid, "monoallelic", self.candidate_variants)
                 vpass = "y"
+        # If only the mother is affected, and the father is ref homozygous (otherwise he should be affected),
+        # then the heterozygous variant is a plausible candidate
         elif mum_aff and not dad_aff:
             if dad_gt == "0/0":
                 add_single_var_to_candidates(varid, var, self.hgncid, "monoallelic", self.candidate_variants)
                 vpass = "y"
+
+        # If only the father is affected, and the mother is ref homozygous (otherwise she should be affected),
+        # then the heterozygous variant is a plausible candidate
         elif not mum_aff and dad_aff:
             if mum_gt == "0/0":
                 add_single_var_to_candidates(varid, var, self.hgncid, "monoallelic", self.candidate_variants)
                 vpass = "y"
+
+        # If none of the parents are affected, and the heterozygous variant seems to be denovo, then it is a plausible candidate
         else:
             if mum_gt == "0/0" and dad_gt == "0/0":
                 add_single_var_to_candidates(varid, var, self.hgncid, "monoallelic", self.candidate_variants)
@@ -200,6 +225,7 @@ class AutosomalFilter(object):
     def mosaic_heterozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
         """
         Heterozygous variant in mosaic gene
+        TODO : Same as monoallelic atm.
         """
         self.inheritance_report.populate_inheritance_report(
             "autosomal", "mosaic", var.gt, mum_gt, dad_gt, mum_aff, dad_aff
@@ -230,23 +256,36 @@ class AutosomalFilter(object):
     def imprinted_heterozygous_parents_filter(self, varid, var, mum_gt, dad_gt, mum_aff, dad_aff):
         """
         Heterozygous variant in imprinted gene
+        #TODO : better understand this bit
         """
         self.inheritance_report.populate_inheritance_report(
             "autosomal", "imprinted", var.gt, mum_gt, dad_gt, mum_aff, dad_aff
         )
         vpass = "n"
+
+        # If both parents are affected, the heterozygous variant is a plausible candidate
         if mum_aff and dad_aff:
+            # TODO : As the variant is heterozygous in the child, it cannot be homozygous in both parents, unless
+            # there is a DNM that revert it to the ref (not sure how this case is handeled at the moment)
             if not (dad_gt == "1/1" and mum_gt == "1/1"):
                 add_single_var_to_candidates(varid, var, self.hgncid, "imprinted", self.candidate_variants)
                 vpass = "y"
+        # If only the mother is affected, and the father is not alt homozygous (otherwise he should be affected),
+        # then the heterozygous variant is a plausible candidate
         elif mum_aff and not dad_aff:
             if not dad_gt == "1/1":
                 add_single_var_to_candidates(varid, var, self.hgncid, "imprinted", self.candidate_variants)
                 vpass = "y"
+
+        # If only the father is affected, and the mother is not alt homozygous (otherwise she should be affected),
+        # then the heterozygous variant is a plausible candidate
         elif not mum_aff and dad_aff:
             if not mum_gt == "1/1":
                 add_single_var_to_candidates(varid, var, self.hgncid, "imprinted", self.candidate_variants)
                 vpass = "y"
+
+        # If none of the parents are affected, and none of the parents have this variant in both copies, then it is a plausible candidate
+        # (the imprinting might be on the copy that harbor the ref allele)
         else:
             if not dad_gt == "1/1" and not mum_gt == "1/1":
                 add_single_var_to_candidates(varid, var, self.hgncid, "imprinted", self.candidate_variants)
@@ -265,25 +304,33 @@ class AutosomalFilter(object):
 
         vpass = "n"
 
+        # If both parents are affected, and at least one of them has the variant, it is a plausible candidate
         if mum_aff and dad_aff:
             if mum_gt != "0/0" and dad_gt != "0/0":
                 add_single_var_to_candidates(varid, var, self.hgncid, "biallelic", self.candidate_variants)
                 vpass = "y"
+
+        # If only the mother is affected, and the father has only one copy of the variant (otherwise he would be affected),
+        # it is a plausible candidate
         elif mum_aff and not dad_aff:
             if dad_gt == "0/1" and mum_gt != "0/0":
                 add_single_var_to_candidates(varid, var, self.hgncid, "biallelic", self.candidate_variants)
                 vpass = "y"
+        # If only the father is affected, and the mother has only one copy of the variant (otherwise she would be affected),
+        # it is a plausible candidate
         elif not mum_aff and dad_aff:
             if mum_gt == "0/1" and dad_gt != "0/0":
                 add_single_var_to_candidates(varid, var, self.hgncid, "biallelic", self.candidate_variants)
                 vpass = "y"
+        # If none of the parents are affected
         else:
+            # If each parent has the alt heterozygous variant, it is a plausible candidate
             if mum_gt == "0/1" and dad_gt == "0/1":
                 add_single_var_to_candidates(varid, var, self.hgncid, "biallelic", self.candidate_variants)
                 vpass = "y"
+
+            # If only one parent has the alt heterozygous variant, it is a plausible compound het candidate
             elif mum_gt == "0/1" and dad_gt == "0/0":
-                # allow homs apparently inherited from one parent as these may
-                # have one hom and one cnv
                 add_compound_het_to_candidates(varid, var, self.hgncid, "biallelic", self.candidate_variants)
                 vpass = "y"
             elif mum_gt == "0/0" and dad_gt == "0/1":
@@ -297,13 +344,15 @@ class AutosomalFilter(object):
         """
         Homozygous variant in monoallelic gene
         """
-        # todo will need modification when CNVs (and UPDs) added
+
         self.inheritance_report.populate_inheritance_report(
             "autosomal", "monoallelic", var.gt, mum_gt, dad_gt, mum_aff, dad_aff
         )
 
         vpass = "n"
 
+        # If both parents are affected, and have at least one copy of the variant, it is a plausible candidate
+        # TODO : what if the other copy is de novo ?
         if mum_aff and dad_aff:
             if mum_gt != "0/0" and dad_gt != "0/0":
                 add_single_var_to_candidates(varid, var, self.hgncid, "monoallelic", self.candidate_variants)
@@ -331,9 +380,14 @@ class AutosomalFilter(object):
     def biallelic_no_parents_filter(self, varid, var):
         """
         Variant in biallelic gene in a singleton
+        Two variants (one in each copy of the gene) are required to have the disease.
+
         """
+
+        # If heterozygous variant, it is a plausible compound het candidate
         if var.genotype == "1":
             add_compound_het_to_candidates(varid, var, self.hgncid, "biallelic", self.candidate_variants)
+        # If homozygous variant, it is a plausible candidate
         elif var.genotype == "2":
             add_single_var_to_candidates(varid, var, self.hgncid, "biallelic", self.candidate_variants)
         else:
@@ -343,6 +397,8 @@ class AutosomalFilter(object):
         """
         Variant in monoalleic gene in a singleton
         """
+
+        # If homozygous or heterozygous variant, it is a plausible candidate
         if var.genotype == "1" or var.genotype == "2":
             add_single_var_to_candidates(varid, var, self.hgncid, "monoallelic", self.candidate_variants)
         else:
@@ -352,6 +408,7 @@ class AutosomalFilter(object):
         """
         Variant in mosaic gene in a singleton
         """
+        # If homozygous or heterozygous variant, it is a plausible candidate
         if var.genotype == "1" or var.genotype == "2":
             add_single_var_to_candidates(varid, var, self.hgncid, "mosaic", self.candidate_variants)
         else:
@@ -362,8 +419,10 @@ class AutosomalFilter(object):
         Variant in imprinted gene in a singleton
         """
         # todo will need modification when CNVs (and UPDs) added
+        # If heterozygous variant, it is a plausible candidate
         if var.genotype == "1":
             add_single_var_to_candidates(varid, var, self.hgncid, "imprinted", self.candidate_variants)
+        # If homozygous variant, filtered out. TODO : Not sure why
         elif var.genotype == "2":
             logging.info(varid + " failed inheritance filter for homozygous " "variant in imprinted gene")
             # todo add flag for CNV here or modify inheritance to include CNV data

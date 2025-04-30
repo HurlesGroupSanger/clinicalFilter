@@ -166,8 +166,10 @@ class CNVFiltering(object):
         """
         Identify CNVS which could be in compound hets
         """
-        # return True or False for pass or fail
+
+        # TODO : why desired_cn is 1 or 3 ???
         desired_cn = ["1", "3"]
+
         # could the CNV be part of a compound het? If so, add to candidate
         # compound hets
         if not self.variants["child"][varid].cn in desired_cn:
@@ -225,10 +227,14 @@ class CNVFiltering(object):
         # see if any pass
         hgncids = self.variants["child"][varid].hgnc_id_all.split("|")
         for hid in hgncids:
+
             surrounding_dup = False
+
+            # Extract HGNC number only (e.g., HGNC:114 will return 114) and check if in DDG2P genes
             hgncid = hid[5:]
             if not hgncid in self.genes.keys():
                 continue
+
             # fail duplications completely surrounding surround monoallelic,
             # hemizygous and x-linked dominant genes with loss of function
             # mechanism
@@ -236,8 +242,8 @@ class CNVFiltering(object):
                 self.variants["child"][varid].alt == "<DUP>"
                 and self.variants["child"][varid].chrom == self.genes[hgncid]["chr"]
             ):
-                # check modes
                 dupmodes = set({"Monoallelic", "Hemizygous", "X-linked dominant"})
+
                 if (
                     "Loss of function" in self.genes[hgncid]["mechanism"]
                     and len(set.intersection(self.genes[hgncid]["mode"], dupmodes)) > 0
@@ -268,10 +274,11 @@ class CNVFiltering(object):
                         self.candidate_variants,
                     )
                     return cnvpass
+
             # Monoallelic, X-linked dominant or Hemizygous in male pass if
             # CN=0, 1 or 3 and any mechanism
             cns_wanted = ["0", "1", "3"]
-            if not surrounding_dup == True:
+            if not surrounding_dup:
                 if "Monoallelic" in self.genes[hgncid]["mode"] or "X-linked dominant" in self.genes[hgncid]["mode"]:
                     if self.variants["child"][varid].cn in cns_wanted:
                         self.variants["child"][varid].reportable_symbol.append(self.genes[hgncid]["symbol"])
@@ -297,6 +304,7 @@ class CNVFiltering(object):
                         self.candidate_variants,
                     )
                     return cnvpass
+
                 # Hemizygous in female pass if CN=3 and mechanism =
                 # "Increased gene dosage"
                 if (
@@ -316,6 +324,7 @@ class CNVFiltering(object):
                         self.candidate_variants,
                     )
                     return cnvpass
+
             # Pass intragenic DUP in monoallelic or X-linked dominant gene with
             # loss of function mechanism and any part of the gene is outside of
             # the CNV boundary

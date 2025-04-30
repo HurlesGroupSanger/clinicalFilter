@@ -46,7 +46,8 @@ class PostInheritanceFiltering(object):
         Filter non-Biallelic vairants with more stringent MAF thresholds
         """
         for v in list(self.candidate_variants["single_variants"].keys()):
-            if self.candidate_variants["single_variants"][v]["mode"] != "Biallelic":
+            variant = self.candidate_variants["single_variants"][v]
+            if "biallelic" not in self.candidate_variants["single_variants"][v]["mode"]:
                 ddd_af = self.candidate_variants["single_variants"][v]["variant"].ddd_af
                 max_af = self.candidate_variants["single_variants"][v]["variant"].max_af
                 if ddd_af == ".":

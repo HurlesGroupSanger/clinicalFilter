@@ -170,7 +170,7 @@ class PreInheritanceFiltering(object):
 
     def revel_filter(self, variants_per_gene):
         """
-        Remove missense variants with REVEL < 0.5 unless DNM
+        Remove missense variants with REVEL < 0.4 unless DNM
         """
         for gn in list(variants_per_gene.keys()):
             for varid in list(variants_per_gene[gn].keys()):
