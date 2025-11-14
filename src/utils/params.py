@@ -18,3 +18,5 @@ DECIPHER_INHERITANCE_NA = "."
 
 # Threshold used on allelic depth to categorise the variant as mosaic for DECIPHER inheritance
 THRESHOLD_AD_MOSAICITY = 0.3
+
+SPLICEAI_THRESHOLD = 0.2
