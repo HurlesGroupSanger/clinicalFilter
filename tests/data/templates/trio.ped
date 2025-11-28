@@ -1,0 +1,3 @@
+test_trio_family	proband	mother	father	M	2	tests/data/templates/proband_trio.vcf.gz
+test_trio_family	father	0	0	M	1	tests/data/templates/father.vcf.gz
+test_trio_family	mother	0	0	F	1	tests/data/templates/mother.vcf.gz

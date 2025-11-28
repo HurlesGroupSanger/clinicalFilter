@@ -1,0 +1,5 @@
+chr	start	stop	gene	hgnc_id	type	mode	mech	syndrome
+X	41333348	41364472	DDX3X	2745	.	X-linked dominant	loss of function	DDX3X-related intellectual disability
+X	41333348	41364472	DDX3X	2745	.	Hemizygous	undetermined	DDX3X-related intellectual developmental disorder
+16	89267619 	89490561	ANKRD11	21316	.	Monoallelic	undetermined	ANKRD11-related KBG syndrome
+8	99013266	99877580 	VPS13B	2745	.	Biallelic	loss of function	VPS13B-related Cohen syndrome
