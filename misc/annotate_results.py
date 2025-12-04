@@ -3,6 +3,8 @@
 import click
 import pandas as pd
 import json
+import logging
+import logging.config
 
 
 @click.command()
@@ -15,9 +17,12 @@ def annotate_cf(config_file):
         config_file (str): path to configuration file
     """
 
+    logger = logging.getLogger("logger")
+
     conf = get_conf(config_file)
 
     # Load all files and construct variant identifiers
+    logger.info("Loading resources...")
     id_mapping_df = load_id_mapping(conf["id_mapping"])
     previous_gene_list = load_previous_genelist(conf["previous_gene_list"])
     decipher_variants_info_df = load_decipher_variants_info(conf["decipher_variants_info"], id_mapping_df)
@@ -75,6 +80,9 @@ def annotate(
         previous_gene_list (_type_): _description_
         id_mapping_df (_type_): _description_
     """
+
+    logger = logging.getLogger("logger")
+    logger.info("Starting CF results annotation...")
 
     cf_results["ref_reads"] = "."
     cf_results["alt_reads"] = "."
@@ -151,6 +159,7 @@ def annotate(
     cf_results["cnvs_per_proband"] = cf_results["proband"].map(nb_cnvs_per_proband)
 
     # Check if variants was already in B37 results
+    logger.info("Checking whether variants were already in previous CF results and/or in DECIPHER...")
     cf_results["in_build_37"] = cf_results.apply(
         lambda row, b37_cf_results: ("y" if row.varid in list(b37_cf_results.varid) else "n"),
         axis=1,
@@ -179,9 +188,15 @@ def annotate(
         args=(previous_gene_list,),
     )
 
+    # Fuzzy matching for CNVs
+    logger.info("CNV fuzzy matching...")
     cf_results = cnv_fuzzy_matching(cf_results, b37_cf_results, "in_build_37")
     cf_results = cnv_fuzzy_matching(cf_results, decipher_variants_info, "in_decipher")
     cf_results = cnv_fuzzy_matching(cf_results, b38_cf_previous_results, "in_previous_build_38")
+
+    # Fuzzy matching for indels/MNVs
+    logger.info("Indels/MNVs fuzzy matching...")
+    cf_results = indels_mnvs_fuzzy_matching(cf_results, decipher_variants_info)
 
     cf_results.drop(["family_id", "cnv", "varid"], inplace=True, axis=1)
 
@@ -531,6 +546,54 @@ def cnv_fuzzy_matching(cf_df, other_df, column_name):
     return cf_df
 
 
+def indels_mnvs_fuzzy_matching(cf_df, decipher_variants_info):
+    """
+    Check whether indels/MNVs were previously reported with slightly different positions
+
+    Args:
+        cf_results (pd.DataFrame): current run CF results
+    """
+
+    logger = logging.getLogger("logger")
+
+    OFFSET_INDEL_MNV = 20
+
+    # Exclude CNVs
+    sequence_variants_df = cf_df.loc[~cf_df.alt.isin(["<DEL>", "<DUP>"])]
+
+    patients_with_variant_not_in_decipher = sequence_variants_df.loc[
+        sequence_variants_df.in_decipher == "n", "decipher_id"
+    ].unique()
+
+    # For each proband, check if any variant match with DECIPHER reported variants
+    for decipher_id in patients_with_variant_not_in_decipher:
+
+        patient_variants_cf_df = sequence_variants_df.loc[sequence_variants_df.decipher_id == decipher_id]
+        patient_decipher_variants_df = decipher_variants_info.loc[decipher_variants_info.decipher_id == decipher_id]
+
+        # If no overlapping chromosomes between variants already reported in DECIPHER and the ones not yet reported in DECIPHER, skip
+        if (
+            set(patient_decipher_variants_df.chr)
+            & set(patient_variants_cf_df.loc[patient_variants_cf_df.in_decipher == "n"].chrom)
+        ) == set():
+            continue
+
+        # For each variant not yet reported in DECIPHER, check if any variant reported in DECIPHER is close enough
+        for idx, patient_variant in patient_variants_cf_df.loc[patient_variants_cf_df.in_decipher == "n"].iterrows():
+
+            patient_decipher_variants_df_on_chrom = patient_decipher_variants_df.loc[
+                patient_decipher_variants_df.chr == patient_variant.chrom
+            ]
+
+            for _, decipher_variant in patient_decipher_variants_df_on_chrom.iterrows():
+                if abs(patient_variant["pos"] - decipher_variant["start"]) < OFFSET_INDEL_MNV:
+                    cf_df.at[idx, "in_decipher"] = "y"
+                    logger.info("Found fuzzy match for {}".format(patient_variant.varid))
+                    break
+
+    return cf_df
+
+
 def format_results(df):
     """
     Format CF results
@@ -564,5 +627,43 @@ def format_results(df):
     return df
 
 
+def init_log(show_time=True):
+    """
+    Initialise logger
+
+    Args:
+        show_time (bool, optional): print time in log entries. Defaults to True.
+    """
+
+    if show_time:
+        log_format = "[%(levelname)s:%(asctime)s] %(message)s"
+    else:
+        log_format = "%(levelname)s | %(message)s"
+
+    MY_LOGGING_CONFIG = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "default_formatter": {"format": log_format},
+        },
+        "handlers": {
+            "stream_handler": {
+                "class": "logging.StreamHandler",
+                "formatter": "default_formatter",
+            },
+        },
+        "loggers": {
+            "logger": {
+                "handlers": ["stream_handler"],
+                "level": "INFO",
+                "propagate": True,
+            }
+        },
+    }
+
+    logging.config.dictConfig(MY_LOGGING_CONFIG)
+
+
 if __name__ == "__main__":
+    init_log()
     annotate_cf()
