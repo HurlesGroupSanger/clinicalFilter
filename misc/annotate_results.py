@@ -219,10 +219,12 @@ def get_nb_variants_per_proband(row, df):
 
 
 def keep_new_variants_only(df):
-    """_summary_
+    """
+    Keep only new variants (not found in B37 or DECIPHER and not in previous B38 build).
+    Exception for DNMs which are kept even if already selected in previous CF run but not reported in DECIPHER.
 
     Args:
-        df (_type_): _description_
+        df (pd.DataFrame): CF results
     """
 
     def filter_cnvs(row):
@@ -232,11 +234,17 @@ def keep_new_variants_only(df):
                 filter = False
         return filter
 
-    # Keep only variants not already found in B37 or already reported in DECIPHER
-    df = df.loc[(df.in_build_37 == "n") & (df.in_decipher == "n")]
+    # Keep only variants that are not already in DECIPHER
+    df = df.loc[df.in_decipher == "n"]
 
+    # Keep only variants that were not already selected in last B37 run (or are de novo not reported in DECIPHER)
+    filt = (df.in_build_37 == "n") | (df.decipher_inheritance.str.startswith("de_novo"))
+    df = df.loc[filt]
+
+    # Keep only variants that were not already selected in previous B38 build (or are de novo not reported in DECIPHER)
     if "in_previous_build_38" in df.columns:
-        df = df.loc[df.in_previous_build_38 == "n"]
+        filt = (df.in_previous_build_38 == "n") | (df.decipher_inheritance.str.startswith("de_novo"))
+        df = df.loc[filt]
 
     # Filter CNVS from probands having more than 4 CNVs
     df = df[df.apply(filter_cnvs, axis=1)]
@@ -305,7 +313,7 @@ def load_decipher_variants_info(filename, id_mapping_df):
         id_mapping_df (pd.DataFrame) : DDD identifiers mapping
     """
 
-    df = pd.read_csv(filename, sep="\t", dtype={"patient_id": str})
+    df = pd.read_csv(filename, sep="\t", dtype={"patient_id": str}, low_memory=False)
     df = df.merge(id_mapping_df, left_on="patient_id", right_on="decipher_id")
 
     df = build_decipher_variant_id(df)
@@ -381,12 +389,12 @@ def build_b37_variant_id(df):
         ref = row["ref/alt_alleles"].split("/")[0]
         alt = row["ref/alt_alleles"].split("/")[1]
         if alt == "<DEL>":
-            varid = ("_").join([row["#proband"], str(row.chrom), str(row.position), "DEL"])
+            varid = ("_").join([row["proband"], str(row.chrom), str(row.position), "DEL"])
         elif alt == "<DUP>":
-            varid = ("_").join([row["#proband"], str(row.chrom), str(row.position), "DUP"])
+            varid = ("_").join([row["proband"], str(row.chrom), str(row.position), "DUP"])
         else:
             npos, nref, nalt = normalise_variant(row.position, ref, alt)
-            varid = ("_").join([row["#proband"], str(row.chrom), str(npos), nref, nalt])
+            varid = ("_").join([row["proband"], str(row.chrom), str(npos), nref, nalt])
 
         list_var_id.append(varid)
 
@@ -489,7 +497,7 @@ def cnv_fuzzy_matching(cf_df, other_df, column_name):
         chrom_column = "chr"
     elif column_name == "in_build_37":
         cnv_other_df = other_df.loc[other_df.varid.str.contains("DEL") | other_df.varid.str.contains("DUP")]
-        proband_column = "#proband"
+        proband_column = "proband"
         chrom_column = "chrom"
     else:
         cnv_other_df = other_df.loc[other_df.alt.isin(["<DEL>", "<DUP>"])]
