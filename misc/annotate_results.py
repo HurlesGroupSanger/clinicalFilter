@@ -28,6 +28,7 @@ def annotate_cf(config_file):
     decipher_variants_info_df = load_decipher_variants_info(conf["decipher_variants_info"], id_mapping_df)
     b37_cf_results = load_b37_cf_results(conf["b37_cf_results"])
     latest_cf_results = load_latest_cf_results(conf["latest_cf_results"])
+    tiering_info = load_tiering_info(conf["tiering_info"])
 
     if "b38_cf_previous_results" in conf:
         b38_cf_previous_results = load_latest_cf_results(conf["b38_cf_previous_results"])
@@ -42,6 +43,7 @@ def annotate_cf(config_file):
         previous_gene_list,
         id_mapping_df,
         b38_cf_previous_results,
+        tiering_info,
     )
 
     # Order columns, sort rows
@@ -70,15 +72,20 @@ def annotate(
     previous_gene_list,
     id_mapping_df,
     b38_cf_previous_results,
+    tiering_info,
 ):
     """
+    Annotate CF results with various information
 
-    Args:
-        cf_results (_type_): _description_
-        b37_cf_results (_type_): _description_
-        deciper_variants_info (_type_): _description_
-        previous_gene_list (_type_): _description_
-        id_mapping_df (_type_): _description_
+    Args :
+        cf_results (pd.DataFrame): current CF results
+        b37_cf_results (pd.DataFrame): last B37 CF results
+        decipher_variants_info (pd.DataFrame): variants already reported in DECIPHER
+        previous_gene_list (list): DDG2P genes used in the previous run
+        id_mapping_df (pd.DataFrame) : DDD identifiers mapping
+        b38_cf_previous_results (pd.DataFrame): previous B38 CF results
+        tiering_info (pd.DataFrame): diagnostic tiering information for each patient
+
     """
 
     logger = logging.getLogger("logger")
@@ -117,6 +124,9 @@ def annotate(
         axis=1,
         args=(nb_variants_per_proband,),
     )
+
+    # Check if another variant is present in the same region (+-100bp)
+    cf_results = other_variant_in_same_region(cf_results)
 
     # Get number of variants in the list associated to the current gene
     nb_variants_per_gene = dict(cf_results["symbol"].value_counts())
@@ -198,7 +208,10 @@ def annotate(
     logger.info("Indels/MNVs fuzzy matching...")
     cf_results = indels_mnvs_fuzzy_matching(cf_results, decipher_variants_info)
 
-    cf_results.drop(["family_id", "cnv", "varid"], inplace=True, axis=1)
+    # Add diagnostic tiering information
+    cf_results = cf_results.merge(tiering_info, on="decipher_id", how="left")
+
+    cf_results.drop(["family_id", "cnv"], inplace=True, axis=1)
 
     return cf_results
 
@@ -491,6 +504,48 @@ def build_b38_variant_id(df):
     return df
 
 
+def load_tiering_info(filename):
+    """
+    Load diagnostic tiering information for each patient
+
+    Args:
+        filename (str): path to tiering information file
+    """
+
+    df = pd.read_csv(filename, sep="\t", low_memory=False, dtype={"decipher_id": str})
+    return df
+
+
+def other_variant_in_same_region(cf_df):
+    """
+    Flag variants occurring in the same region (+- 100bp) as another variant in the same proband
+
+    Args:
+        cf_df (pd.DataFrame): CF results
+    """
+
+    OFFSET = 100
+
+    cf_df["other_variant_in_region"] = "n"
+    for _, patient_variants_df in cf_df.groupby("decipher_id"):
+
+        for idx, row in patient_variants_df.iterrows():
+            chrom = row["chrom"]
+            pos = row["pos"]
+
+            overlapping_variants = patient_variants_df.loc[
+                (patient_variants_df["chrom"] == chrom)
+                & (patient_variants_df["pos"] >= (pos - OFFSET))
+                & (patient_variants_df["pos"] <= (pos + OFFSET))
+                & (patient_variants_df.index != idx)
+            ]
+
+            if not overlapping_variants.empty:
+                cf_df.at[idx, "other_variant_in_region"] = "y"
+
+    return cf_df
+
+
 def cnv_fuzzy_matching(cf_df, other_df, column_name):
     """
     Check whether the CNV was previously reported with slightly different positions (using an offset of 1000bp)
@@ -622,7 +677,7 @@ def format_results(df):
     df = df[main_columns + postcf_columns + ceps_columns]
 
     # Put decipher identifier in front
-    df = df[["decipher_id"] + [x for x in df.columns if x != "decipher_id"]]
+    df = df[["decipher_id"] + [x for x in df.columns if x not in ["decipher_id", "varid"]] + ["varid"]]
 
     return df
 
