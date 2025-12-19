@@ -38,7 +38,7 @@ class PostInheritanceFiltering(object):
         Post-inheritance filtering - MAF and REVEL
         """
         self.maf_filter()
-        self.allele_count_filter()
+        # self.allele_count_filter()
         return self.candidate_variants
 
     def maf_filter(self):
@@ -46,7 +46,7 @@ class PostInheritanceFiltering(object):
         Filter non-Biallelic vairants with more stringent MAF thresholds
         """
         for v in list(self.candidate_variants["single_variants"].keys()):
-            variant = self.candidate_variants["single_variants"][v]
+
             if "biallelic" not in self.candidate_variants["single_variants"][v]["mode"]:
                 ddd_af = self.candidate_variants["single_variants"][v]["variant"].ddd_af
                 max_af = self.candidate_variants["single_variants"][v]["variant"].max_af
@@ -73,29 +73,31 @@ class PostInheritanceFiltering(object):
         Filter on AC_het and AC_hemi
         """
         for v in list(self.candidate_variants["single_variants"].keys()):
-            if self.candidate_variants["single_variants"][v]["mode"] == "Monoallelic":
+            if "monoallelic" in self.candidate_variants["single_variants"][v]["mode"]:
                 if int(self.candidate_variants["single_variants"][v]["variant"].AC_het) > 4:
-                    del self.candidate_variants["single_variants"][v]
                     logging.info(
                         v + " failed post-inhertance AC_het filter for "
                         "monoallelic genes " + self.candidate_variants["single_variants"][v]["variant"].AC_het
                     )
-            if (
-                self.candidate_variants["single_variants"][v]["mode"] == "Hemizygous"
-                and self.candidate_variants["single_variants"][v]["sex"] == "XY"
+                    del self.candidate_variants["single_variants"][v]
+                    continue
+
+            if ("hemizygous" in self.candidate_variants["single_variants"][v]["mode"]) and (
+                self.candidate_variants["single_variants"][v]["sex"] == "XY"
             ):
                 if int(self.candidate_variants["single_variants"][v]["variant"].AC_hemi) > 0:
-                    del self.candidate_variants["single_variants"][v]
                     logging.info(
                         v + " failed post-inhertance AC_hemi filter for "
                         "monoallelic genes " + self.candidate_variants["single_variants"][v]["variant"].AC_hemi
                     )
-            if self.candidate_variants["single_variants"][v]["mode"] == "X-linked dominant":
+                    del self.candidate_variants["single_variants"][v]
+                    continue
+
+            if "X-linked dominant" in self.candidate_variants["single_variants"][v]["mode"]:
                 AC_total = int(self.candidate_variants["single_variants"][v]["variant"].AC_het) + int(
                     self.candidate_variants["single_variants"][v]["variant"].AC_hemi
                 )
                 if AC_total > 4:
-                    del self.candidate_variants["single_variants"][v]
                     logging.info(
                         v + " failed post-inhertance AC_hemi filter for "
                         "X linked dominant genes "
@@ -103,3 +105,5 @@ class PostInheritanceFiltering(object):
                         + " + "
                         + self.candidate_variants["single_variants"][v]["variant"].AC_hemi
                     )
+                    del self.candidate_variants["single_variants"][v]
+                    continue
