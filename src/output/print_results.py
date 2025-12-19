@@ -105,6 +105,9 @@ def create_output(families, variants, inheritance_reports, outdir):
         "LoF_filter",
         "LoF_flags",
         "LoF_info",
+        "ClinVar",
+        "ClinVar_ALLELEID",
+        "ClinVar_CLNSIG",
     ]
 
     results = {}
@@ -195,6 +198,9 @@ def print_output(results, header, outfile):
                         results[fam][var]["LoF_filter"],
                         results[fam][var]["LoF_flags"],
                         results[fam][var]["LoF_info"],
+                        results[fam][var]["ClinVar"],
+                        results[fam][var]["ClinVar_ALLELEID"],
+                        results[fam][var]["ClinVar_CLNSIG"],
                     ]
                 )
                 o.write(line)
@@ -444,6 +450,9 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res["LoF_filter"] = var["variant"].LoF_filter
     res["LoF_flags"] = var["variant"].LoF_flags
     res["LoF_info"] = var["variant"].LoF_info
+    res["ClinVar"] = var["variant"].ClinVar
+    res["ClinVar_ALLELEID"] = var["variant"].ClinVar_ALLELEID
+    res["ClinVar_CLNSIG"] = var["variant"].ClinVar_CLNSIG
 
     return res
 
@@ -555,7 +564,7 @@ def is_mosaic(allelic_depths):
     Returns:
         bool: mosaic or not
     """
-      
+
     allelic_depths_split = allelic_depths.split(",")
 
     ref_allele_count = int(allelic_depths_split[0])

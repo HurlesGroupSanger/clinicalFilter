@@ -151,6 +151,9 @@ def readvcf(filename, regions, sex):
         "LoF_info",
         "CADD_PHRED",
         "CLIN_SIG",
+        "ClinVar",
+        "ClinVar_ALLELEID",
+        "ClinVar_CLNSIG",
         "CALLSOURCE",
         "MEANLR2",
     ]
@@ -267,17 +270,22 @@ def readvcf(filename, regions, sex):
         vdata["CADD_PHRED"] = oldata[60]
         vdata["CLIN_SIG"] = oldata[61]
 
+        # Added for b38v4
+        vdata["ClinVar"] = oldata[62]
+        vdata["ClinVar_ALLELEID"] = oldata[63]
+        vdata["ClinVar_CLNSIG"] = oldata[64]
+
         # Extra informations on CNVs
-        vdata["CALLSOURCE"] = oldata[62]
-        vdata["MEANLR2"] = oldata[63]
+        vdata["CALLSOURCE"] = oldata[65]
+        vdata["MEANLR2"] = oldata[66]
 
         # Format information
-        vdata["gt"] = oldata[64]
-        vdata["gq"] = oldata[65]
-        vdata["pid"] = oldata[66]
-        vdata["ad"] = oldata[67]
-        vdata["cnv_inh"] = oldata[68]
-        vdata["cn"] = oldata[69]
+        vdata["gt"] = oldata[67]
+        vdata["gq"] = oldata[68]
+        vdata["pid"] = oldata[69]
+        vdata["ad"] = oldata[70]
+        vdata["cnv_inh"] = oldata[71]
+        vdata["cn"] = oldata[72]
 
         if not vdata["DNM"] == "." or not vdata["DNG"] == ".":
             vdata["dnm"] = True
