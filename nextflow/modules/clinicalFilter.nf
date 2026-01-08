@@ -30,7 +30,15 @@ process CF {
 	publishDir "${params.publish_dir}/${params.date}/DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}_clinical_filter.tsv"
 	publishDir "${params.publish_dir}/${params.date}/DD/DP/$ab/$cd/$ef/${stable_id}/clinical_filter/", mode: 'copy', pattern: "${stable_id}_clinical_filter.log"
 
-	beforeScript "export PYTHONPATH=${baseDir}/../src/:\$PYTHONPATH"
+
+	beforeScript = params.useModules
+		? """
+		module load ${params.bcftoolsModule}
+		export PYTHONPATH=${baseDir}/../src:\$PYTHONPATH
+		"""
+		: """
+		export PYTHONPATH=${baseDir}/../src:\$PYTHONPATH
+		"""
 
 	input:
     tuple val(stable_id),val(ab),val(cd),val(ef), path(ped)
