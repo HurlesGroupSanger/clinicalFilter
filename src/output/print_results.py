@@ -519,9 +519,19 @@ def decipher_ready_inheritance(var):
     if triogenotype.endswith("NANA"):
         return params.DECIPHER_INHERITANCE_UNKNOWN
 
-    # CNVS are not handled at the moment
+    # Using Cipher inheritance for CNVs
     if ("DUP" in triogenotype) or ("DEL" in triogenotype):
-        return params.DECIPHER_INHERITANCE_NA
+        cnv_inh = var["variant"].cnv_inh
+        if cnv_inh == "not_inherited":
+            return params.DECIPHER_INHERITANCE_DENOVO
+        elif cnv_inh == "maternal_inh":
+            return params.DECIPHER_INHERITANCE_MATERNAL
+        elif cnv_inh == "paternal_inh":
+            return params.DECIPHER_INHERITANCE_PATERNAL
+        elif cnv_inh == "biparental_inh":
+            return params.DECIPHER_INHERITANCE_BIPARENTAL
+        else:
+            return params.DECIPHER_INHERITANCE_NA
 
     # Denovo variants
     if triogenotype in ["100", "200"]:
