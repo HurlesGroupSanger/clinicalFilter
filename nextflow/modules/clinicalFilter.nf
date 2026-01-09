@@ -10,7 +10,7 @@ process CREATE_PED {
     path(list_vcfs)
     path(list_probands)
 	path(families_ped)
-	path(publish_dir)
+	val(publish_dir)
 	val(date)
 
 	output:

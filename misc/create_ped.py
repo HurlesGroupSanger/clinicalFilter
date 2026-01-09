@@ -3,6 +3,8 @@ import click
 import pandas as pd
 import textwrap
 import os
+import logging
+import logging.config
 
 
 @click.command()
@@ -21,13 +23,22 @@ def create_ped(list_vcfs, list_probands, families_ped, cf_dir):
         cf_dir (str): clinical filtering output directory
     """
 
+    logger = logging.getLogger("logger")
+
     # Load list of VCFs
     vcf_df = load_list_vcfs(list_vcfs)
 
     # Get probands to consider in CF
     probands_df = pd.read_csv(list_probands, header=None)
+    logger.info(f"List probands length: {probands_df.shape[0]}")
     probands_df.columns = ["stable_id"]
     probands_in_vcf_list = list(set(probands_df.stable_id) & set(vcf_df.stable_id))
+
+    # Warn if some probands are missing in the VCF list
+    missing_vcfs = set(probands_df.stable_id) - set(probands_in_vcf_list)
+    if missing_vcfs:
+        logger.warning(f"{len(missing_vcfs)} probands have no associated VCFs and will be ignored")
+        logger.warning(f"Missing vcfs: {', '.join(missing_vcfs)}")
     probands_df = probands_df.loc[probands_df.stable_id.isin(probands_in_vcf_list)]
 
     # Get relationships for the proband to consider
@@ -44,11 +55,15 @@ def load_list_vcfs(list_vcfs):
         list_vcfs (str): list of VCFs file to consider in CF
     """
 
+    logger = logging.getLogger("logger")
+
     vcf_df = pd.read_csv(list_vcfs, header=None)
     vcf_df.columns = ["vcf_path"]
     vcf_df["stable_id"] = [x[-3] for x in vcf_df["vcf_path"].str.split("/")]
     vcf_df = vcf_df[["stable_id", "vcf_path"]]
     assert vcf_df.stable_id.str.startswith("DDDP").all()
+
+    logger.info(f"List VCF length: {vcf_df.shape[0]}")
 
     return vcf_df
 
@@ -84,14 +99,25 @@ def create_individual_ped(vcf_df, probands_in_vcf_list, family_df, cf_dir):
         cf_dir (str): clinical filtering folder
     """
 
+    logger = logging.getLogger("logger")
+
     dict_ped = dict()
     for _, min_family_df in family_df.groupby("family_id"):
 
+        proband_id = list(set(min_family_df.individual_id) & set(probands_in_vcf_list))
+        if not proband_id:
+            continue
+
         # We check that we have all the VCF for the family
-        assert min_family_df.individual_id.isin(vcf_df.stable_id).all()
+        try:
+            assert min_family_df.individual_id.isin(vcf_df.stable_id).all()
+        except AssertionError:
+            logger.warning(
+                f"Some individuals in family {min_family_df.family_id.iloc[0]} have no associated VCFs and will be ignored"
+            )
+            continue
 
         # Retrieve the proband in the family
-        proband_id = list(set(min_family_df.individual_id) & set(probands_in_vcf_list))
         assert len(proband_id) == 1
         proband_id = proband_id[0]
 
@@ -106,7 +132,7 @@ def create_individual_ped(vcf_df, probands_in_vcf_list, family_df, cf_dir):
         ped_file = write_individual_ped(min_family_pluspath_df, proband_id, cf_dir)
         dict_ped[proband_id] = ped_file
 
-    with open("list_ped.tsv", "w") as f:
+    with open(f"list_ped.tsv", "w") as f:
         for key, value in dict_ped.items():
             f.write(f"{key}\t{value}\n")
 
@@ -135,5 +161,43 @@ def write_individual_ped(min_family_df, proband_id, cf_dir):
     return os.path.realpath(ped_file)
 
 
+def init_log(show_time=True):
+    """
+    Initialise logger
+
+    Args:
+        show_time (bool, optional): print time in log entries. Defaults to True.
+    """
+
+    if show_time:
+        log_format = "[%(levelname)s:%(asctime)s] %(message)s"
+    else:
+        log_format = "%(levelname)s | %(message)s"
+
+    MY_LOGGING_CONFIG = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "default_formatter": {"format": log_format},
+        },
+        "handlers": {
+            "stream_handler": {
+                "class": "logging.StreamHandler",
+                "formatter": "default_formatter",
+            },
+        },
+        "loggers": {
+            "logger": {
+                "handlers": ["stream_handler"],
+                "level": "INFO",
+                "propagate": True,
+            }
+        },
+    }
+
+    logging.config.dictConfig(MY_LOGGING_CONFIG)
+
+
 if __name__ == "__main__":
+    init_log()
     create_ped()
