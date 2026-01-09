@@ -17,7 +17,7 @@ def create_ped(list_vcfs, list_probands, families_ped, cf_dir):
     Create individual PED file used for clinical filtering
 
     Args:
-        list_vcfs (str): list of VCFs file to consider in CF, output of pre-CF steps
+        list_vcfs (str): list of VCFs file to consider in CF, output of pre-CF steps (two-columns file: stable_id, vcf_path)
         list_probands (str): list of probands to consider in CF, found in resources folder
         families_ped (str): relationships between individuals, found in resources folder
         cf_dir (str): clinical filtering output directory
@@ -57,10 +57,8 @@ def load_list_vcfs(list_vcfs):
 
     logger = logging.getLogger("logger")
 
-    vcf_df = pd.read_csv(list_vcfs, header=None)
-    vcf_df.columns = ["vcf_path"]
-    vcf_df["stable_id"] = [x[-3] for x in vcf_df["vcf_path"].str.split("/")]
-    vcf_df = vcf_df[["stable_id", "vcf_path"]]
+    vcf_df = pd.read_csv(list_vcfs, header=None, sep="\t")
+    vcf_df.columns = ["stable_id", "vcf_path"]
     assert vcf_df.stable_id.str.startswith("DDDP").all()
 
     logger.info(f"List VCF length: {vcf_df.shape[0]}")
