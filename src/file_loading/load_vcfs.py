@@ -21,12 +21,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 
-import subprocess
 import logging
 import os
+import subprocess
 
-from variants.snv import SNV
 from variants.cnv import CNV
+from variants.snv import SNV
 
 
 def load_variants(family, outdir, regions=None):
@@ -156,6 +156,7 @@ def readvcf(filename, regions, sex):
         "ClinVar_CLNSIG",
         "CALLSOURCE",
         "MEANLR2",
+        "AF_joint",
     ]
     formatfields = ["GT", "GQ", "PID", "AD", "CIFER_INHERITANCE", "CN"]
 
@@ -171,7 +172,7 @@ def readvcf(filename, regions, sex):
         bcfcmdroot = (
             "bcftools norm -m - "
             + filename
-            + " | bcftools view -e 'INFO/MAX_AF>0.005 | FORMAT/GT[0]="
+            + " | bcftools view -e 'INFO/MAX_AF>0.005 | INFO/AF_joint>0.005 | FORMAT/GT[0]="
             + '"ref"'
             + "'  | bcftools query -u -f '%CHROM\t%POS\t%REF\t%ALT{0}\t"
         )
@@ -181,7 +182,7 @@ def readvcf(filename, regions, sex):
             + regions
             + " "
             + filename
-            + " | bcftools view -e 'INFO/MAX_AF>0.005 | FORMAT/GT[0]="
+            + " | bcftools view -e 'INFO/MAX_AF>0.005 | INFO/AF_joint>0.005 | FORMAT/GT[0]="
             + '"ref"'
             + "'  | bcftools query -u -f '%CHROM\t%POS\t%REF\t%ALT{0}\t"
         )
@@ -279,13 +280,17 @@ def readvcf(filename, regions, sex):
         vdata["CALLSOURCE"] = oldata[65]
         vdata["MEANLR2"] = oldata[66]
 
+        # Joint AF from gnomAD (as MAX_AF from VEP is sometimes missing)
+        vdata["AF_joint"] = oldata[67]
+        vdata["max_af"] = max_af_between_vep_and_gnomad(vdata["max_af"], vdata["AF_joint"])
+
         # Format information
-        vdata["gt"] = oldata[67]
-        vdata["gq"] = oldata[68]
-        vdata["pid"] = oldata[69]
-        vdata["ad"] = oldata[70]
-        vdata["cnv_inh"] = oldata[71]
-        vdata["cn"] = oldata[72]
+        vdata["gt"] = oldata[68]
+        vdata["gq"] = oldata[69]
+        vdata["pid"] = oldata[70]
+        vdata["ad"] = oldata[71]
+        vdata["cnv_inh"] = oldata[72]
+        vdata["cn"] = oldata[73]
 
         if not vdata["DNM"] == "." or not vdata["DNG"] == ".":
             vdata["dnm"] = True
@@ -304,6 +309,29 @@ def readvcf(filename, regions, sex):
     logging.info("Variants loaded from " + filename)
 
     return vars
+
+
+def max_af_between_vep_and_gnomad(vep_max_af, gnomad_af):
+    """
+    Get the maximum allele frequency between VEP and gnomAD joint AF
+    Implemented as sometimes VEP MAX_AF is missing ('.') but gnomAD AF_joint is present,
+    especially for indels.
+
+    :param vep_max_af: MAX_AF from VEP annotation
+    :param gnomad_af: AF_joint from gnomAD annotation
+
+    """
+
+    if (vep_max_af == ".") and (gnomad_af == "."):
+        return "."
+
+    if vep_max_af == ".":
+        return gnomad_af
+
+    if gnomad_af == ".":
+        return vep_max_af
+
+    return str(max(float(vep_max_af), float(gnomad_af)))
 
 
 def runcommand(cmd):
