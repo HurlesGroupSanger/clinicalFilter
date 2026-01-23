@@ -26,7 +26,10 @@ def annotate_cf(config_file):
     id_mapping_df = load_id_mapping(conf["id_mapping"])
     previous_gene_list = load_previous_genelist(conf["previous_gene_list"])
     decipher_variants_info_df = load_decipher_variants_info(conf["decipher_variants_info"], id_mapping_df)
-    b37_cf_results = load_b37_cf_results(conf["b37_cf_results"])
+    if "b37_cf_results" in conf:
+        b37_cf_results = load_b37_cf_results(conf["b37_cf_results"])
+    else:
+        b37_cf_results = pd.DataFrame()
     latest_cf_results = load_latest_cf_results(conf["latest_cf_results"])
     tiering_info = load_tiering_info(conf["tiering_info"])
 
@@ -95,7 +98,8 @@ def annotate(
     cf_results["alt_reads"] = "."
     cf_results["indel_length"] = "."
     cf_results["in_previous_build_38"] = "."
-    cf_results["in_build_37"] = "n"
+    if not b37_cf_results.empty:
+        cf_results["in_build_37"] = "n"
     cf_results["in_decipher"] = "n"
     cf_results["vars_per_gene"] = 0
     cf_results["gene_in_prev_run"] = "n"
@@ -170,11 +174,13 @@ def annotate(
 
     # Check if variants was already in B37 results
     logger.info("Checking whether variants were already in previous CF results and/or in DECIPHER...")
-    cf_results["in_build_37"] = cf_results.apply(
-        lambda row, b37_cf_results: ("y" if row.varid in list(b37_cf_results.varid) else "n"),
-        axis=1,
-        args=(b37_cf_results,),
-    )
+
+    if not b37_cf_results.empty:
+        cf_results["in_build_37"] = cf_results.apply(
+            lambda row, b37_cf_results: ("y" if row.varid in list(b37_cf_results.varid) else "n"),
+            axis=1,
+            args=(b37_cf_results,),
+        )
 
     # Check if variants was already in previous b38 results
     if not b38_cf_previous_results.empty:
@@ -200,7 +206,8 @@ def annotate(
 
     # Fuzzy matching for CNVs
     logger.info("CNV fuzzy matching...")
-    cf_results = cnv_fuzzy_matching(cf_results, b37_cf_results, "in_build_37")
+    if not b37_cf_results.empty:
+        cf_results = cnv_fuzzy_matching(cf_results, b37_cf_results, "in_build_37")
     cf_results = cnv_fuzzy_matching(cf_results, decipher_variants_info, "in_decipher")
     cf_results = cnv_fuzzy_matching(cf_results, b38_cf_previous_results, "in_previous_build_38")
 
@@ -266,8 +273,9 @@ def keep_new_variants_only(df):
     df = df.loc[df.in_decipher == "n"]
 
     # Keep only variants that were not already selected in last B37 run (or are de novo not reported in DECIPHER)
-    filt = (df.in_build_37 == "n") | (df.decipher_inheritance.str.startswith("de_novo"))
-    df = df.loc[filt]
+    if "in_build_37" in df.columns:
+        filt = (df.in_build_37 == "n") | (df.decipher_inheritance.str.startswith("de_novo"))
+        df = df.loc[filt]
 
     # Keep only variants that were not already selected in previous B38 build (or are de novo not reported in DECIPHER)
     if "in_previous_build_38" in df.columns:
