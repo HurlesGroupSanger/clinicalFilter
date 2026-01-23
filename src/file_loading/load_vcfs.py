@@ -205,7 +205,7 @@ def readvcf(filename, regions, sex):
         # populate hash with variant data
         varid = ("_").join([oldata[0], oldata[1], oldata[2], alt])
         vdata = {}
-        vdata["chrom"] = oldata[0]
+        vdata["chrom"] = oldata[0].replace("chr", "")
         vdata["pos"] = oldata[1]
         vdata["ref"] = oldata[2]
         vdata["alt"] = alt
