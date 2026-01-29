@@ -23,6 +23,7 @@ THE SOFTWARE.
 
 import logging
 from itertools import combinations
+
 from utils.utils import common_elements
 
 
@@ -95,16 +96,23 @@ class CompoundHetScreen(object):
             # If both variants are missense or equivalent
             if len(var1_missense_equiv) > 0 and len(var2_missense_equiv) > 0:
 
-                # If one of the variants has a REVEL > 0.7 or we keep the pair
+                # We keep the pair only if both variants have either a high REVEL score or are P/LP in ClinVar
                 revel_var1 = float(var1.revel) if var1.revel != "." else 0
                 revel_var2 = float(var2.revel) if var2.revel != "." else 0
-                if (revel_var1 > 0.7) or (revel_var2 > 0.7):
-                    return True
 
-                # If one of the variants is classified as (likely) pathogenic in ClinVar we keep the pair
-                if ((set(["Pathogenic", "Likely_pathogenic"]) & set(var1.ClinVar_CLNSIG.split("/"))) != set()) or (
-                    (set(["Pathogenic", "Likely_pathogenic"]) & set(var2.ClinVar_CLNSIG.split("/"))) != set()
+                var1_passes = False
+                var2_passes = False
+                if (revel_var1 > 0.7) or (
+                    set(["Pathogenic", "Likely_pathogenic"]) & set(var1.ClinVar_CLNSIG.split("/")) != set()
                 ):
+                    var1_passes = True
+
+                if (revel_var2 > 0.7) or (
+                    set(["Pathogenic", "Likely_pathogenic"]) & set(var2.ClinVar_CLNSIG.split("/")) != set()
+                ):
+                    var2_passes = True
+
+                if var1_passes and var2_passes:
                     return True
 
                 logging.info(
