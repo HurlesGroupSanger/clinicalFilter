@@ -24,6 +24,7 @@ THE SOFTWARE.
 import logging
 from itertools import combinations
 
+from utils.params import REVEL_THRESHOLD_COMPOUNDHET_SINGLETON
 from utils.utils import common_elements
 
 
@@ -102,12 +103,12 @@ class CompoundHetScreen(object):
 
                 var1_passes = False
                 var2_passes = False
-                if (revel_var1 > 0.7) or (
+                if (revel_var1 > REVEL_THRESHOLD_COMPOUNDHET_SINGLETON) or (
                     set(["Pathogenic", "Likely_pathogenic"]) & set(var1.ClinVar_CLNSIG.split("/")) != set()
                 ):
                     var1_passes = True
 
-                if (revel_var2 > 0.7) or (
+                if (revel_var2 > REVEL_THRESHOLD_COMPOUNDHET_SINGLETON) or (
                     set(["Pathogenic", "Likely_pathogenic"]) & set(var2.ClinVar_CLNSIG.split("/")) != set()
                 ):
                     var2_passes = True

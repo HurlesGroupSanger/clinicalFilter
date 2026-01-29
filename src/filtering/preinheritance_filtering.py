@@ -1,7 +1,7 @@
 import logging
 
+from utils.params import MODERATE_HIGH_IMPACT_CONSEQUENCES, REVEL_THRESHOLD, SPLICE_AI_THRESHOLD
 from utils.utils import common_elements
-from utils.params import SPLICE_AI_THRESHOLD
 
 
 class PreInheritanceFiltering(object):
@@ -25,20 +25,6 @@ class PreInheritanceFiltering(object):
 
     def create_variants_per_gene(self):
         variants_per_gene = {}
-        consequences = [
-            "frameshift_variant",
-            "missense_variant",
-            "splice_donor_variant",
-            "splice_acceptor_variant",
-            "start_lost",
-            "stop_gained",
-            "protein_altering_variant",
-            "transcript_ablation",
-            "transcript_amplification",
-            "inframe_insertion",
-            "inframe_deletion",
-            "stop_lost",
-        ]
 
         for v in self.variants["child"].keys():
             # we only want SNVs in variants per gene
@@ -68,7 +54,7 @@ class PreInheritanceFiltering(object):
             # If the variant is not a variant with high spliceAI score, it has to have a functional consequence to be kept
             if not is_high_spliceAI:
                 cqs = self.variants["child"][v].consequence.split("&")
-                coding_cqs = common_elements(cqs, consequences)
+                coding_cqs = common_elements(cqs, MODERATE_HIGH_IMPACT_CONSEQUENCES)
                 if len(coding_cqs) == 0:
                     logging.info(v + " failed, no functional consequences: " + self.variants["child"][v].consequence)
                     continue
@@ -146,7 +132,7 @@ class PreInheritanceFiltering(object):
                     continue
                 else:
                     revel = float(childvar.revel)
-                    if revel < 0.4:
+                    if revel < REVEL_THRESHOLD:
                         logging.info(varid + " failed REVEL filter: " + str(revel))
                         del variants_per_gene[gn][varid]
                         if len(variants_per_gene[gn].keys()) < 1:
