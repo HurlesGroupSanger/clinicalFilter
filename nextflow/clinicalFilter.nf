@@ -30,12 +30,17 @@ workflow {
 
     if (params.post_cf.enabled){
 
+		if (!params.post_cf.containsKey("b37_cf_results")) {
+			params.post_cf.b37_cf_results = ""
+		}
+
 		ch_postcf_conf = ANNOTATE_RESULTS(ch_concat,
 			params.post_cf.id_mapping,
 			params.post_cf.previous_gene_list,
 			params.post_cf.decipher_variants_info,
 			params.post_cf.b37_cf_results,
-			params.post_cf.b38_cf_previous_results)
+			params.post_cf.b38_cf_previous_results,
+			params.post_cf.tiering_info)
 	}
 
 }

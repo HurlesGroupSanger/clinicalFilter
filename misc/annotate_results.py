@@ -404,8 +404,11 @@ def load_b37_cf_results(filename):
         filename (str): path to last B37 CF results
     """
 
-    df = pd.read_csv(filename, sep="\t")
-    df = build_b37_variant_id(df)
+    if filename:
+        df = pd.read_csv(filename, sep="\t")
+        df = build_b37_variant_id(df)
+    else:
+        df = pd.DataFrame()
     return df
 
 
