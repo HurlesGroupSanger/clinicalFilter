@@ -90,6 +90,7 @@ def create_output(families, variants, inheritance_reports, outdir):
         "phased_any",
         "polyphen",
         "REVEL",
+        "REVEL_transcript_match",
         "CADD_PHRED",
         "AlphaMissense_pred",
         "AlphaMissense_rankscore",
@@ -184,6 +185,7 @@ def print_output(results, header, outfile):
                         str(results[fam][var]["phased_any"]),
                         results[fam][var]["polyphen"],
                         results[fam][var]["REVEL"],
+                        results[fam][var]["REVEL_transcript_match"],
                         results[fam][var]["CADD_PHRED"],
                         results[fam][var]["AlphaMissense_pred"],
                         results[fam][var]["AlphaMissense_rankscore"],
@@ -438,6 +440,7 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     # CEPs
     res["polyphen"] = var["variant"].polyphen
     res["REVEL"] = var["variant"].revel
+    res["REVEL_transcript_match"] = var["variant"].revel_transcript_match
     res["CADD_PHRED"] = var["variant"].CADD_PHRED
     res["AlphaMissense_pred"] = var["variant"].AlphaMissense_pred
     res["AlphaMissense_rankscore"] = var["variant"].AlphaMissense_rankscore

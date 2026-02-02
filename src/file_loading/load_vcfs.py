@@ -157,6 +157,7 @@ def readvcf(filename, regions, sex):
         "CALLSOURCE",
         "MEANLR2",
         "AF_joint",
+        "REVEL_transcript_match",
     ]
     formatfields = ["GT", "GQ", "PID", "AD", "CIFER_INHERITANCE", "CN"]
 
@@ -284,13 +285,15 @@ def readvcf(filename, regions, sex):
         vdata["AF_joint"] = oldata[67]
         vdata["max_af"] = max_af_between_vep_and_gnomad(vdata["max_af"], vdata["AF_joint"])
 
+        vdata["revel_transcript_match"] = oldata[68]
+
         # Format information
-        vdata["gt"] = oldata[68]
-        vdata["gq"] = oldata[69]
-        vdata["pid"] = oldata[70]
-        vdata["ad"] = oldata[71]
-        vdata["cnv_inh"] = oldata[72]
-        vdata["cn"] = oldata[73]
+        vdata["gt"] = oldata[69]
+        vdata["gq"] = oldata[70]
+        vdata["pid"] = oldata[71]
+        vdata["ad"] = oldata[72]
+        vdata["cnv_inh"] = oldata[73]
+        vdata["cn"] = oldata[74]
 
         if not vdata["DNM"] == "." or not vdata["DNG"] == ".":
             vdata["dnm"] = True
