@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-import click
-import pandas as pd
 import json
 import logging
 import logging.config
+
+import click
+import pandas as pd
 
 
 @click.command()
@@ -274,12 +275,14 @@ def keep_new_variants_only(df):
 
     # Keep only variants that were not already selected in last B37 run (or are de novo not reported in DECIPHER)
     if "in_build_37" in df.columns:
-        filt = (df.in_build_37 == "n") | (df.decipher_inheritance.str.startswith("de_novo"))
+        filt = (df.in_build_37 == "n") | ((df.decipher_inheritance.str.startswith("de_novo")) & (df.cnv_length == "."))
         df = df.loc[filt]
 
     # Keep only variants that were not already selected in previous B38 build (or are de novo not reported in DECIPHER)
     if "in_previous_build_38" in df.columns:
-        filt = (df.in_previous_build_38 == "n") | (df.decipher_inheritance.str.startswith("de_novo"))
+        filt = (df.in_previous_build_38 == "n") | (
+            (df.decipher_inheritance.str.startswith("de_novo")) & (df.cnv_length == ".")
+        )
         df = df.loc[filt]
 
     # Filter CNVS from probands having more than 4 CNVs
