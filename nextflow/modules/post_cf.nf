@@ -9,8 +9,9 @@ process ANNOTATE_RESULTS {
 	path id_mapping
 	path previous_gene_list
 	path decipher_variants_info
-	path b37_cf_results
+	val b37_cf_results
 	path b38_cf_previous_results
+	path tiering_info
 
 	output:
 	tuple path("clinical_filter_results_annotated.tsv"), path("clinical_filter_results_annotated_new_variants.tsv")
@@ -25,6 +26,7 @@ process ANNOTATE_RESULTS {
 	"b37_cf_results":"$b37_cf_results",
 	"b38_cf_previous_results": "$b38_cf_previous_results",
 	"latest_cf_results": "$cf_results",
+	"tiering_info": "$tiering_info",
 	"outdir": "./"
 	}
 	EOF

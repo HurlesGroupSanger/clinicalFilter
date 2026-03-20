@@ -2,3 +2,6 @@ nextflow/.nextflow*
 *.pyc
 *.code-workspace
 settings.json
+tests_bak
+.*
+tests/output

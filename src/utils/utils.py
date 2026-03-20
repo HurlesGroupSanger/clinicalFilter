@@ -30,6 +30,7 @@ def add_single_var_to_candidates(varid, var, hgncid, inh, candidates):
     """
     Add a single variant to candidate variants hash
     """
+
     if not varid in candidates["single_variants"].keys():
         candidates["single_variants"][varid] = {}
         candidates["single_variants"][varid]["mode"] = set()

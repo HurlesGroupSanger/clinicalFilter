@@ -22,6 +22,7 @@ THE SOFTWARE.
 """
 
 import json
+
 from utils import params
 
 
@@ -75,6 +76,7 @@ def create_output(families, variants, inheritance_reports, outdir):
         "MEANLR2",
         "max_af",
         "ddd_af",
+        "AF_joint",
         "AC_het",
         "AC_hemi",
         "AC_tot",
@@ -88,6 +90,7 @@ def create_output(families, variants, inheritance_reports, outdir):
         "phased_any",
         "polyphen",
         "REVEL",
+        "REVEL_transcript_match",
         "CADD_PHRED",
         "AlphaMissense_pred",
         "AlphaMissense_rankscore",
@@ -105,6 +108,9 @@ def create_output(families, variants, inheritance_reports, outdir):
         "LoF_filter",
         "LoF_flags",
         "LoF_info",
+        "ClinVar",
+        "ClinVar_ALLELEID",
+        "ClinVar_CLNSIG",
     ]
 
     results = {}
@@ -165,6 +171,7 @@ def print_output(results, header, outfile):
                         results[fam][var]["MEANLR2"],
                         results[fam][var]["max_af"],
                         results[fam][var]["ddd_af"],
+                        results[fam][var]["AF_joint"],
                         results[fam][var]["AC_het"],
                         results[fam][var]["AC_hemi"],
                         results[fam][var]["AC_tot"],
@@ -178,6 +185,7 @@ def print_output(results, header, outfile):
                         str(results[fam][var]["phased_any"]),
                         results[fam][var]["polyphen"],
                         results[fam][var]["REVEL"],
+                        results[fam][var]["REVEL_transcript_match"],
                         results[fam][var]["CADD_PHRED"],
                         results[fam][var]["AlphaMissense_pred"],
                         results[fam][var]["AlphaMissense_rankscore"],
@@ -195,6 +203,9 @@ def print_output(results, header, outfile):
                         results[fam][var]["LoF_filter"],
                         results[fam][var]["LoF_flags"],
                         results[fam][var]["LoF_info"],
+                        results[fam][var]["ClinVar"],
+                        results[fam][var]["ClinVar_ALLELEID"],
+                        results[fam][var]["ClinVar_CLNSIG"],
                     ]
                 )
                 o.write(line)
@@ -389,10 +400,12 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res["max_af"] = var["variant"].max_af
     res["ddd_af"] = var["variant"].ddd_af
     if var["variant"].is_snv():
+        res["AF_joint"] = var["variant"].AF_joint
         res["AC_het"] = var["variant"].AC_het
         res["AC_hemi"] = var["variant"].AC_hemi
         res["AC_tot"] = var["variant"].AC_tot
     else:
+        res["AF_joint"] = "."
         res["AC_het"] = "."
         res["AC_hemi"] = "."
         res["AC_tot"] = "."
@@ -427,6 +440,7 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     # CEPs
     res["polyphen"] = var["variant"].polyphen
     res["REVEL"] = var["variant"].revel
+    res["REVEL_transcript_match"] = var["variant"].revel_transcript_match
     res["CADD_PHRED"] = var["variant"].CADD_PHRED
     res["AlphaMissense_pred"] = var["variant"].AlphaMissense_pred
     res["AlphaMissense_rankscore"] = var["variant"].AlphaMissense_rankscore
@@ -444,6 +458,9 @@ def get_variant_info(var, varid, mnvs, variants_in_cis, phased_varids):
     res["LoF_filter"] = var["variant"].LoF_filter
     res["LoF_flags"] = var["variant"].LoF_flags
     res["LoF_info"] = var["variant"].LoF_info
+    res["ClinVar"] = var["variant"].ClinVar
+    res["ClinVar_ALLELEID"] = var["variant"].ClinVar_ALLELEID
+    res["ClinVar_CLNSIG"] = var["variant"].ClinVar_CLNSIG
 
     return res
 
@@ -510,9 +527,19 @@ def decipher_ready_inheritance(var):
     if triogenotype.endswith("NANA"):
         return params.DECIPHER_INHERITANCE_UNKNOWN
 
-    # CNVS are not handled at the moment
+    # Using Cipher inheritance for CNVs
     if ("DUP" in triogenotype) or ("DEL" in triogenotype):
-        return params.DECIPHER_INHERITANCE_NA
+        cnv_inh = var["variant"].cnv_inh
+        if cnv_inh == "not_inherited":
+            return params.DECIPHER_INHERITANCE_DENOVO
+        elif cnv_inh == "maternal_inh":
+            return params.DECIPHER_INHERITANCE_MATERNAL
+        elif cnv_inh == "paternal_inh":
+            return params.DECIPHER_INHERITANCE_PATERNAL
+        elif cnv_inh == "biparental_inh":
+            return params.DECIPHER_INHERITANCE_BIPARENTAL
+        else:
+            return params.DECIPHER_INHERITANCE_NA
 
     # Denovo variants
     if triogenotype in ["100", "200"]:
@@ -555,7 +582,7 @@ def is_mosaic(allelic_depths):
     Returns:
         bool: mosaic or not
     """
-      
+
     allelic_depths_split = allelic_depths.split(",")
 
     ref_allele_count = int(allelic_depths_split[0])

@@ -23,6 +23,8 @@ THE SOFTWARE.
 
 import logging
 
+from utils.params import LOF_CONSEQUENCES, MODERATE_HIGH_IMPACT_CONSEQUENCES, REVEL_THRESHOLD_COMPOUNDHET_SINGLETON
+
 
 class PostInheritanceFiltering(object):
     """
@@ -39,6 +41,7 @@ class PostInheritanceFiltering(object):
         """
         self.maf_filter()
         self.allele_count_filter()
+        # self.clean_spliceAI()
         return self.candidate_variants
 
     def maf_filter(self):
@@ -46,7 +49,15 @@ class PostInheritanceFiltering(object):
         Filter non-Biallelic vairants with more stringent MAF thresholds
         """
         for v in list(self.candidate_variants["single_variants"].keys()):
-            variant = self.candidate_variants["single_variants"][v]
+
+            # We do not apply post-inheritance MAF filter to known pathogenic variants
+            if (
+                set(["Pathogenic", "Likely_pathogenic"])
+                & set(self.candidate_variants["single_variants"][v]["variant"].ClinVar_CLNSIG.split("/"))
+                != set()
+            ):
+                continue
+
             if "biallelic" not in self.candidate_variants["single_variants"][v]["mode"]:
                 ddd_af = self.candidate_variants["single_variants"][v]["variant"].ddd_af
                 max_af = self.candidate_variants["single_variants"][v]["variant"].max_af
@@ -73,29 +84,47 @@ class PostInheritanceFiltering(object):
         Filter on AC_het and AC_hemi
         """
         for v in list(self.candidate_variants["single_variants"].keys()):
-            if self.candidate_variants["single_variants"][v]["mode"] == "Monoallelic":
-                if int(self.candidate_variants["single_variants"][v]["variant"].AC_het) > 4:
-                    del self.candidate_variants["single_variants"][v]
+
+            # Not applicable to CNVs
+            if not self.candidate_variants["single_variants"][v]["variant"].is_snv():
+                continue
+
+            if "biallelic" in self.candidate_variants["single_variants"][v]["mode"]:
+                continue
+
+            # We do not apply AC filters to known pathogenic variants
+            if (
+                set(["Pathogenic", "Likely_pathogenic"])
+                & set(self.candidate_variants["single_variants"][v]["variant"].ClinVar_CLNSIG.split("/"))
+                != set()
+            ):
+                continue
+
+            if "monoallelic" in self.candidate_variants["single_variants"][v]["mode"]:
+                if int(self.candidate_variants["single_variants"][v]["variant"].AC_het) > 12:
                     logging.info(
                         v + " failed post-inhertance AC_het filter for "
                         "monoallelic genes " + self.candidate_variants["single_variants"][v]["variant"].AC_het
                     )
-            if (
-                self.candidate_variants["single_variants"][v]["mode"] == "Hemizygous"
-                and self.candidate_variants["single_variants"][v]["sex"] == "XY"
-            ):
-                if int(self.candidate_variants["single_variants"][v]["variant"].AC_hemi) > 0:
                     del self.candidate_variants["single_variants"][v]
+                    continue
+
+            if ("hemizygous" in self.candidate_variants["single_variants"][v]["mode"]) and (
+                self.candidate_variants["single_variants"][v]["variant"].sex == "XY"
+            ):
+                if int(self.candidate_variants["single_variants"][v]["variant"].AC_hemi) > 2:
                     logging.info(
                         v + " failed post-inhertance AC_hemi filter for "
                         "monoallelic genes " + self.candidate_variants["single_variants"][v]["variant"].AC_hemi
                     )
-            if self.candidate_variants["single_variants"][v]["mode"] == "X-linked dominant":
+                    del self.candidate_variants["single_variants"][v]
+                    continue
+
+            if "X-linked dominant" in self.candidate_variants["single_variants"][v]["mode"]:
                 AC_total = int(self.candidate_variants["single_variants"][v]["variant"].AC_het) + int(
                     self.candidate_variants["single_variants"][v]["variant"].AC_hemi
                 )
-                if AC_total > 4:
-                    del self.candidate_variants["single_variants"][v]
+                if AC_total > 12:
                     logging.info(
                         v + " failed post-inhertance AC_hemi filter for "
                         "X linked dominant genes "
@@ -103,3 +132,80 @@ class PostInheritanceFiltering(object):
                         + " + "
                         + self.candidate_variants["single_variants"][v]["variant"].AC_hemi
                     )
+                    del self.candidate_variants["single_variants"][v]
+                    continue
+
+    def clean_spliceAI(self):
+        """
+        We want to keep high spliceAI variants only if they are :
+        - single variant DNM
+        - part of a compound het with the paired variant being LoF
+
+        Here is the rationale for the filtering. The only reason why we would keep a low impact variant (e.g. synonymous)
+        or a missense variant with low REVEL score, is because it has a high spliceAI score.
+
+        #TODO : we should normally doublecheck the spliceAI score, however we will implement this in the next version of the tool
+
+        """
+
+        # Single variant filter
+        for varid in list(self.candidate_variants["single_variants"].keys()):
+            variant = self.candidate_variants["single_variants"][varid]["variant"]
+
+            # We keep single variants DNM in any case
+            if variant.is_snv() and variant.is_dnm():
+                continue
+
+            # If a missense variant passed the pre-inheritance filters because of high spliceAI score but is not part of a compound het,
+            # we now remove it
+            if variant.consequence == "missense_variant":
+                if variant.revel == "." or float(variant.revel) < 0.4:
+                    logging.info(varid + " failed post-inheritance spliceAI filter")
+                    del self.candidate_variants["single_variants"][varid]
+
+            # If a variant passed the pre-inheritance filters because of high spliceAI score but is not part of a compound het,
+            # we now remove it
+            if variant.consequence not in MODERATE_HIGH_IMPACT_CONSEQUENCES:
+                logging.info(varid + " failed post-inheritance spliceAI filter")
+                del self.candidate_variants["single_variants"][varid]
+
+        # Compound het filter
+        for compound_het_id in list(self.candidate_variants["compound_hets"].keys()):
+
+            compound_het = self.candidate_variants["compound_hets"][compound_het_id]
+
+            # TODO : we should handle cases with more than 2 variants in the next version
+            if len(compound_het) > 2:
+                continue
+
+            var1 = compound_het[list(compound_het.keys())[0]]["variant"]
+            var2 = compound_het[list(compound_het.keys())[1]]["variant"]
+
+            # Compound het with both variants missene or equivalent with a high REVEL score or known pathogenic in ClinVar are kept
+            if (var1.revel != "." and float(var1.revel) > REVEL_THRESHOLD_COMPOUNDHET_SINGLETON) or (
+                set(["Pathogenic", "Likely_pathogenic"]) & set(var1.ClinVar_CLNSIG.split("/")) != set()
+            ):
+
+                if (var2.revel != "." and float(var2.revel) > REVEL_THRESHOLD_COMPOUNDHET_SINGLETON) or (
+                    set(["Pathogenic", "Likely_pathogenic"]) & set(var2.ClinVar_CLNSIG.split("/")) != set()
+                ):
+                    continue
+
+            # If one variant has a high spliceAI score but the other one is not a LoF we remove the compound het
+            if (var1.consequence not in MODERATE_HIGH_IMPACT_CONSEQUENCES) or (
+                (var1.consequence == "missense_variant") and (var1.revel == "." or float(var1.revel) < 0.4)
+            ):
+                if var2.consequence not in LOF_CONSEQUENCES:
+                    logging.info(compound_het_id + " failed post-inheritance spliceAI filter for compound hets")
+                    del self.candidate_variants["compound_hets"][compound_het_id]
+                    continue
+
+            # If one variant has a high spliceAI score but the other one is not a LoF we remove the compound het
+            if (var2.consequence not in MODERATE_HIGH_IMPACT_CONSEQUENCES) or (
+                (var2.consequence == "missense_variant") and (var2.revel == "." or float(var2.revel) < 0.4)
+            ):
+
+                if var1.consequence not in LOF_CONSEQUENCES:
+                    logging.info(compound_het_id + " failed post-inheritance spliceAI filter for compound hets")
+                    del self.candidate_variants["compound_hets"][compound_het_id]
+                    continue

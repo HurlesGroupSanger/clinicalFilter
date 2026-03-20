@@ -1,7 +1,7 @@
 = DDD Clinical Filtering Rules
 :icons: font
 :source-highlighter: pygments
-v1.1 - February 2024
+v1.2 - February 2026
 
 This document describes the rules implemented in our clinical filtering pipeline in order to select candidate variants in the DDD cohort. 
 
@@ -194,7 +194,8 @@ A GQ score of 40 corresponds to a 1 in 10,000 chance that the genotype is incorr
 === 1.3 Splicing
 
 
-Keep _synonymous_ and _UTR_ splicing variants with high predicted impact (spliceAI >= *0.8*). 
+Keep DNM with high predicted splicing impact (spliceAI >= *0.2*). 
+
 
 .More
 [%collapsible]
@@ -237,6 +238,8 @@ inframe_insertion
 inframe_deletion
 stop_lost
 ----
+
+_Not applied to variants that passed the spliceAI filter_
 
 
 .More
@@ -498,7 +501,7 @@ image::images/DDD_CF_Compound-heterozygosity.svg[]
 
 Some precisions for singletons:
 
-- "both missense" include any combination of _missense_ and _inframe_ variants
+- "both missense" include any combination of _missense_ and _inframe_ variants. This filter has been slightly changed in b38v4 : if both "missense" variants have a high REVEL score (*>= 0.8*) or are *P/LP* in ClinVar, they are kept.
 - if phasing information is available, variants in *cis* are discarded
 
 
@@ -559,7 +562,7 @@ The gnomAD allele counts is not provided by VEP but comes from our own allele co
 
 ==== 5.2.1 Monoallelic
 
-Exclude variants with an heterozygous allele count greater than *4* in genes with _Monoallelic_ allelic requirement. 
+Exclude variants with an heterozygous allele count greater than *12* in genes with _Monoallelic_ allelic requirement. 
 
 .More
 [%collapsible]
@@ -571,7 +574,7 @@ Exclude variants with an heterozygous allele count greater than *4* in genes wit
 [source,python]
 ----
 if self.candidate_variants["single_variants"][v]["mode"] == "Monoallelic":
-	if int(self.candidate_variants["single_variants"][v]["variant"].AC_het) > 4:
+	if int(self.candidate_variants["single_variants"][v]["variant"].AC_het) > 12:
 		del self.candidate_variants["single_variants"][v]
 ----
 
@@ -587,7 +590,7 @@ AC_het = AC_XX + AC_XY - 2*(nhomalt_XX + nhomalt_XY)
 
 ==== 5.2.2 Hemizygous
 
-Exclude variants in males with an hemizygous allele count greater than *0* in genes with _Hemizygous_ allelic requirement. 
+Exclude variants in males with an hemizygous allele count greater than *2* in genes with _Hemizygous_ allelic requirement. 
 
 .More
 [%collapsible]
@@ -602,7 +605,7 @@ if (
 	self.candidate_variants["single_variants"][v]["mode"] == "Hemizygous"
 	and self.candidate_variants["single_variants"][v]["sex"] == "XY"
 ):
-	if int(self.candidate_variants["single_variants"][v]["variant"].AC_hemi) > 0:
+	if int(self.candidate_variants["single_variants"][v]["variant"].AC_hemi) > 2:
 		del self.candidate_variants["single_variants"][v]
 ----
 
@@ -618,7 +621,7 @@ AC_hemi = nhomalt_XY
 
 ==== 5.2.3 X-linked dominant
 
-Exclude variants with an heterozygous + hemizygous allele count greater than *4* in genes with _X-linked dominant_ allelic requirement. 
+Exclude variants with an heterozygous + hemizygous allele count greater than *12* in genes with _X-linked dominant_ allelic requirement. 
 
 .More
 [%collapsible]
@@ -633,7 +636,7 @@ if self.candidate_variants["single_variants"][v]["mode"] == "X-linked dominant":
 	AC_total = int(self.candidate_variants["single_variants"][v]["variant"].AC_het) + int(
 		self.candidate_variants["single_variants"][v]["variant"].AC_hemi
 	)
-	if AC_total > 4:
+	if AC_total > 12:
 		del self.candidate_variants["single_variants"][v]
 ----
 
@@ -642,9 +645,10 @@ if self.candidate_variants["single_variants"][v]["mode"] == "X-linked dominant":
 
 == Revision History
 
-[cols="3,3,3,3"]
+[cols="1,2,2,7"]
 |===
 | Version | Date       | Author         | Description
+| 1.2     | 2026-03-20 | Erwan Delage    | Version used for b38v4. Extended the spliceAI rule to all splicing variants and lowered the threshold to *0.2*. Increased the AC thresholds for monoallelic and X-linked dominant genes post-inheritance filter following the switch to gnomAD 4.1. Relaxed the "both missense" filter for singletons.
 | 1.1     | 2024-09-15 | Erwan Delage    | Add the new spliceAI rule, version used for b38v3
 | 1.0     | 2024-09-15 | Erwan Delage    | Integration of Ruth's inheritance diagrams, version used for b38v1 and b38v2.
 | 0.1     | 2024-02-08 | Erwan Delage    | Initial version of the document.

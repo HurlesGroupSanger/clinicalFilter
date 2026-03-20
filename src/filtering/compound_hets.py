@@ -23,6 +23,8 @@ THE SOFTWARE.
 
 import logging
 from itertools import combinations
+
+from utils.params import REVEL_THRESHOLD_COMPOUNDHET_SINGLETON
 from utils.utils import common_elements
 
 
@@ -75,8 +77,13 @@ class CompoundHetScreen(object):
         """
 
         if self.family.has_no_parents():
-            # If there are no parents and the variants are not both missense
-            # or in frame del/ins then pass
+
+            # If the variants are phased to the same parent, discard them
+            if (var1.pid != "." and var2.pid != ".") and (var1.pid == var2.pid):
+                logging.info(varid1 + " " + varid2 + " failed compound het " "screen, variants in cis")
+                return False
+
+            # Extract variant consequences
             missense_equiv = [
                 "missense_variant",
                 "inframe_deletion",
@@ -86,20 +93,39 @@ class CompoundHetScreen(object):
             var2cqs = var2.consequence.split("&")
             var1_missense_equiv = common_elements(missense_equiv, var1cqs)
             var2_missense_equiv = common_elements(missense_equiv, var2cqs)
+
+            # If both variants are missense or equivalent
             if len(var1_missense_equiv) > 0 and len(var2_missense_equiv) > 0:
-                # if var1.consequence.find(
-                #         "missense_variant") and var2.consequence.find(
-                #     "missense_variant"):
+
+                # We keep the pair only if both variants have either a high REVEL score or are P/LP in ClinVar
+                revel_var1 = float(var1.revel) if var1.revel != "." else 0
+                revel_var2 = float(var2.revel) if var2.revel != "." else 0
+
+                var1_passes = False
+                var2_passes = False
+                if (revel_var1 > REVEL_THRESHOLD_COMPOUNDHET_SINGLETON) or (
+                    set(["Pathogenic", "Likely_pathogenic"]) & set(var1.ClinVar_CLNSIG.split("/")) != set()
+                ):
+                    var1_passes = True
+
+                if (revel_var2 > REVEL_THRESHOLD_COMPOUNDHET_SINGLETON) or (
+                    set(["Pathogenic", "Likely_pathogenic"]) & set(var2.ClinVar_CLNSIG.split("/")) != set()
+                ):
+                    var2_passes = True
+
+                if var1_passes and var2_passes:
+                    return True
+
                 logging.info(
-                    varid1 + " " + varid2 + " failed compound het screen, no parents and " "both missense or equivalent"
+                    varid1
+                    + " "
+                    + varid2
+                    + " failed compound het screen, no parents and both missense or equivalent with low chances of pathogenicity"
                 )
-                return False
-            elif (var1.pid != "." and var2.pid != ".") and (var1.pid == var2.pid):
-                logging.info(varid1 + " " + varid2 + " failed compound het " "screen, variants in cis")
+
                 return False
 
-            else:
-                return True
+            return True
         elif self.family.has_both_parents():
             if (
                 var1.chrom == "X"

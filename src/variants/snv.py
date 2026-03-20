@@ -21,8 +21,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 
-from variants.variant import Variant
 import logging
+
+from variants.variant import Variant
 
 
 class SNV(Variant):
@@ -236,3 +237,9 @@ class SNV(Variant):
             return True
         else:
             return False
+
+    def is_dnm(self):
+        """
+        Is the variant a DNM?
+        """
+        return self.dnm

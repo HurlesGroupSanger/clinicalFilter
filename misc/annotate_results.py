@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 
+import json
+import logging
+import logging.config
+
 import click
 import pandas as pd
-import json
 
 
 @click.command()
@@ -15,14 +18,21 @@ def annotate_cf(config_file):
         config_file (str): path to configuration file
     """
 
+    logger = logging.getLogger("logger")
+
     conf = get_conf(config_file)
 
     # Load all files and construct variant identifiers
+    logger.info("Loading resources...")
     id_mapping_df = load_id_mapping(conf["id_mapping"])
     previous_gene_list = load_previous_genelist(conf["previous_gene_list"])
     decipher_variants_info_df = load_decipher_variants_info(conf["decipher_variants_info"], id_mapping_df)
-    b37_cf_results = load_b37_cf_results(conf["b37_cf_results"])
+    if "b37_cf_results" in conf:
+        b37_cf_results = load_b37_cf_results(conf["b37_cf_results"])
+    else:
+        b37_cf_results = pd.DataFrame()
     latest_cf_results = load_latest_cf_results(conf["latest_cf_results"])
+    tiering_info = load_tiering_info(conf["tiering_info"])
 
     if "b38_cf_previous_results" in conf:
         b38_cf_previous_results = load_latest_cf_results(conf["b38_cf_previous_results"])
@@ -37,6 +47,7 @@ def annotate_cf(config_file):
         previous_gene_list,
         id_mapping_df,
         b38_cf_previous_results,
+        tiering_info,
     )
 
     # Order columns, sort rows
@@ -65,22 +76,31 @@ def annotate(
     previous_gene_list,
     id_mapping_df,
     b38_cf_previous_results,
+    tiering_info,
 ):
     """
+    Annotate CF results with various information
 
-    Args:
-        cf_results (_type_): _description_
-        b37_cf_results (_type_): _description_
-        deciper_variants_info (_type_): _description_
-        previous_gene_list (_type_): _description_
-        id_mapping_df (_type_): _description_
+    Args :
+        cf_results (pd.DataFrame): current CF results
+        b37_cf_results (pd.DataFrame): last B37 CF results
+        decipher_variants_info (pd.DataFrame): variants already reported in DECIPHER
+        previous_gene_list (list): DDG2P genes used in the previous run
+        id_mapping_df (pd.DataFrame) : DDD identifiers mapping
+        b38_cf_previous_results (pd.DataFrame): previous B38 CF results
+        tiering_info (pd.DataFrame): diagnostic tiering information for each patient
+
     """
+
+    logger = logging.getLogger("logger")
+    logger.info("Starting CF results annotation...")
 
     cf_results["ref_reads"] = "."
     cf_results["alt_reads"] = "."
     cf_results["indel_length"] = "."
     cf_results["in_previous_build_38"] = "."
-    cf_results["in_build_37"] = "n"
+    if not b37_cf_results.empty:
+        cf_results["in_build_37"] = "n"
     cf_results["in_decipher"] = "n"
     cf_results["vars_per_gene"] = 0
     cf_results["gene_in_prev_run"] = "n"
@@ -109,6 +129,9 @@ def annotate(
         axis=1,
         args=(nb_variants_per_proband,),
     )
+
+    # Check if another variant is present in the same region (+-100bp)
+    cf_results = other_variant_in_same_region(cf_results)
 
     # Get number of variants in the list associated to the current gene
     nb_variants_per_gene = dict(cf_results["symbol"].value_counts())
@@ -151,11 +174,14 @@ def annotate(
     cf_results["cnvs_per_proband"] = cf_results["proband"].map(nb_cnvs_per_proband)
 
     # Check if variants was already in B37 results
-    cf_results["in_build_37"] = cf_results.apply(
-        lambda row, b37_cf_results: ("y" if row.varid in list(b37_cf_results.varid) else "n"),
-        axis=1,
-        args=(b37_cf_results,),
-    )
+    logger.info("Checking whether variants were already in previous CF results and/or in DECIPHER...")
+
+    if not b37_cf_results.empty:
+        cf_results["in_build_37"] = cf_results.apply(
+            lambda row, b37_cf_results: ("y" if row.varid in list(b37_cf_results.varid) else "n"),
+            axis=1,
+            args=(b37_cf_results,),
+        )
 
     # Check if variants was already in previous b38 results
     if not b38_cf_previous_results.empty:
@@ -179,11 +205,21 @@ def annotate(
         args=(previous_gene_list,),
     )
 
-    cf_results = cnv_fuzzy_matching(cf_results, b37_cf_results, "in_build_37")
+    # Fuzzy matching for CNVs
+    logger.info("CNV fuzzy matching...")
+    if not b37_cf_results.empty:
+        cf_results = cnv_fuzzy_matching(cf_results, b37_cf_results, "in_build_37")
     cf_results = cnv_fuzzy_matching(cf_results, decipher_variants_info, "in_decipher")
     cf_results = cnv_fuzzy_matching(cf_results, b38_cf_previous_results, "in_previous_build_38")
 
-    cf_results.drop(["family_id", "cnv", "varid"], inplace=True, axis=1)
+    # Fuzzy matching for indels/MNVs
+    logger.info("Indels/MNVs fuzzy matching...")
+    cf_results = indels_mnvs_fuzzy_matching(cf_results, decipher_variants_info)
+
+    # Add diagnostic tiering information
+    cf_results = cf_results.merge(tiering_info, on="decipher_id", how="left")
+
+    cf_results.drop(["family_id", "cnv"], inplace=True, axis=1)
 
     return cf_results
 
@@ -219,10 +255,12 @@ def get_nb_variants_per_proband(row, df):
 
 
 def keep_new_variants_only(df):
-    """_summary_
+    """
+    Keep only new variants (not found in B37 or DECIPHER and not in previous B38 build).
+    Exception for DNMs which are kept even if already selected in previous CF run but not reported in DECIPHER.
 
     Args:
-        df (_type_): _description_
+        df (pd.DataFrame): CF results
     """
 
     def filter_cnvs(row):
@@ -232,11 +270,20 @@ def keep_new_variants_only(df):
                 filter = False
         return filter
 
-    # Keep only variants not already found in B37 or already reported in DECIPHER
-    df = df.loc[(df.in_build_37 == "n") & (df.in_decipher == "n")]
+    # Keep only variants that are not already in DECIPHER
+    df = df.loc[df.in_decipher == "n"]
 
+    # Keep only variants that were not already selected in last B37 run (or are de novo not reported in DECIPHER)
+    if "in_build_37" in df.columns:
+        filt = (df.in_build_37 == "n") | ((df.decipher_inheritance.str.startswith("de_novo")) & (df.cnv_length == "."))
+        df = df.loc[filt]
+
+    # Keep only variants that were not already selected in previous B38 build (or are de novo not reported in DECIPHER)
     if "in_previous_build_38" in df.columns:
-        df = df.loc[df.in_previous_build_38 == "n"]
+        filt = (df.in_previous_build_38 == "n") | (
+            (df.decipher_inheritance.str.startswith("de_novo")) & (df.cnv_length == ".")
+        )
+        df = df.loc[filt]
 
     # Filter CNVS from probands having more than 4 CNVs
     df = df[df.apply(filter_cnvs, axis=1)]
@@ -305,7 +352,7 @@ def load_decipher_variants_info(filename, id_mapping_df):
         id_mapping_df (pd.DataFrame) : DDD identifiers mapping
     """
 
-    df = pd.read_csv(filename, sep="\t", dtype={"patient_id": str})
+    df = pd.read_csv(filename, sep="\t", dtype={"patient_id": str}, low_memory=False)
     df = df.merge(id_mapping_df, left_on="patient_id", right_on="decipher_id")
 
     df = build_decipher_variant_id(df)
@@ -360,8 +407,11 @@ def load_b37_cf_results(filename):
         filename (str): path to last B37 CF results
     """
 
-    df = pd.read_csv(filename, sep="\t")
-    df = build_b37_variant_id(df)
+    if filename:
+        df = pd.read_csv(filename, sep="\t")
+        df = build_b37_variant_id(df)
+    else:
+        df = pd.DataFrame()
     return df
 
 
@@ -381,12 +431,12 @@ def build_b37_variant_id(df):
         ref = row["ref/alt_alleles"].split("/")[0]
         alt = row["ref/alt_alleles"].split("/")[1]
         if alt == "<DEL>":
-            varid = ("_").join([row["#proband"], str(row.chrom), str(row.position), "DEL"])
+            varid = ("_").join([row["proband"], str(row.chrom), str(row.position), "DEL"])
         elif alt == "<DUP>":
-            varid = ("_").join([row["#proband"], str(row.chrom), str(row.position), "DUP"])
+            varid = ("_").join([row["proband"], str(row.chrom), str(row.position), "DUP"])
         else:
             npos, nref, nalt = normalise_variant(row.position, ref, alt)
-            varid = ("_").join([row["#proband"], str(row.chrom), str(npos), nref, nalt])
+            varid = ("_").join([row["proband"], str(row.chrom), str(npos), nref, nalt])
 
         list_var_id.append(varid)
 
@@ -468,6 +518,48 @@ def build_b38_variant_id(df):
     return df
 
 
+def load_tiering_info(filename):
+    """
+    Load diagnostic tiering information for each patient
+
+    Args:
+        filename (str): path to tiering information file
+    """
+
+    df = pd.read_csv(filename, sep="\t", low_memory=False, dtype={"decipher_id": str})
+    return df
+
+
+def other_variant_in_same_region(cf_df):
+    """
+    Flag variants occurring in the same region (+- 100bp) as another variant in the same proband
+
+    Args:
+        cf_df (pd.DataFrame): CF results
+    """
+
+    OFFSET = 100
+
+    cf_df["other_variant_in_region"] = "n"
+    for _, patient_variants_df in cf_df.groupby("decipher_id"):
+
+        for idx, row in patient_variants_df.iterrows():
+            chrom = row["chrom"]
+            pos = row["pos"]
+
+            overlapping_variants = patient_variants_df.loc[
+                (patient_variants_df["chrom"] == chrom)
+                & (patient_variants_df["pos"] >= (pos - OFFSET))
+                & (patient_variants_df["pos"] <= (pos + OFFSET))
+                & (patient_variants_df.index != idx)
+            ]
+
+            if not overlapping_variants.empty:
+                cf_df.at[idx, "other_variant_in_region"] = "y"
+
+    return cf_df
+
+
 def cnv_fuzzy_matching(cf_df, other_df, column_name):
     """
     Check whether the CNV was previously reported with slightly different positions (using an offset of 1000bp)
@@ -489,7 +581,7 @@ def cnv_fuzzy_matching(cf_df, other_df, column_name):
         chrom_column = "chr"
     elif column_name == "in_build_37":
         cnv_other_df = other_df.loc[other_df.varid.str.contains("DEL") | other_df.varid.str.contains("DUP")]
-        proband_column = "#proband"
+        proband_column = "proband"
         chrom_column = "chrom"
     else:
         cnv_other_df = other_df.loc[other_df.alt.isin(["<DEL>", "<DUP>"])]
@@ -523,6 +615,54 @@ def cnv_fuzzy_matching(cf_df, other_df, column_name):
     return cf_df
 
 
+def indels_mnvs_fuzzy_matching(cf_df, decipher_variants_info):
+    """
+    Check whether indels/MNVs were previously reported with slightly different positions
+
+    Args:
+        cf_results (pd.DataFrame): current run CF results
+    """
+
+    logger = logging.getLogger("logger")
+
+    OFFSET_INDEL_MNV = 20
+
+    # Exclude CNVs
+    sequence_variants_df = cf_df.loc[~cf_df.alt.isin(["<DEL>", "<DUP>"])]
+
+    patients_with_variant_not_in_decipher = sequence_variants_df.loc[
+        sequence_variants_df.in_decipher == "n", "decipher_id"
+    ].unique()
+
+    # For each proband, check if any variant match with DECIPHER reported variants
+    for decipher_id in patients_with_variant_not_in_decipher:
+
+        patient_variants_cf_df = sequence_variants_df.loc[sequence_variants_df.decipher_id == decipher_id]
+        patient_decipher_variants_df = decipher_variants_info.loc[decipher_variants_info.decipher_id == decipher_id]
+
+        # If no overlapping chromosomes between variants already reported in DECIPHER and the ones not yet reported in DECIPHER, skip
+        if (
+            set(patient_decipher_variants_df.chr)
+            & set(patient_variants_cf_df.loc[patient_variants_cf_df.in_decipher == "n"].chrom)
+        ) == set():
+            continue
+
+        # For each variant not yet reported in DECIPHER, check if any variant reported in DECIPHER is close enough
+        for idx, patient_variant in patient_variants_cf_df.loc[patient_variants_cf_df.in_decipher == "n"].iterrows():
+
+            patient_decipher_variants_df_on_chrom = patient_decipher_variants_df.loc[
+                patient_decipher_variants_df.chr == patient_variant.chrom
+            ]
+
+            for _, decipher_variant in patient_decipher_variants_df_on_chrom.iterrows():
+                if abs(patient_variant["pos"] - decipher_variant["start"]) < OFFSET_INDEL_MNV:
+                    cf_df.at[idx, "in_decipher"] = "y"
+                    logger.info("Found fuzzy match for {}".format(patient_variant.varid))
+                    break
+
+    return cf_df
+
+
 def format_results(df):
     """
     Format CF results
@@ -551,10 +691,48 @@ def format_results(df):
     df = df[main_columns + postcf_columns + ceps_columns]
 
     # Put decipher identifier in front
-    df = df[["decipher_id"] + [x for x in df.columns if x != "decipher_id"]]
+    df = df[["decipher_id"] + [x for x in df.columns if x not in ["decipher_id", "varid"]] + ["varid"]]
 
     return df
 
 
+def init_log(show_time=True):
+    """
+    Initialise logger
+
+    Args:
+        show_time (bool, optional): print time in log entries. Defaults to True.
+    """
+
+    if show_time:
+        log_format = "[%(levelname)s:%(asctime)s] %(message)s"
+    else:
+        log_format = "%(levelname)s | %(message)s"
+
+    MY_LOGGING_CONFIG = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "default_formatter": {"format": log_format},
+        },
+        "handlers": {
+            "stream_handler": {
+                "class": "logging.StreamHandler",
+                "formatter": "default_formatter",
+            },
+        },
+        "loggers": {
+            "logger": {
+                "handlers": ["stream_handler"],
+                "level": "INFO",
+                "propagate": True,
+            }
+        },
+    }
+
+    logging.config.dictConfig(MY_LOGGING_CONFIG)
+
+
 if __name__ == "__main__":
+    init_log()
     annotate_cf()
