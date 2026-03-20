@@ -83,6 +83,10 @@ class PreInheritanceFiltering(object):
             bool: whether or not the variant is a variant with a high spliceAI score
         """
 
+        # TODO : For this run we are only considering DNMs
+        if not self.variants["child"][v].is_dnm():
+            return False
+
         ds_ag = (
             float(self.variants["child"][v].SpliceAI_pred_DS_AG)
             if self.variants["child"][v].SpliceAI_pred_DS_AG != "."

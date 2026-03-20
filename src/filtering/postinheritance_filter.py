@@ -41,7 +41,7 @@ class PostInheritanceFiltering(object):
         """
         self.maf_filter()
         self.allele_count_filter()
-        self.clean_spliceAI()
+        # self.clean_spliceAI()
         return self.candidate_variants
 
     def maf_filter(self):
@@ -173,7 +173,11 @@ class PostInheritanceFiltering(object):
         for compound_het_id in list(self.candidate_variants["compound_hets"].keys()):
 
             compound_het = self.candidate_variants["compound_hets"][compound_het_id]
-            assert len(compound_het) == 2
+
+            # TODO : we should handle cases with more than 2 variants in the next version
+            if len(compound_het) > 2:
+                continue
+
             var1 = compound_het[list(compound_het.keys())[0]]["variant"]
             var2 = compound_het[list(compound_het.keys())[1]]["variant"]
 
