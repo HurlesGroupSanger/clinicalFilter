@@ -4,3 +4,4 @@ nextflow/.nextflow*
 settings.json
 tests_bak
 .*
+tests/output
