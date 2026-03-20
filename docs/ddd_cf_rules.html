@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<meta name="author" content="v1.1 - February 2024">
+<meta name="author" content="v1.2 - February 2026">
 <title>DDD Clinical Filtering Rules</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -512,7 +512,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div id="header">
 <h1>DDD Clinical Filtering Rules</h1>
 <div class="details">
-<span id="author" class="author">v1.1 - February 2024</span><br>
+<span id="author" class="author">v1.2 - February 2026</span><br>
 </div>
 </div>
 <div id="content">
@@ -794,7 +794,7 @@ The threshold is adjusted to take into account male hemizygosity.</p>
 <div class="sect2">
 <h3 id="_1_3_splicing">1.3 Splicing</h3>
 <div class="paragraph">
-<p>Keep <em>synonymous</em> and <em>UTR</em> splicing variants with high predicted impact (spliceAI &gt;= <strong>0.8</strong>).</p>
+<p>Keep DNM with high predicted splicing impact (spliceAI &gt;= <strong>0.2</strong>).</p>
 </div>
 <details>
 <summary class="title">More</summary>
@@ -847,6 +847,9 @@ inframe_insertion
 inframe_deletion
 stop_lost</pre>
 </div>
+</div>
+<div class="paragraph">
+<p><em>Not applied to variants that passed the spliceAI filter</em></p>
 </div>
 <details>
 <summary class="title">More</summary>
@@ -1223,7 +1226,7 @@ stop_lost</pre>
 <div class="ulist">
 <ul>
 <li>
-<p>"both missense" include any combination of <em>missense</em> and <em>inframe</em> variants</p>
+<p>"both missense" include any combination of <em>missense</em> and <em>inframe</em> variants. This filter has been slightly changed in b38v4 : if both "missense" variants have a high REVEL score (<strong>&gt;= 0.8</strong>) or are <strong>P/LP</strong> in ClinVar, they are kept.</p>
 </li>
 <li>
 <p>if phasing information is available, variants in <strong>cis</strong> are discarded</p>
@@ -1305,7 +1308,7 @@ stop_lost</pre>
 <div class="sect3">
 <h4 id="_5_2_1_monoallelic">5.2.1 Monoallelic</h4>
 <div class="paragraph">
-<p>Exclude variants with an heterozygous allele count greater than <strong>4</strong> in genes with <em>Monoallelic</em> allelic requirement.</p>
+<p>Exclude variants with an heterozygous allele count greater than <strong>12</strong> in genes with <em>Monoallelic</em> allelic requirement.</p>
 </div>
 <details>
 <summary class="title">More</summary>
@@ -1317,7 +1320,7 @@ stop_lost</pre>
 <div class="title">postinheritance_filter.py &#8594; allele_count_filter</div>
 <div class="content">
 <pre class="pygments highlight"><code data-lang="python"><span></span><span class="tok-k">if</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;mode&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;Monoallelic&quot;</span><span class="tok-p">:</span>
-	<span class="tok-k">if</span> <span class="tok-nb">int</span><span class="tok-p">(</span><span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;variant&quot;</span><span class="tok-p">]</span><span class="tok-o">.</span><span class="tok-n">AC_het</span><span class="tok-p">)</span> <span class="tok-o">&gt;</span> <span class="tok-mi">4</span><span class="tok-p">:</span>
+	<span class="tok-k">if</span> <span class="tok-nb">int</span><span class="tok-p">(</span><span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;variant&quot;</span><span class="tok-p">]</span><span class="tok-o">.</span><span class="tok-n">AC_het</span><span class="tok-p">)</span> <span class="tok-o">&gt;</span> <span class="tok-mi">12</span><span class="tok-p">:</span>
 		<span class="tok-k">del</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">]</span></code></pre>
 </div>
 </div>
@@ -1344,7 +1347,7 @@ stop_lost</pre>
 <div class="sect3">
 <h4 id="_5_2_2_hemizygous">5.2.2 Hemizygous</h4>
 <div class="paragraph">
-<p>Exclude variants in males with an hemizygous allele count greater than <strong>0</strong> in genes with <em>Hemizygous</em> allelic requirement.</p>
+<p>Exclude variants in males with an hemizygous allele count greater than <strong>2</strong> in genes with <em>Hemizygous</em> allelic requirement.</p>
 </div>
 <details>
 <summary class="title">More</summary>
@@ -1359,7 +1362,7 @@ stop_lost</pre>
 	<span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;mode&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;Hemizygous&quot;</span>
 	<span class="tok-ow">and</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;sex&quot;</span><span class="tok-p">]</span> <span class="tok-o">==</span> <span class="tok-s2">&quot;XY&quot;</span>
 <span class="tok-p">):</span>
-	<span class="tok-k">if</span> <span class="tok-nb">int</span><span class="tok-p">(</span><span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;variant&quot;</span><span class="tok-p">]</span><span class="tok-o">.</span><span class="tok-n">AC_hemi</span><span class="tok-p">)</span> <span class="tok-o">&gt;</span> <span class="tok-mi">0</span><span class="tok-p">:</span>
+	<span class="tok-k">if</span> <span class="tok-nb">int</span><span class="tok-p">(</span><span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;variant&quot;</span><span class="tok-p">]</span><span class="tok-o">.</span><span class="tok-n">AC_hemi</span><span class="tok-p">)</span> <span class="tok-o">&gt;</span> <span class="tok-mi">2</span><span class="tok-p">:</span>
 		<span class="tok-k">del</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">]</span></code></pre>
 </div>
 </div>
@@ -1386,7 +1389,7 @@ stop_lost</pre>
 <div class="sect3">
 <h4 id="_5_2_3_x_linked_dominant">5.2.3 X-linked dominant</h4>
 <div class="paragraph">
-<p>Exclude variants with an heterozygous + hemizygous allele count greater than <strong>4</strong> in genes with <em>X-linked dominant</em> allelic requirement.</p>
+<p>Exclude variants with an heterozygous + hemizygous allele count greater than <strong>12</strong> in genes with <em>X-linked dominant</em> allelic requirement.</p>
 </div>
 <details>
 <summary class="title">More</summary>
@@ -1401,7 +1404,7 @@ stop_lost</pre>
 	<span class="tok-n">AC_total</span> <span class="tok-o">=</span> <span class="tok-nb">int</span><span class="tok-p">(</span><span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;variant&quot;</span><span class="tok-p">]</span><span class="tok-o">.</span><span class="tok-n">AC_het</span><span class="tok-p">)</span> <span class="tok-o">+</span> <span class="tok-nb">int</span><span class="tok-p">(</span>
 		<span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">][</span><span class="tok-s2">&quot;variant&quot;</span><span class="tok-p">]</span><span class="tok-o">.</span><span class="tok-n">AC_hemi</span>
 	<span class="tok-p">)</span>
-	<span class="tok-k">if</span> <span class="tok-n">AC_total</span> <span class="tok-o">&gt;</span> <span class="tok-mi">4</span><span class="tok-p">:</span>
+	<span class="tok-k">if</span> <span class="tok-n">AC_total</span> <span class="tok-o">&gt;</span> <span class="tok-mi">12</span><span class="tok-p">:</span>
 		<span class="tok-k">del</span> <span class="tok-bp">self</span><span class="tok-o">.</span><span class="tok-n">candidate_variants</span><span class="tok-p">[</span><span class="tok-s2">&quot;single_variants&quot;</span><span class="tok-p">][</span><span class="tok-n">v</span><span class="tok-p">]</span></code></pre>
 </div>
 </div>
@@ -1416,10 +1419,10 @@ stop_lost</pre>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
+<col style="width: 8.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 58.3335%;">
 </colgroup>
 <tbody>
 <tr>
@@ -1427,6 +1430,12 @@ stop_lost</pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Date</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Author</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2026-03-20</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Erwan Delage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Version used for b38v4. Extended the spliceAI rule to all splicing variants and lowered the threshold to <strong>0.2</strong>. Increased the AC thresholds for monoallelic and X-linked dominant genes post-inheritance filter following the switch to gnomAD 4.1. Relaxed the "both missense" filter for singletons.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1.1</p></td>
@@ -1453,7 +1462,7 @@ stop_lost</pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-09-15 19:13:41 +0100
+Last updated 2026-03-20 17:35:11 UTC
 </div>
 </div>
 </body>
